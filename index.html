@@ -275,7 +275,7 @@ function get_rad(rad1, rad0) {
 }
 
 function is_numeric_val(value) {
-  return /^-?\d+$/.test(value);
+  return /^-{0,1}\d*\.{0,1}\d+$/.test(value);
 }
 
 function get_txtnum(str) {
