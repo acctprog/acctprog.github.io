@@ -1,0 +1,612 @@
+<html>
+<head>
+<style>
+body {
+  font-family: sans-serif;
+  background-color: #ffdd22;
+}
+
+table {
+  border-collapse: collapse;
+  background-color: white;
+}
+
+table td, table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+table tr:nth-child(even){background-color: #f2f2f2;}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.c_next {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.d_boxed {
+  margin-top: 8px;
+  border: 1px solid green;
+  width: 40em;
+  padding: 15px;
+  line-height: 1.5;
+  background-color: white;
+}
+
+input[type=text] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+</style>
+</head>
+<script>
+
+s_story1 = "Executive Transportation Company (ETC) is an Edmonton based business group " + 
+  "that offers executive transportation to business executives travelling within Alberta. " +
+  "The company currently has a fleet of luxury sedans, stretch limousines and executive SUVs. <br><br>" +
+  "The company is contemplating buying a pre-owned Bell 427 helicopter for its transportation fleet. " +
+  "Although the helicopter is expensive, its versatility is expected to give the company access to " +
+  "a wider market. Alisha Jones, the Controller of the company has summarized the financial " +
+  "aspects of this capital investment project in the table given on the next slide. <br><br>" +
+  "She has asked you to do the capital budgeting analysis of this investment.";
+
+s_story2 = "Executive Transportation Company (ETC) is also considering the purchase " +
+  "of a luxury sedan. <br><br>The company has collected the data (on next slide) for two " +
+  "different models. The controller has  asked you to analyze the two options and " +
+  "make necessary recommendations.";
+
+s_ci = "Net after-tax operating cash inflows";
+s_y1 = "Year 1";
+s_y2 = "Year 2";
+s_y3 = "Year 3";
+s_y4 = "Year 4";
+s_y5 = "Year 5";
+s_y6 = "Year 6";
+
+s_cip = "Data - Capital Investment Project";
+s_v1  = s_coh = "Cost of helicopter";
+s_v2  = s_iwc = "Initial working capital requirement";
+s_v3  = s_ci1 = s_ci + " - " + s_y1;
+s_v4  = s_ci2 = s_ci + " - " + s_y2;
+s_v5  = s_ci3 = s_ci + " - " + s_y3;
+s_v6  = s_ci4 = s_ci + " - " + s_y4;
+s_v7  = s_ci5 = s_ci + " - " + s_y5;
+s_v8  = s_ci6 = s_ci + " - " + s_y6;
+s_v9  = s_srv = "Salvage (resale) value";
+s_v10 = s_wcr = "Working capital recovery";
+s_v11 = s_drc = "Discount rate (Cost of capital)";
+s_v12 = s_mpp = "Maximum payback period";
+s_ien = "Initial Expenditure Now";
+
+s_it0 = "Payback period";
+s_it1 = "Discounted payback period";
+s_it2 = "Net present value";
+s_it3 = "IRR";
+s_it4 = "PI";
+
+h_ppp = "What is the <b><u>payback period</u></b> of this project?";
+h_dpp = "What is the <b><u>discounted payback period</u></b> of this project?";
+h_npv = "What is the <b><u>net present value</u></b> of this project?";
+h_irr = "What is the <b><u>IRR</u></b> of this project?";
+h_pip = "What is the <b><u>PI</u></b> of this project?";
+
+a_hq1 = [h_ppp, h_dpp, h_npv, h_irr, h_pip];
+
+h_dec = "Should ETC undertake this project?";
+
+r_v1 = [15, 20, -100000];
+r_v2 = [10, 20, -10000];
+r_v3 = [50, 100, 10000];
+r_v4 = [45, 90, 10000];
+r_v5 = [40, 80, 10000];
+r_v6 = [35, 75, 10000];
+r_v7 = [35, 75, 10000];
+r_v8 = [30, 70, 10000];
+r_v9 = [40, 45, 10000];
+r_v11 = [7, 14, 0.01];
+r_v12 = [2, 10, 1]; // check
+
+function randbws(arr) {
+  var min = arr[0];
+  var max = arr[1];
+  var scale = arr[2];
+  return (Math.floor(Math.random() * (max - min + 1) + min)) * scale;
+}
+
+v1 = randbws(r_v1);
+v2 = randbws(r_v2);
+v3 = randbws(r_v3);
+v4 = randbws(r_v4);
+v5 = randbws(r_v5);
+v6 = randbws(r_v6);
+v7 = randbws(r_v7);
+v8 = randbws(r_v8);
+v9 = randbws(r_v9);
+v10 = -v2;
+v11 = randbws(r_v11);
+v12 = randbws(r_v12);
+
+cf = [v1+v2, v3, v4, v5, v6, v7, v8+v9+v10];
+pv = [0, 0, 0, 0, 0, 0, 0];
+pv[0]= cf[0];
+pv[1] = cf[1] / Math.pow(1 + v11, 1);
+pv[2] = cf[2] / Math.pow(1 + v11, 2);
+pv[3] = cf[3] / Math.pow(1 + v11, 3);
+pv[4] = cf[4] / Math.pow(1 + v11, 4);
+pv[5] = cf[5] / Math.pow(1 + v11, 5);
+pv[6] = cf[6] / Math.pow(1 + v11, 6);
+r_npv = 0;
+r_pi = 0;
+for (i = 0; i < 6; i++) {
+  r_npv += pv[i];
+  if (i != 0) r_pi += pv[i];
+}
+r_pi /= -pv[0];
+
+function gen_th(table_el, arr, drc) {
+  var thead = table_el.createTHead();
+  var row = thead.insertRow();
+  for (i = 0; i < 8; i++) {
+    var th = document.createElement("th");
+    var text = document.createTextNode(arr[0][i]);
+    th.appendChild(text);
+    row.appendChild(th);
+  }
+}
+
+function gen_td(table_el, arr, drc) {
+  for (i = 1; i < 7; i++) {
+    var row = table_el.insertRow();
+    if ((i < 6) || drc) {
+      for (j = 0; j < 8; j++) {
+        var cell = row.insertCell();
+        var text = document.createTextNode(arr[i][j]);
+        cell.appendChild(text);
+      }
+    }
+  }
+}
+
+function gen_table(table, arr, drc) {
+  var table_el = get_el(table);
+  gen_td(table_el, arr, drc);
+  gen_th(table_el, arr, drc);
+}
+
+function addCommas(nStr) {
+  nStr += '';
+  var x = nStr.split('.');
+  var x1 = x[0];
+  var x2 = x.length > 1 ? '.' + x[1] : '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x1)) {
+    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+  }
+  return x1 + x2;
+}
+
+function sf(num) {
+  return addCommas(num);
+}
+
+function fmt_pct(num) {
+  return (num * 100).toFixed(1) + "%";
+}
+
+tbl_arr = [["", s_ien, s_y1, s_y2, s_y3, s_y4, s_y5, s_y6],
+  [s_coh, sf(v1), "", "", "", "", "", ""],
+  [s_iwc, sf(v2), "", "", "", "", "", ""],
+  [s_ci,  "", sf(v3), sf(v4), sf(v5), sf(v6), sf(v7), sf(v8)],
+  [s_srv, "", "", "", "", "", "", sf(v9)],
+  [s_wcr, "", "", "", "", "", "", sf(v10)],
+  [s_drc, fmt_pct(v11), "", "", "", "", "", ""]];
+  
+
+function get_el(str) {
+  return document.getElementById(str);
+}
+
+function hide_el(str) {
+  get_el(str).style.display = "none";
+}
+
+function show_el(str) {
+  get_el(str).style.display = "block";
+}
+
+function doshow_el(str, doshow) {
+  if (doshow == 0) {
+    hide_el(str);
+  } else {
+    show_el(str);
+  }
+}
+
+function focus_el(arr) {
+  doshow_el("ds_story", arr[0]);
+  doshow_el("ds_data", arr[1]);
+  doshow_el("ds_main", arr[2]);
+  doshow_el("ds_score", arr[3]);
+}
+
+function set_el(str, txt) {
+  return get_el(str).innerHTML = txt;
+}
+
+function ael_el(str, func) {
+  get_el(str).addEventListener("click", func);
+}
+
+function clear_rad(str) {
+  get_el(str).checked = false;
+}
+
+function clear_txt(str) {
+  get_el(str).value = "";
+}
+
+function clear_table(str) {
+  get_el(str).innerHTML = "";
+}
+
+function get_rad(rad1, rad0) {
+  if (get_el(rad1).checked) return 1;
+  if (get_el(rad0).checked) return 0;
+  return null;
+}
+
+function is_numeric_val(value) {
+  return /^-?\d+$/.test(value);
+}
+
+function get_txtnum(str) {
+  var elval = get_el(str).value;
+  if (elval == "") return null;
+  if (elval[0] == "$") elval = elval.substring(1);
+  if (!is_numeric_val(elval)) return null;
+  var pelval = parseFloat(elval);
+  return pelval;
+}
+
+function gather_results(str, rad1, rad0) {
+  var res0 = get_txtnum(str);
+  var res1 = get_rad(rad1, rad0);
+  if ((res0 == null) || (res1 == null)) return null;
+  return [res0, res1];
+}
+
+num_intro_slides = 2;
+num_main_slides = 5;
+num_outro_slides = 1;
+max_slide_index = num_intro_slides + num_main_slides + num_outro_slides - 1;
+
+function next_slide_is_main(idx) {
+  var nidx = idx + 1;
+  return ((nidx >= num_intro_slides) &&
+    (nidx < num_intro_slides + num_main_slides));
+}
+
+function curr_slide_is_main(idx) {
+  return next_slide_is_main(idx - 1);
+}
+
+function get_midx(sidx) {
+  return sidx - num_intro_slides;
+}
+
+function gen_main_table(sidx) {
+  var drc = !next_slide_is_main(sidx);
+  gen_table("d_table", tbl_arr, drc);
+}
+
+function gen_main(sidx) {
+  clear_table("d_table");
+  gen_main_table(sidx);
+  set_el("d_q1", a_hq1[get_midx(sidx)]);
+  clear_txt("d_a1");
+  set_el("d_q2", h_dec);
+  clear_rad("d_rady");
+  clear_rad("d_radn");
+}
+
+exp_vals = [10, 11, 12, 13, 14];
+exp_decs = [0, 1, 0, 0, 1];
+
+res_vals = [];
+res_decs = [];
+
+res_scos = [];
+exp_scos = [];
+
+function sum_arr(arr) {
+  var res = 0;
+  var alen = arr.length;
+  for (i = 0; i < alen; i++) {
+    res += arr[i];
+  }
+  return res;
+}
+
+function fmt_val(num) {
+  return addCommas(num);
+}
+
+function fmt_dec(num) {
+  if (num == 0) return "No";
+  return "Yes";
+}
+
+function fmt_sco(num) {
+  return num;
+}
+
+function sim_vals(v1, v2) {
+  return v1.toFixed(1) == v2.toFixed(1);
+}
+
+function sim_decs(d1, d2) {
+  return d1 == d2;
+}
+
+function gen_scores() {
+  for (var i = 0; i < num_main_slides; i++) {
+    var ev = exp_vals[i];
+    var rv = res_vals[i];
+    var ed = exp_decs[i];
+    var rd = res_decs[i];
+    var sv = sim_vals(ev, rv);
+    var sd = sim_decs(ed, rd);
+    exp_scos[i] = 2;
+    var score = 0;
+    if (sv) score++;
+    if (sd) score++;
+    res_scos[i] = score;
+  }
+}
+
+function gen_scoreb() {
+  gen_scores();
+  
+  set_el("d_yv0", fmt_val(res_vals[0]));
+  set_el("d_yv1", fmt_val(res_vals[1]));
+  set_el("d_yv2", fmt_val(res_vals[2]));
+  set_el("d_yv3", fmt_val(res_vals[3]));
+  set_el("d_yv4", fmt_val(res_vals[4]));
+  
+  set_el("d_yd0", fmt_dec(res_decs[0]));
+  set_el("d_yd1", fmt_dec(res_decs[1]));
+  set_el("d_yd2", fmt_dec(res_decs[2]));
+  set_el("d_yd3", fmt_dec(res_decs[3]));
+  set_el("d_yd4", fmt_dec(res_decs[4]));
+  
+  set_el("d_ev0", fmt_val(exp_vals[0]));
+  set_el("d_ev1", fmt_val(exp_vals[1]));
+  set_el("d_ev2", fmt_val(exp_vals[2]));
+  set_el("d_ev3", fmt_val(exp_vals[3]));
+  set_el("d_ev4", fmt_val(exp_vals[4]));
+  
+  set_el("d_ed0", fmt_dec(exp_decs[0]));
+  set_el("d_ed1", fmt_dec(exp_decs[1]));
+  set_el("d_ed2", fmt_dec(exp_decs[2]));
+  set_el("d_ed3", fmt_dec(exp_decs[3]));
+  set_el("d_ed4", fmt_dec(exp_decs[4]));
+  
+  set_el("d_sc0", fmt_sco(res_scos[0]));
+  set_el("d_sc1", fmt_sco(res_scos[1]));
+  set_el("d_sc2", fmt_sco(res_scos[2]));
+  set_el("d_sc3", fmt_sco(res_scos[3]));
+  set_el("d_sc4", fmt_sco(res_scos[4]));
+  
+  var tscore = sum_arr(res_scos);
+  var mscore = sum_arr(exp_scos);
+  set_el("d_tscore", fmt_sco(tscore));
+  set_el("d_mscore", fmt_sco(mscore));
+}
+
+slide_index = -1;
+
+function move_next() {
+  if (slide_index == max_slide_index) {
+    return;
+  }
+  
+  if (slide_index == -1) {
+    focus_el([1, 0, 0, 0]);
+  } else if (slide_index == 0) {
+    focus_el([0, 1, 0, 0]);
+  } else {
+    if (curr_slide_is_main(slide_index)) {
+      var results = gather_results("d_a1", "d_rady", "d_radn");
+      if (results == null) {
+        alert("Please enter a valid number and choose a valid yes/no response");
+        return;
+      } else {
+        var midx = get_midx(slide_index);
+        res_vals[midx] = results[0];
+        res_decs[midx] = results[1];
+      }
+    }
+    if (next_slide_is_main(slide_index)) {
+      gen_main(slide_index + 1);
+      focus_el([0, 0, 1, 0]);
+    } else {
+      gen_scoreb();
+      focus_el([0, 0, 0, 1]);
+    }
+  }
+  
+  slide_index += 1;
+}
+
+function init_data() {
+  set_el("d_story", s_story1);
+  set_el("d_datah", s_cip);
+  set_el("d_hv1", s_v1);
+  set_el("d_hv2", s_v2);
+  set_el("d_hv3", s_v3);
+  set_el("d_hv4", s_v4);
+  set_el("d_hv5", s_v5);
+  set_el("d_hv6", s_v6);
+  set_el("d_hv7", s_v7);
+  set_el("d_hv8", s_v8);
+  set_el("d_hv9", s_v9);
+  set_el("d_hv11", s_v11);
+  set_el("d_hv12", s_v12);
+  set_el("d_bv1", sf(v1));
+  set_el("d_bv2", sf(v2));
+  set_el("d_bv3", sf(v3));
+  set_el("d_bv4", sf(v4));
+  set_el("d_bv5", sf(v5));
+  set_el("d_bv6", sf(v6));
+  set_el("d_bv7", sf(v7));
+  set_el("d_bv8", sf(v8));
+  set_el("d_bv9", sf(v9));
+  set_el("d_bv11", fmt_pct(v11));
+  set_el("d_bv12", sf(v12));
+  ael_el("d_next1", move_next);
+  ael_el("d_next2", move_next);
+  ael_el("d_next3", move_next);
+  set_el("d_it0", s_it0);
+  set_el("d_it1", s_it1);
+  set_el("d_it2", s_it2);
+  set_el("d_it3", s_it3);
+  set_el("d_it4", s_it4);
+}
+
+function init() {
+  init_data();
+  move_next();
+}
+
+</script>
+
+<div id="ds_story">
+  <div id="d_story" class="d_boxed"></div>
+  <button type="button" class="c_next" id="d_next1">Next &nbsp;&gt;&gt;</button>
+</div>
+
+<div id="ds_data">
+  <table id="d_data">
+    <thead><tr><th></th><th id="d_datah"></th></tr></thead>
+    <tbody>
+      <tr><td id="d_hv1" ></td><td id="d_bv1" ></td></tr>
+      <tr><td id="d_hv2" ></td><td id="d_bv2" ></td></tr>
+      <tr><td id="d_hv3" ></td><td id="d_bv3" ></td></tr>
+      <tr><td id="d_hv4" ></td><td id="d_bv4" ></td></tr>
+      <tr><td id="d_hv5" ></td><td id="d_bv5" ></td></tr>
+      <tr><td id="d_hv6" ></td><td id="d_bv6" ></td></tr>
+      <tr><td id="d_hv7" ></td><td id="d_bv7" ></td></tr>
+      <tr><td id="d_hv8" ></td><td id="d_bv8" ></td></tr>
+      <tr><td id="d_hv9" ></td><td id="d_bv9" ></td></tr>
+      <tr><td id="d_hv11"></td><td id="d_bv11"></td></tr>
+      <tr><td id="d_hv12"></td><td id="d_bv12"></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_next" id="d_next2">Next &nbsp;&gt;&gt;</button>
+</div>
+
+<div id="ds_main">
+  <table id="d_table">
+  </table>
+  <div class="d_boxed">
+    <div id="d_sec1">
+      <span id="d_q1"></span>
+      <input type="text" id="d_a1" />
+    </div>
+    <div id="d_sec2">
+      <span id="d_q2"></span>
+      <label><input type="radio" class="c_rad" name="n_rad" id="d_rady" value="y" />Yes</label>
+      <label><input type="radio" class="c_rad" name="n_rad" id="d_radn" value="n" />No</label>
+    </div>
+  </div>
+  <button type="button" class="c_next" id="d_next3">Next &nbsp;&gt;&gt;</button>
+</div>
+
+<div id="ds_score">
+  <table id="d_score">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Your value</th>
+        <th>Your decision</th>
+        <th>Expected value</th>
+        <th>Expected decision</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody id="d_scoreb">
+      <tr>
+        <td id="d_it0"></td>
+        <td id="d_yv0"></td>
+        <td id="d_yd0"></td>
+        <td id="d_ev0"></td>
+        <td id="d_ed0"></td>
+        <td id="d_sc0"></td>
+      </tr>
+      <tr>
+        <td id="d_it1"></td>
+        <td id="d_yv1"></td>
+        <td id="d_yd1"></td>
+        <td id="d_ev1"></td>
+        <td id="d_ed1"></td>
+        <td id="d_sc1"></td>
+      </tr>
+      <tr>
+        <td id="d_it2"></td>
+        <td id="d_yv2"></td>
+        <td id="d_yd2"></td>
+        <td id="d_ev2"></td>
+        <td id="d_ed2"></td>
+        <td id="d_sc2"></td>
+      </tr>
+      <tr>
+        <td id="d_it3"></td>
+        <td id="d_yv3"></td>
+        <td id="d_yd3"></td>
+        <td id="d_ev3"></td>
+        <td id="d_ed3"></td>
+        <td id="d_sc3"></td>
+      </tr>
+      <tr>
+        <td id="d_it4"></td>
+        <td id="d_yv4"></td>
+        <td id="d_yd4"></td>
+        <td id="d_ev4"></td>
+        <td id="d_ed4"></td>
+        <td id="d_sc4"></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div><b>Your score:</b> <span id="d_tscore"></span></div>
+    <div><b>Maximum score:</b> <span id="d_mscore"></span></div>
+  </div>
+  <button type="button" class="c_next" onClick="window.location.reload();">Retry with different numbers</button>
+</div>
+
+<script>
+
+init();
+
+</script>
+
+</html>
