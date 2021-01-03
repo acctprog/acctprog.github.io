@@ -60,6 +60,87 @@ input[type=text] {
 </head>
 <script>
 
+function uniroot(func) {
+  var a = 0
+    , b = 10
+    , c = a
+    , fa = func(a)
+    , fb = func(b)
+    , fc = fa
+    , s = 0
+    , fs = 0
+    , tol_act   // Actual tolerance
+    , new_step  // Step at this iteration
+    , prev_step // Distance from the last but one to the last approximation
+    , p         // Interpolation step is calculated in the form p/q; division is delayed until the last moment
+    , q
+    ;
+
+  errorTol = 0.00001;
+  maxIter = 100000;
+
+  while ( maxIter-- > 0 ) {
+  
+    prev_step = b - a;
+   
+    if ( Math.abs(fc) < Math.abs(fb) ) {
+      // Swap data for b to be the best approximation
+      a = b, b = c, c = a;
+      fa = fb, fb = fc, fc = fa;
+    }
+
+    tol_act = 1e-15 * Math.abs(b) + errorTol / 2;
+    new_step = ( c - b ) / 2;
+
+    if ( Math.abs(new_step) <= tol_act || fb === 0 ) {
+      return b; // Acceptable approx. is found
+    }
+
+    // Decide if the interpolation can be tried
+    if ( Math.abs(prev_step) >= tol_act && Math.abs(fa) > Math.abs(fb) ) {
+      // If prev_step was large enough and was in true direction, Interpolatiom may be tried
+      var t1, cb, t2;
+      cb = c - b;
+      if ( a === c ) { // If we have only two distinct points linear interpolation can only be applied
+        t1 = fb / fa;
+        p = cb * t1;
+        q = 1.0 - t1;
+      }
+      else { // Quadric inverse interpolation
+        q = fa / fc, t1 = fb / fc, t2 = fb / fa;
+        p = t2 * (cb * q * (q - t1) - (b - a) * (t1 - 1));
+        q = (q - 1) * (t1 - 1) * (t2 - 1);
+      }
+
+      if ( p > 0 ) {
+        q = -q;  // p was calculated with the opposite sign; make p positive
+      }
+      else {
+        p = -p;  // and assign possible minus to q
+      }
+
+      if ( p < ( 0.75 * cb * q - Math.abs( tol_act * q ) / 2 ) &&
+           p < Math.abs( prev_step * q / 2 ) ) { 
+        // If (b + p / q) falls in [b,c] and isn't too large it is accepted
+        new_step = p / q;
+      }
+ 
+      // If p/q is too large then the bissection procedure can reduce [b,c] range to more extent
+    }
+
+    if ( Math.abs( new_step ) < tol_act ) { // Adjust the step to be not less than tolerance
+      new_step = ( new_step > 0 ) ? tol_act : -tol_act;
+    }
+
+    a = b, fa = fb;     // Save the previous approx.
+    b += new_step, fb = func(b);  // Do step to a new approxim.
+
+    if ( (fb > 0 && fc > 0) || (fb < 0 && fc < 0) ) {
+      c = a, fc = fa; // Adjust c for it to have a sign opposite to that of b
+    }
+  }
+}
+
 s_story1 = "Executive Transportation Company (ETC) is an Edmonton based business group " + 
   "that offers executive transportation to business executives travelling within Alberta. " +
   "The company currently has a fleet of luxury sedans, stretch limousines and executive SUVs. <br><br>" +
@@ -146,13 +227,31 @@ v11 = randbws(r_v11);
 v12 = randbws(r_v12);
 
 cf = [v1+v2, v3, v4, v5, v6, v7, v8+v9+v10];
+cf0 = cf[0];
+cf1 = cf[1];
+cf2 = cf[2];
+cf3 = cf[3];
+cf4 = cf[4];
+cf5 = cf[5];
+cf6 = cf[6];
+
+function irrfun(x) {
+  var x1 = 1 / (1 + x);
+  var x2 = x1 * x1;
+  var x3 = x2 * x1;
+  var x4 = x3 * x1;
+  var x5 = x4 * x1;
+  var x6 = x5 * x1;
+  return cf0 + (cf1 * x1) + (cf2 * x2) + (cf3 * x3) + (cf4 * x4) + (cf5 * x5) + (cf6 * x6);
+}
+
 pv = [cf[0]];
 for (var i = 1; i < 7; i++) {
     pv[i] = cf[i] / Math.pow(1 + v11, i);
 }
 r_npv = 0;
 r_pi = 0;
-for (i = 0; i < 6; i++) {
+for (i = 0; i < 7; i++) {
   r_npv += pv[i];
   if (i != 0) r_pi += pv[i];
 }
@@ -170,6 +269,8 @@ r_pp = 0;
 for (var i = 0; i < 7; i++) {
     r_pp += r_ppa[i];
 }
+
+r_irr = uniroot(irrfun) * 100;
 
 pvccf= [pv[0]];
 for (var i = 1; i < 7; i++) {
@@ -231,7 +332,7 @@ function sf(num) {
 }
 
 function fmt_pct(num) {
-  return (num * 100).toFixed(1) + "%";
+  return (num * 100).toFixed(2) + "%";
 }
 
 tbl_arr = [["", s_ien, s_y1, s_y2, s_y3, s_y4, s_y5, s_y6],
@@ -304,6 +405,8 @@ function get_txtnum(str) {
   var elval = get_el(str).value;
   if (elval == "") return null;
   if (elval[0] == "$") elval = elval.substring(1);
+  if (elval.endsWith("%")) elval = elval.substring(elval.length - 1);
+  elval = elval.replace(",", "");
   if (!is_numeric_val(elval)) return null;
   var pelval = parseFloat(elval);
   return pelval;
@@ -350,7 +453,7 @@ function gen_main(sidx) {
   clear_rad("d_radn");
 }
 
-exp_vals = [r_pp, r_dpp, r_npv, 999, r_pi];
+exp_vals = [r_pp, r_dpp, r_npv, r_irr, r_pi];
 exp_decs = [0, 1, 0, 0, 1];
 exp_decs[0] = (exp_vals[0] > v12) ? 0 : 1;
 exp_decs[1] = (exp_vals[1] > v12) ? 0 : 1;
@@ -387,7 +490,11 @@ function fmt_sco(num) {
 }
 
 function sim_vals(v1, v2) {
-  return (Math.abs(v1 - v2) <= 0.2);
+  return (Math.abs(v1 - v2) < 0.011);
+}
+
+function sim_vals_whole(v1, v2) {
+    return (Math.abs(v1 - v2) < 1.1);
 }
 
 function sim_decs(d1, d2) {
@@ -557,10 +664,10 @@ function init() {
   <div class="d_boxed">
     <div id="d_sec1">
       <span id="d_q1"></span>
-      <input type="text" id="d_a1" />
+      <input type="text" id="d_a1" autocomplete="off" />
     </div>
     <div id="d_sec2">
-      <span id="d_q2"></span>
+      <div id="d_q2"></div>
       <label><input type="radio" class="c_rad" name="n_rad" id="d_rady" value="y" />Yes</label>
       <label><input type="radio" class="c_rad" name="n_rad" id="d_radn" value="n" />No</label>
     </div>
