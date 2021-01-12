@@ -28,6 +28,18 @@ function addCommas0(x) {
   return x;
 }
 
+function addCommas(nStr) {
+  nStr += '';
+  var x = nStr.split('.');
+  var x1 = x[0];
+  var x2 = x.length > 1 ? '.' + x[1] : '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x1)) {
+    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+  }
+  return x1 + x2;
+}
+
 function sfn(str, v, n) {
   document.getElementById(str).innerHTML = addCommas0(v.toFixed(n));
 }
@@ -391,10 +403,10 @@ function cmparr(arr_d, arr_f, nums, strs, pct_index, all_from) {
       arr_f[i] = (nums[i]*100).toFixed(1) + "%";
     } else if (i >= all_from && all_from > -1) {
       arr_d[i] = cmpnum(nums[i], strs[i], true, false);
-      arr_f[i] = nums[i].toFixed(1);
+      arr_f[i] = addCommas(nums[i].toFixed(1));
     } else {
       arr_d[i] = cmpnum(nums[i], strs[i], false, false);
-      arr_f[i] = nums[i].toFixed(0);
+      arr_f[i] = addCommas0(nums[i].toFixed(0));
     }
   }
 }
@@ -468,27 +480,27 @@ function goPrev() {
       </tr>
     </thead>
     <tbody>
-      <tr><td><b>Assets</b></td><td>2021</td><td>2020</td></tr>
-      <tr><td>Cash</td><td id="d_h00"></td><td id="d_h01"></td></tr>
-      <tr><td>Short-term investments</td><td id="d_h10"></td><td id="d_h11"></td></tr>
-      <tr><td>Accounts receivable</td><td id="d_h20"></td><td id="d_h21"></td></tr>
-      <tr><td>Inventory</td><td id="d_h30"></td><td id="d_h31"></td></tr>
-      <tr><td>Prepaid expenses</td><td id="d_h40"></td><td id="d_h41"></td></tr>
-      <tr><td><b>Total current assets</b></td><td><b><span id="d_h50"></span></b></td><td><b><span id="d_h51"></span></b></td></tr>
-      <tr><td>Property, plant and equipment</td><td id="d_h60"></td><td id="d_h61"></td></tr>
-      <tr><td>Less: Accumulated depreciation</td><td id="d_h70"></td><td id="d_h71"></td></tr>
-      <tr><td><b>Property, plant and equipment (net)</b></td><td><b><span id="d_h80"></span></b></td><td><b><span id="d_h81"></span></b></td></tr>
-      <tr><td><b>Total assets</b></td><td><b><span id="d_h90"></span></b></td><td><b><span id="d_h91"></span></b></td></tr>
-      <tr><td><b>Liabilities and Equity</b></td><td id="d_h100"></td><td id="d_h101"></td></tr>
-      <tr><td>Accounts payable</td><td id="d_h110"></td><td id="d_h111"></td></tr>
-      <tr><td>Short-term notes payable</td><td id="d_h120"></td><td id="d_h121"></td></tr>
-      <tr><td>Accrued liabilities</td><td id="d_h130"></td><td id="d_h131"></td></tr>
-      <tr><td><b>Total current liabilities</b></td><td><b><span id="d_h140"></span></b></td><td><b><span id="d_h141"></span></b></td></tr>
-      <tr><td>Long-term debt</td><td id="d_h150"></td><td id="d_h151"></td></tr>
-      <tr><td>Common stock</td><td id="d_h160"></td><td id="d_h161"></td></tr>
-      <tr><td>Retained earnings</td><td id="d_h170"></td><td id="d_h171"></td></tr>
-      <tr><td><b>Total equity</b></td><td><b><span id="d_h180"></span></b></td><td><b><span id="d_h181"></span></b></td></tr>
-      <tr><td><b>Total liabilities and equity</b></td><td><b><span id="d_h190"></span></b></td><td><b><span id="d_h191"></span></b></td></tr>
+      <tr><td><b>Assets</b></td><td><b>2021</b></td><td><b>2020</b></td></tr>
+      <tr><td>Cash</td><td id="d_h00" class=r></td><td id="d_h01" class=r></td></tr>
+      <tr><td>Short-term investments</td><td id="d_h10" class=r></td><td id="d_h11" class=r></td></tr>
+      <tr><td>Accounts receivable</td><td id="d_h20" class=r></td><td id="d_h21" class=r></td></tr>
+      <tr><td>Inventory</td><td id="d_h30" class=r></td><td id="d_h31" class=r></td></tr>
+      <tr><td>Prepaid expenses</td><td id="d_h40" class=r></td><td id="d_h41" class=r></td></tr>
+      <tr><td><b>Total current assets</b></td><td class=r><b><span id="d_h50"></span></b></td><td class=r><b><span id="d_h51"></span></b></td></tr>
+      <tr><td>Property, plant and equipment</td><td id="d_h60" class=r></td><td id="d_h61" class=r></td></tr>
+      <tr><td>Less: Accumulated depreciation</td><td id="d_h70" class=r></td><td id="d_h71" class=r></td></tr>
+      <tr><td><b>Property, plant and equipment (net)</b></td><td class=r><b><span id="d_h80"></span></b></td><td class=r><b><span id="d_h81"></span></b></td></tr>
+      <tr><td><b>Total assets</b></td><td class=r><b><span id="d_h90"></span></b></td><td class=r><b><span id="d_h91"></span></b></td></tr>
+      <tr><td><b>Liabilities and Equity</b></td><td id="d_h100" class=r></td><td id="d_h101" class=r></td></tr>
+      <tr><td>Accounts payable</td><td id="d_h110" class=r></td><td id="d_h111" class=r></td></tr>
+      <tr><td>Short-term notes payable</td><td id="d_h120" class=r></td><td id="d_h121" class=r></td></tr>
+      <tr><td>Accrued liabilities</td><td id="d_h130" class=r></td><td id="d_h131" class=r></td></tr>
+      <tr><td><b>Total current liabilities</b></td><td class=r><b><span id="d_h140"></span></b></td><td class=r><b><span id="d_h141"></span></b></td></tr>
+      <tr><td>Long-term debt</td><td id="d_h150" class=r></td><td id="d_h151" class=r></td></tr>
+      <tr><td>Common stock</td><td id="d_h160" class=r></td><td id="d_h161" class=r></td></tr>
+      <tr><td>Retained earnings</td><td id="d_h170" class=r></td><td id="d_h171" class=r></td></tr>
+      <tr><td><b>Total equity</b></td><td class=r><b><span id="d_h180"></span></b></td><td class=r><b><span id="d_h181"></span></b></td></tr>
+      <tr><td><b>Total liabilities and equity</b></td><td class=r><b><span id="d_h190"></span></b></td><td class=r><b><span id="d_h191"></span></b></td></tr>
   </table>
   <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
   <button type="button" class="c_nav" onclick="goNext()">Next</button>
@@ -503,16 +515,16 @@ function goPrev() {
     </thead>
     <tbody>
       <tr><td></td><td><b>2021</b></td><td><b>2020</b></td></tr>
-      <tr><td>Sales</td><td id="d_i00"></td><td id="d_i01"></td></tr>
-      <tr><td>Cost of goods sold</td><td id="d_i10"></td><td id="d_i11"></td></tr>
-      <tr><td><b>&nbsp;&nbsp;Gross profit</b></td><td><b><span id="d_i20"></span></b></td><td><b><span id="d_i21"></span></b></td></tr>
-      <tr><td>Other operating expenses</td><td id="d_i30"></td><td id="d_i31"></td></tr>
-      <tr><td>Depreciation expense</td><td id="d_i40"></td><td id="d_i41"></td></tr>
-      <tr><td><b>Operating income (EBIT)</b></td><td><b><span id="d_i50"></span></b></td><td><b><span id="d_i51"></span></b></td></tr>
-      <tr><td>Interest expense</td><td id="d_i60"></td><td id="d_i61"></td></tr>
-      <tr><td><b>Earnings before taxes</b></td><td><b><span id="d_i70"></span></b></td><td><b><span id="d_i71"></span></b></td></tr>
-      <tr><td>Taxes</td><td id="d_i80"></td><td id="d_i81"></td></tr>
-      <tr><td>Net income</td><td id="d_i90"></td><td id="d_i91"></td></tr>
+      <tr><td>Sales</td><td id="d_i00" class=r></td><td id="d_i01" class=r></td></tr>
+      <tr><td>Cost of goods sold</td><td id="d_i10" class=r></td><td id="d_i11" class=r></td></tr>
+      <tr><td><b>&nbsp;&nbsp;Gross profit</b></td><td class=r><b><span id="d_i20"></span></b></td><td class=r><b><span id="d_i21"></span></b></td></tr>
+      <tr><td>Other operating expenses</td><td id="d_i30" class=r></td><td id="d_i31" class=r></td></tr>
+      <tr><td>Depreciation expense</td><td id="d_i40" class=r></td><td id="d_i41" class=r></td></tr>
+      <tr><td><b>Operating income (EBIT)</b></td><td class=r><b><span id="d_i50"></span></b></td><td class=r><b><span id="d_i51"></span></b></td></tr>
+      <tr><td>Interest expense</td><td id="d_i60" class=r></td><td id="d_i61" class=r></td></tr>
+      <tr><td><b>Earnings before taxes</b></td><td class=r><b><span id="d_i70"></span></b></td><td class=r><b><span id="d_i71"></span></b></td></tr>
+      <tr><td>Taxes</td><td id="d_i80" class=r></td><td id="d_i81" class=r></td></tr>
+      <tr><td>Net income</td><td id="d_i90" class=r></td><td id="d_i91" class=r></td></tr>
     </tbody>
   </table>
   <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
@@ -575,7 +587,7 @@ function goPrev() {
   <table class="treg">
     <thead>
       <tr>
-        <th colspan="2">Calculate FCF, ROIC and EVA for 2021</th>
+        <th colspan="2">Calculate FCF, ROIC and EVA for 2021 (alternative method)</th>
       </tr>
     </thead>
     <tbody>
@@ -656,46 +668,46 @@ function goPrev() {
       </tr>
     </thead>
     <tbody>
-      <tr><td>1</td><td>NOPAT - 2021</td><td id="d_s00"></td><td id="d_s01"></td><td id="d_s02"></td></tr>
-      <tr><td>1</td><td>Operating current assets</td><td id="d_s10"></td><td id="d_s11"></td><td id="d_s12"></td></tr>
-      <tr><td>1</td><td>Operating current liabilities</td><td id="d_s20"></td><td id="d_s21"></td><td id="d_s22"></td></tr>
-      <tr><td>1</td><td>NOWC (2021)</td><td id="d_s30"></td><td id="d_s31"></td><td id="d_s32"></td></tr>
-      <tr><td>1</td><td>Operating current assets</td><td id="d_s40"></td><td id="d_s41"></td><td id="d_s42"></td></tr>
-      <tr><td>1</td><td>Operating current liabilities</td><td id="d_s50"></td><td id="d_s51"></td><td id="d_s52"></td></tr>
-      <tr><td>1</td><td>NOWC (2020)</td><td id="d_s60"></td><td id="d_s61"></td><td id="d_s62"></td></tr>
-      <tr><td>1</td><td>TNOC - 2021</td><td id="d_s70"></td><td id="d_s71"></td><td id="d_s72"></td></tr>
-      <tr><td>1</td><td>TNOC - 2020</td><td id="d_s80"></td><td id="d_s81"></td><td id="d_s82"></td></tr>
-      <tr><td>1</td><td>Free cash flow - 2021</td><td id="d_s90"></td><td id="d_s91"></td><td id="d_s92"></td></tr>
-      <tr><td>1</td><td>ROIC - 2021</td><td id="d_s100"></td><td id="d_s101"></td><td id="d_s102"></td></tr>
-      <tr><td>1</td><td>EVA - 2021</td><td id="d_s110"></td><td id="d_s111"></td><td id="d_s112"></td></tr>
-      <tr><td>2</td><td>After-tax interest payment</td><td id="d_s120"></td><td id="d_s121"></td><td id="d_s122"></td></tr>
-      <tr><td>2</td><td>(Increase) or reduction in debt</td><td id="d_s130"></td><td id="d_s131"></td><td id="d_s132"></td></tr>
-      <tr><td>2</td><td>Cash dividend</td><td id="d_s140"></td><td id="d_s141"></td><td id="d_s142"></td></tr>
-      <tr><td>2</td><td>Stock buy back or issuance</td><td id="d_s150"></td><td id="d_s151"></td><td id="d_s152"></td></tr>
-      <tr><td>2</td><td>Purchase or (sale) of mark. securities</td><td id="d_s160"></td><td id="d_s161"></td><td id="d_s162"></td></tr>
-      <tr><td>2</td><td>Sum</td><td id="d_s170"></td><td id="d_s171"></td><td id="d_s172"></td></tr>
-      <tr><td>3</td><td>Operating cash flows</td><td id="d_s180"></td><td id="d_s181"></td><td id="d_s182"></td></tr>
-      <tr><td>3</td><td>Operating current assets</td><td id="d_s190"></td><td id="d_s191"></td><td id="d_s192"></td></tr>
-      <tr><td>3</td><td>Operating current liabilities</td><td id="d_s200"></td><td id="d_s201"></td><td id="d_s202"></td></tr>
-      <tr><td>3</td><td>NOWC (2021)</td><td id="d_s210"></td><td id="d_s211"></td><td id="d_s212"></td></tr>
-      <tr><td>3</td><td>Operating current assets</td><td id="d_s220"></td><td id="d_s221"></td><td id="d_s222"></td></tr>
-      <tr><td>3</td><td>Operating current liabilities</td><td id="d_s230"></td><td id="d_s231"></td><td id="d_s232"></td></tr>
-      <tr><td>3</td><td>NOWC (2020)</td><td id="d_s240"></td><td id="d_s241"></td><td id="d_s242"></td></tr>
-      <tr><td>3</td><td>Change in NOWC</td><td id="d_s250"></td><td id="d_s251"></td><td id="d_s252"></td></tr>
-      <tr><td>3</td><td>Change in P, P and E</td><td id="d_s260"></td><td id="d_s261"></td><td id="d_s262"></td></tr>
-      <tr><td>3</td><td>Free cash flow - 2021</td><td id="d_s270"></td><td id="d_s271"></td><td id="d_s272"></td></tr>
-      <tr><td>4</td><td>Net working capital - 2021</td><td id="d_s280"></td><td id="d_s281"></td><td id="d_s282"></td></tr>
-      <tr><td>4</td><td>Inventory conversion period - 2021</td><td id="d_s290"></td><td id="d_s291"></td><td id="d_s292"></td></tr>
-      <tr><td>4</td><td>Receivables collection period - 2021</td><td id="d_s300"></td><td id="d_s301"></td><td id="d_s302"></td></tr>
-      <tr><td>4</td><td>Operating cycle - 2021</td><td id="d_s310"></td><td id="d_s311"></td><td id="d_s312"></td></tr>
-      <tr><td>4</td><td>Payable deferral period - 2021</td><td id="d_s320"></td><td id="d_s321"></td><td id="d_s322"></td></tr>
-      <tr><td>4</td><td>Cash conversion cycle - 2021</td><td id="d_s330"></td><td id="d_s331"></td><td id="d_s332"></td></tr>
-      <tr><td>5</td><td>Net working capital - 2020</td><td id="d_s340"></td><td id="d_s341"></td><td id="d_s342"></td></tr>
-      <tr><td>5</td><td>Inventory conversion period - 2020</td><td id="d_s350"></td><td id="d_s351"></td><td id="d_s352"></td></tr>
-      <tr><td>5</td><td>Receivables collection period - 2020</td><td id="d_s360"></td><td id="d_s361"></td><td id="d_s362"></td></tr>
-      <tr><td>5</td><td>Payable deferral period - 2020</td><td id="d_s370"></td><td id="d_s371"></td><td id="d_s372"></td></tr>
-      <tr><td>5</td><td>Cash conversion cycle -2020</td><td id="d_s380"></td><td id="d_s381"></td><td id="d_s382"></td></tr>
-      <tr><td>5</td><td>Increase (decrease) in CCC</td><td id="d_s390"></td><td id="d_s391"></td><td id="d_s392"></td></tr>
+      <tr><td>1</td><td>NOPAT - 2021</td><td id="d_s00" class=r></td><td id="d_s01" class=r></td><td id="d_s02"></td></tr>
+      <tr><td>1</td><td>Operating current assets</td><td id="d_s10" class=r></td><td id="d_s11" class=r></td><td id="d_s12"></td></tr>
+      <tr><td>1</td><td>Operating current liabilities</td><td id="d_s20" class=r></td><td id="d_s21" class=r></td><td id="d_s22"></td></tr>
+      <tr><td>1</td><td>NOWC (2021)</td><td id="d_s30" class=r></td><td id="d_s31" class=r></td><td id="d_s32"></td></tr>
+      <tr><td>1</td><td>Operating current assets</td><td id="d_s40" class=r></td><td id="d_s41" class=r></td><td id="d_s42"></td></tr>
+      <tr><td>1</td><td>Operating current liabilities</td><td id="d_s50" class=r></td><td id="d_s51" class=r></td><td id="d_s52"></td></tr>
+      <tr><td>1</td><td>NOWC (2020)</td><td id="d_s60" class=r></td><td id="d_s61" class=r></td><td id="d_s62"></td></tr>
+      <tr><td>1</td><td>TNOC - 2021</td><td id="d_s70" class=r></td><td id="d_s71" class=r></td><td id="d_s72"></td></tr>
+      <tr><td>1</td><td>TNOC - 2020</td><td id="d_s80" class=r></td><td id="d_s81" class=r></td><td id="d_s82"></td></tr>
+      <tr><td>1</td><td>Free cash flow - 2021</td><td id="d_s90" class=r></td><td id="d_s91" class=r></td><td id="d_s92"></td></tr>
+      <tr><td>1</td><td>ROIC - 2021</td><td id="d_s100" class=r></td><td id="d_s101" class=r></td><td id="d_s102"></td></tr>
+      <tr><td>1</td><td>EVA - 2021</td><td id="d_s110" class=r></td><td id="d_s111" class=r></td><td id="d_s112"></td></tr>
+      <tr><td>2</td><td>After-tax interest payment</td><td id="d_s120" class=r></td><td id="d_s121" class=r></td><td id="d_s122"></td></tr>
+      <tr><td>2</td><td>(Increase) or reduction in debt</td><td id="d_s130" class=r></td><td id="d_s131" class=r></td><td id="d_s132"></td></tr>
+      <tr><td>2</td><td>Cash dividend</td><td id="d_s140" class=r></td><td id="d_s141" class=r></td><td id="d_s142"></td></tr>
+      <tr><td>2</td><td>Stock buy back or issuance</td><td id="d_s150" class=r></td><td id="d_s151" class=r></td><td id="d_s152"></td></tr>
+      <tr><td>2</td><td>Purchase or (sale) of mark. securities</td><td id="d_s160" class=r></td><td id="d_s161" class=r></td><td id="d_s162"></td></tr>
+      <tr><td>2</td><td>Sum</td><td id="d_s170" class=r></td><td id="d_s171" class=r></td><td id="d_s172"></td></tr>
+      <tr><td>3</td><td>Operating cash flows</td><td id="d_s180" class=r></td><td id="d_s181" class=r></td><td id="d_s182"></td></tr>
+      <tr><td>3</td><td>Operating current assets</td><td id="d_s190" class=r></td><td id="d_s191" class=r></td><td id="d_s192"></td></tr>
+      <tr><td>3</td><td>Operating current liabilities</td><td id="d_s200" class=r></td><td id="d_s201" class=r></td><td id="d_s202"></td></tr>
+      <tr><td>3</td><td>NOWC (2021)</td><td id="d_s210" class=r></td><td id="d_s211" class=r></td><td id="d_s212"></td></tr>
+      <tr><td>3</td><td>Operating current assets</td><td id="d_s220" class=r></td><td id="d_s221" class=r></td><td id="d_s222"></td></tr>
+      <tr><td>3</td><td>Operating current liabilities</td><td id="d_s230" class=r></td><td id="d_s231" class=r></td><td id="d_s232"></td></tr>
+      <tr><td>3</td><td>NOWC (2020)</td><td id="d_s240" class=r></td><td id="d_s241" class=r></td><td id="d_s242"></td></tr>
+      <tr><td>3</td><td>Change in NOWC</td><td id="d_s250" class=r></td><td id="d_s251" class=r></td><td id="d_s252"></td></tr>
+      <tr><td>3</td><td>Change in P, P and E</td><td id="d_s260" class=r></td><td id="d_s261" class=r></td><td id="d_s262"></td></tr>
+      <tr><td>3</td><td>Free cash flow - 2021</td><td id="d_s270" class=r></td><td id="d_s271" class=r></td><td id="d_s272"></td></tr>
+      <tr><td>4</td><td>Net working capital - 2021</td><td id="d_s280" class=r></td><td id="d_s281" class=r></td><td id="d_s282"></td></tr>
+      <tr><td>4</td><td>Inventory conversion period - 2021</td><td id="d_s290" class=r></td><td id="d_s291" class=r></td><td id="d_s292"></td></tr>
+      <tr><td>4</td><td>Receivables collection period - 2021</td><td id="d_s300" class=r></td><td id="d_s301" class=r></td><td id="d_s302"></td></tr>
+      <tr><td>4</td><td>Operating cycle - 2021</td><td id="d_s310" class=r></td><td id="d_s311" class=r></td><td id="d_s312"></td></tr>
+      <tr><td>4</td><td>Payable deferral period - 2021</td><td id="d_s320" class=r></td><td id="d_s321" class=r></td><td id="d_s322"></td></tr>
+      <tr><td>4</td><td>Cash conversion cycle - 2021</td><td id="d_s330" class=r></td><td id="d_s331" class=r></td><td id="d_s332"></td></tr>
+      <tr><td>5</td><td>Net working capital - 2020</td><td id="d_s340" class=r></td><td id="d_s341" class=r></td><td id="d_s342"></td></tr>
+      <tr><td>5</td><td>Inventory conversion period - 2020</td><td id="d_s350" class=r></td><td id="d_s351" class=r></td><td id="d_s352"></td></tr>
+      <tr><td>5</td><td>Receivables collection period - 2020</td><td id="d_s360" class=r></td><td id="d_s361" class=r></td><td id="d_s362"></td></tr>
+      <tr><td>5</td><td>Payable deferral period - 2020</td><td id="d_s370" class=r></td><td id="d_s371" class=r></td><td id="d_s372"></td></tr>
+      <tr><td>5</td><td>Cash conversion cycle -2020</td><td id="d_s380" class=r></td><td id="d_s381" class=r></td><td id="d_s382"></td></tr>
+      <tr><td>5</td><td>Increase (decrease) in CCC</td><td id="d_s390" class=r></td><td id="d_s391" class=r></td><td id="d_s392"></td></tr>
     </tbody>
   </table>
   <div class="d_boxed">
@@ -726,6 +738,10 @@ table {
 table td, table th {
   border: 1px solid #ddd;
   padding: 8px;
+}
+
+td.r {
+  text-align: right;
 }
 
 .tstripe tr:nth-child(even){background-color: #f2f2f2;}
