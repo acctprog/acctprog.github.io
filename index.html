@@ -1,5 +1,717 @@
 <html>
 <head>
+</head>
+<script>
+
+function set_el(str, txt) {
+  document.getElementById(str).innerHTML = txt;
+}
+
+function get_el_value(str) {
+  return document.getElementById(str).value;
+}
+
+function doshow_el(str, doshow) {
+  if (doshow == 0) {
+    document.getElementById(str).style.display = "none";
+  } else {
+    document.getElementById(str).style.display = "block";
+  }
+}
+
+function addCommas0(x) {
+  x += '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x)) {
+    x = x.replace(rgx, '$1' + ',' + '$2');
+  }
+  return x;
+}
+
+function sfn(str, v, n) {
+  document.getElementById(str).innerHTML = addCommas0(v.toFixed(n));
+}
+
+function sf0(str, v) {
+  sfn(str, v, 0);
+}
+
+function sf1(str, v) {
+  sfn(str, v, 1);
+}
+
+function se0(str, v) {
+  sf0(str + "1", v);
+}
+
+function sd0(str, arr) {
+  sf0(str + "0", arr[0]);
+  sf0(str + "1", arr[1]);
+}
+
+r_a1 = [4, 6, 100];
+r_a2 = [5, 10, 10];
+r_a3 = [180, 220, 100];
+r_a4 = [200, 250, 100];
+r_a5 = [4, 6, 100];
+r_a6 = [75, 75, 1000];
+r_a7 = [35, 35, 1000];
+r_a8 = [20, 22, 1000];
+r_a9 = [8, 10, 1000];
+r_a10 = [10, 13, 100];
+r_a11 = [3, 6, 1000];
+r_a12 = [30, 30, 1000];
+r_a14 = [15, 18, 0.01];
+
+r_b1 = [6, 8, 100];
+r_b2 = [30, 40, 100];
+r_b3 = [150, 160, 100];
+r_b4 = [170, 185, 100];
+r_b5 = [3, 5, 100];
+r_b6 = [70, 70, 1000];
+r_b7 = [28, 28, 1000];
+r_b8 = [18, 20, 1000];
+r_b9 = [8, 10, 1000];
+r_b10 = [7, 9, 100];
+r_b11 = [3, 6, 1000];
+r_b12 = [30, 30, 1000];
+
+r_c1 = [130, 140, 1000];
+r_c2 = [80, 90, 1000];
+r_c3 = [150, 180, 100];
+r_c6 = [30, 35, 0.01];
+
+r_d1 = [110, 120, 1000];
+r_d2 = [72, 76, 1000];
+r_d3 = [130, 150, 100];
+
+function randbws(arr) {
+    var min = arr[0];
+    var max = arr[1];
+    var scale = arr[2];
+    if (min == max) return min * scale;
+    return (Math.floor(Math.random() * (max - min + 1) + min)) * scale;
+}
+
+function randchoose(arr) {
+    var x1 = arr[0];
+    var x2 = arr[1];
+    var scale = arr[2];
+    var x = Math.random() < 0.5 ? x1 : x2;
+    return x * scale;
+}
+
+a1 = randbws(r_a1);
+a2 = randbws(r_a2);
+a3 = randbws(r_a3);
+a4 = randbws(r_a4);
+a5 = randbws(r_a5);
+a6 = randbws(r_a6);
+a7 = randbws(r_a7);
+a8 = randbws(r_a8);
+a9 = randbws(r_a9);
+a10 = randbws(r_a10);
+a11 = randbws(r_a11);
+a12 = randbws(r_a12);
+a14 = randchoose(r_a14);
+
+b1 = randbws(r_b1);
+b2 = randbws(r_b2);
+b3 = randbws(r_b3);
+b4 = randbws(r_b4);
+b5 = randbws(r_b5);
+b6 = randbws(r_b6);
+b7 = randbws(r_b7);
+b8 = randbws(r_b8);
+b9 = randbws(r_b9);
+b10 = randbws(r_b10);
+b11 = randbws(r_b11);
+b12 = randbws(r_b12);
+
+c1 = randbws(r_c1);
+c2 = randbws(r_c2);
+c3 = randbws(r_c3);
+c6 = randchoose(r_c6);
+
+d1 = randbws(r_d1);
+d2 = randbws(r_d2);
+d3 = randbws(r_d3);
+d6 = c6;
+
+function addarr2(a, b) {
+    return [a[0]+b[0], a[1]+b[1]];
+}
+
+function addarr3(a, b, c) {
+    return [a[0]+b[0]+c[0], a[1]+b[1]+c[1]];
+}
+
+function addarr4(a, b, c, d) {
+    return [a[0]+b[0]+c[0]+d[0], a[1]+b[1]+c[1]+d[1]];
+}
+
+function addarr5(a, b, c, d, e) {
+    return [a[0]+b[0]+c[0]+d[0]+e[0], a[1]+b[1]+c[1]+d[1]+e[1]];
+}
+
+function addarrmulsca(a, b, c) {
+    return [c*(a[0]+b[0]), c*(a[1]+b[1])];
+}
+
+function subarr2(a, b) {
+    return [a[0]-b[0], a[1]-b[1]];
+}
+
+function subarr3(a, b, c) {
+    return [a[0]-b[0]-c[0], a[1]-b[1]-c[1]];
+}
+
+function subarr4(a, b, c, d) {
+    return [a[0]-b[0]-c[0]-d[0], a[1]-b[1]-c[1]-d[1]];
+}
+
+function submulsec(a, b, c) {
+    var x = a - b;
+    return [x, c*x];
+}
+
+function mularr2(a, b) {
+    return [a[0]*b[0], a[1]*b[1]];
+}
+
+h_cas = [a1, b1];
+h_sti = [a2, b2];
+h_acr = [a3, b3];
+h_inv = [a4, b4];
+h_pre = [a5, b5];
+h_tca = addarr5(h_cas, h_sti, h_acr, h_inv, h_pre);
+h_ppe = [a6, b6];
+h_lad = [a7, b7];
+h_ppn = subarr2(h_ppe, h_lad);
+h_tas = addarr2(h_tca, h_ppn);
+h_acp = [a8, b8];
+h_snp = [a9, b9];
+h_acl = [a10, b10];
+h_tcl = addarr3(h_acp, h_snp, h_acl);
+h_ltd = [a11, b11];
+h_cos = [a12, b12];
+h_ree = subarr4(h_tas, h_tcl, h_ltd, h_cos);
+h_teq = addarr2(h_cos, h_ree);
+h_tle = addarr3(h_tcl, h_ltd, h_teq);
+
+i_sal = [c1, d1];
+i_cgs = [c2, d2];
+i_grp = subarr2(i_sal, i_cgs);
+i_ooe = [c3, d3];
+i_dex = submulsec(h_lad[0], h_lad[1], 0.93);
+i_oie = subarr3(i_grp, i_ooe, i_dex);
+i_iex = addarrmulsca(h_ltd, h_snp, 0.05);
+i_ebt = subarr2(i_oie, i_iex);
+i_tax = mularr2(i_ebt, [c6, d6]);
+i_nic = subarr2(i_ebt, i_tax);
+
+n_c = [];
+n_c[0] = i_oie[0]*(1-c6);
+n_c[1] = h_tca[0]-h_sti[0];
+n_c[2] = h_tcl[0]-h_snp[0];
+n_c[3] = n_c[1]-n_c[2];
+n_c[4] = h_tca[1]-h_sti[1];
+n_c[5] = h_tcl[1]-h_snp[1];
+n_c[6] = n_c[4]-n_c[5];
+n_c[7] = n_c[3]+h_ppn[0];
+n_c[8] = n_c[6]+h_ppn[1];
+n_c[9] = n_c[0]-(n_c[7]-n_c[8]);
+n_c[10] = n_c[0]/n_c[7];
+n_c[11] = n_c[0]-(n_c[7]*a14);
+
+special_index_n = 10;
+
+o_c = [];
+o_c[0] = i_iex[0]*(1-c6);
+o_c[1] = -((h_snp[0]+h_ltd[0])-(h_snp[1]+h_ltd[1]));
+o_c[2] = (h_ree[1]+i_nic[0])-h_ree[1];
+o_c[3] = h_cos[0]-h_cos[1];
+o_c[4] = -(h_sti[1]-h_sti[0]);
+o_c[5] = o_c[0]+o_c[1]+o_c[2]+o_c[3]+o_c[4];
+
+p_c = [];
+p_c[0] = i_oie[0]*(1-c6)+i_dex[0];
+p_c[1] = h_tca[0]-h_sti[0];
+p_c[2] = h_tcl[0]-h_snp[0];
+p_c[3] = p_c[1]-p_c[2];
+p_c[4] = h_tca[1]-h_sti[1];
+p_c[5] = h_tcl[1]-h_snp[1];
+p_c[6] = p_c[4]-p_c[5];
+p_c[7] = p_c[3]-p_c[6];
+p_c[8] = h_ppe[0]-h_ppe[1];
+p_c[9] = p_c[0]-p_c[7]-p_c[8];
+
+q_c = [];
+q_c[0] = h_tca[0]-h_tcl[0];
+q_c[1] = h_inv[0]/(i_cgs[0]/365);
+q_c[2] = h_acr[0]/(i_sal[0]/365);
+q_c[3] = q_c[1]+q_c[2];
+q_c[4] = h_acp[0]/(i_cgs[0]/365);
+q_c[5] = q_c[1]+q_c[2]-q_c[4];
+
+r_c = [];
+r_c[0] = h_tca[1]-h_tcl[1];
+r_c[1] = h_inv[1]/(i_cgs[1]/365);
+r_c[2] = h_acr[1]/(i_sal[1]/365);
+r_c[3] = h_acp[1]/(i_cgs[1]/365);
+r_c[4] = r_c[1]+r_c[2]-r_c[3];
+r_c[5] = q_c[5]-r_c[4];
+
+function set_all() {
+  sd0("d_h0", h_cas);
+  sd0("d_h1", h_sti);
+  sd0("d_h2", h_acr);
+  sd0("d_h3", h_inv);
+  sd0("d_h4", h_pre);
+  sd0("d_h5", h_tca);
+  sd0("d_h6", h_ppe);
+  sd0("d_h7", h_lad);
+  sd0("d_h8", h_ppn);
+  sd0("d_h9", h_tas);
+  sd0("d_h11", h_acp);
+  sd0("d_h12", h_snp);
+  sd0("d_h13", h_acl);
+  sd0("d_h14", h_tcl);
+  sd0("d_h15", h_ltd);
+  sd0("d_h16", h_cos);
+  sd0("d_h17", h_ree);
+  sd0("d_h18", h_teq);
+  sd0("d_h19", h_tle);
+  sd0("d_i0", i_sal);
+  sd0("d_i1", i_cgs);
+  sd0("d_i2", i_grp);
+  sd0("d_i3", i_ooe);
+  sd0("d_i4", i_dex);
+  sd0("d_i5", i_oie);
+  sd0("d_i6", i_iex);
+  sd0("d_i7", i_ebt);
+  sd0("d_i8", i_tax);
+  sd0("d_i9", i_nic);
+}
+
+n_b = [];
+o_b = [];
+p_b = [];
+q_b = [];
+r_b = [];
+
+function get_all_values() {
+  for (var i = 0; i < n_c.length; i++) {
+    n_b[i] = get_el_value("d_n" + i);
+  }
+  for (var i = 0; i < o_c.length; i++) {
+    o_b[i] = get_el_value("d_o" + i);
+  }
+  for (var i = 0; i < p_c.length; i++) {
+    p_b[i] = get_el_value("d_p" + i);
+  }
+  for (var i = 0; i < q_c.length; i++) {
+    q_b[i] = get_el_value("d_q" + i);
+  }
+  for (var i = 0; i < r_c.length; i++) {
+    r_b[i] = get_el_value("d_r" + i);
+  }
+}
+
+function is_numeric_val(value) {
+  return /^-{0,1}\d*\.{0,1}\d+$/.test(value);
+}
+
+function get_txtnum(elval) {
+  if (elval == "") return null;
+  if (elval[0] == "$") elval = elval.substring(1);
+  if (elval.endsWith("%")) elval = elval.substring(elval.length - 1);
+  elval = elval.replace(",", "");
+  if (!is_numeric_val(elval)) return null;
+  var pelval = parseFloat(elval);
+  return pelval;
+}
+
+function cmpnum(num, str, onedec, pct) {
+  inp = get_txtnum(str);
+  if (inp == null) return 0;
+  if (pct) num *= 100;
+  if (onedec) {
+    num *= 10;
+    inp *= 10;
+  }
+  if (Math.abs(num - inp) < 1.1) return 1;
+  return 0;
+}
+
+n_d = [];
+o_d = [];
+p_d = [];
+q_d = [];
+r_d = [];
+
+n_f = [];
+o_f = [];
+p_f = [];
+q_f = [];
+r_f = [];
+
+sc_you = [];
+sc_exp = [];
+sc_sco = [];
+
+function merge5(into, a0, a1, a2, a3, a4) {
+  var i = 0;
+  for (var j = 0; j < a0.length; j++) {
+    into[i] = a0[j];
+    i++;
+  }
+  for (var j = 0; j < a1.length; j++) {
+    into[i] = a1[j];
+    i++;
+  }
+  for (var j = 0; j < a2.length; j++) {
+    into[i] = a2[j];
+    i++;
+  }
+  for (var j = 0; j < a3.length; j++) {
+    into[i] = a3[j];
+    i++;
+  }
+  for (var j = 0; j < a4.length; j++) {
+    into[i] = a4[j];
+    i++;
+  }
+}
+
+function cmparr(arr_d, arr_f, nums, strs, pct_index, all_from) {
+  for (var i = 0; i < nums.length; i++) {
+    if (i == pct_index) {
+      arr_d[i] = cmpnum(nums[i], strs[i], true, true);
+      arr_f[i] = (nums[i]*100).toFixed(1) + "%";
+    } else if (i >= all_from && all_from > -1) {
+      arr_d[i] = cmpnum(nums[i], strs[i], true, false);
+      arr_f[i] = nums[i].toFixed(1);
+    } else {
+      arr_d[i] = cmpnum(nums[i], strs[i], false, false);
+      arr_f[i] = nums[i].toFixed(0);
+    }
+  }
+}
+
+function sum_arr(arr) {
+  var res = 0;
+  for (var i = 0; i < arr.length; i++) {
+    res += arr[i];
+  }
+  return res;
+}
+
+function gen_scores() {
+   get_all_values();
+   cmparr(n_d, n_f, n_c, n_b, special_index_n, -1);
+   cmparr(o_d, o_f, o_c, o_b, -1, -1);
+   cmparr(p_d, p_f, p_c, p_b, -1, -1);
+   cmparr(q_d, q_f, q_c, q_b, -1, 1);
+   cmparr(r_d, r_f, r_c, r_b, -1, 1);
+   merge5(sc_you, n_b, o_b, p_b, q_b, r_b);
+   merge5(sc_exp, n_f, o_f, p_f, q_f, r_f);
+   merge5(sc_sco, n_d, o_d, p_d, q_d, r_d);
+   for (var i = 0; i < sc_you.length; i++) {
+     set_el("d_s" + i + "0", sc_you[i]);
+     set_el("d_s" + i + "1", sc_exp[i]);
+     set_el("d_s" + i + "2", sc_sco[i]);
+   }
+   var tscore = sum_arr(sc_sco);
+   var mscore = sc_sco.length;
+   set_el("d_tscore", tscore);
+   set_el("d_mscore", mscore);
+}
+
+var slide_index = -1;
+var num_slides = 9;
+
+function goNext() {
+  if (slide_index == -1) {
+    set_all();
+  }
+  slide_index++;
+  if (slide_index == num_slides - 1) {
+    gen_scores();
+  }
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+function goPrev() {
+  slide_index--;
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+</script>
+
+<div id="ds_0">
+  <div id="d_story" class="d_boxed">
+    Cohen Chen and Qazi LLC (CCQ) is a boutique investment bank that focuses primarily on the transportation sector. Since its inception in 1995, CCQ has completed more than 150 capital raising transactions on North American debt and equity markets.<br><br>One of their clients is considering acquiring a ---. They have requested CCQ to facilitate the M&A deal.<br><br>CCQ has formed a team of M&amp;A specialists to work on this deal. A recently hired junior analyst --- is assigned the following task.
+  </div>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_1">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="3">Balance Sheets as December 31</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><b>Assets</b></td><td>2021</td><td>2020</td></tr>
+      <tr><td>Cash</td><td id="d_h00"></td><td id="d_h01"></td></tr>
+      <tr><td>Short-term investments</td><td id="d_h10"></td><td id="d_h11"></td></tr>
+      <tr><td>Accounts receivable</td><td id="d_h20"></td><td id="d_h21"></td></tr>
+      <tr><td>Inventory</td><td id="d_h30"></td><td id="d_h31"></td></tr>
+      <tr><td>Prepaid expenses</td><td id="d_h40"></td><td id="d_h41"></td></tr>
+      <tr><td><b>Total current assets</b></td><td><b><span id="d_h50"></span></b></td><td><b><span id="d_h51"></span></b></td></tr>
+      <tr><td>Property, plant and equipment</td><td id="d_h60"></td><td id="d_h61"></td></tr>
+      <tr><td>Less: Accumulated depreciation</td><td id="d_h70"></td><td id="d_h71"></td></tr>
+      <tr><td><b>Property, plant and equipment (net)</b></td><td><b><span id="d_h80"></span></b></td><td><b><span id="d_h81"></span></b></td></tr>
+      <tr><td><b>Total assets</b></td><td><b><span id="d_h90"></span></b></td><td><b><span id="d_h91"></span></b></td></tr>
+      <tr><td><b>Liabilities and Equity</b></td><td id="d_h100"></td><td id="d_h101"></td></tr>
+      <tr><td>Accounts payable</td><td id="d_h110"></td><td id="d_h111"></td></tr>
+      <tr><td>Short-term notes payable</td><td id="d_h120"></td><td id="d_h121"></td></tr>
+      <tr><td>Accrued liabilities</td><td id="d_h130"></td><td id="d_h131"></td></tr>
+      <tr><td><b>Total current liabilities</b></td><td><b><span id="d_h140"></span></b></td><td><b><span id="d_h141"></span></b></td></tr>
+      <tr><td>Long-term debt</td><td id="d_h150"></td><td id="d_h151"></td></tr>
+      <tr><td>Common stock</td><td id="d_h160"></td><td id="d_h161"></td></tr>
+      <tr><td>Retained earnings</td><td id="d_h170"></td><td id="d_h171"></td></tr>
+      <tr><td><b>Total equity</b></td><td><b><span id="d_h180"></span></b></td><td><b><span id="d_h181"></span></b></td></tr>
+      <tr><td><b>Total liabilities and equity</b></td><td><b><span id="d_h190"></span></b></td><td><b><span id="d_h191"></span></b></td></tr>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_2">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="3">Income Statements for Years Ended December 31</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td></td><td><b>2021</b></td><td><b>2020</b></td></tr>
+      <tr><td>Sales</td><td id="d_i00"></td><td id="d_i01"></td></tr>
+      <tr><td>Cost of goods sold</td><td id="d_i10"></td><td id="d_i11"></td></tr>
+      <tr><td><b>&nbsp;&nbsp;Gross profit</b></td><td><b><span id="d_i20"></span></b></td><td><b><span id="d_i21"></span></b></td></tr>
+      <tr><td>Other operating expenses</td><td id="d_i30"></td><td id="d_i31"></td></tr>
+      <tr><td>Depreciation expense</td><td id="d_i40"></td><td id="d_i41"></td></tr>
+      <tr><td><b>Operating income (EBIT)</b></td><td><b><span id="d_i50"></span></b></td><td><b><span id="d_i51"></span></b></td></tr>
+      <tr><td>Interest expense</td><td id="d_i60"></td><td id="d_i61"></td></tr>
+      <tr><td><b>Earnings before taxes</b></td><td><b><span id="d_i70"></span></b></td><td><b><span id="d_i71"></span></b></td></tr>
+      <tr><td>Taxes</td><td id="d_i80"></td><td id="d_i81"></td></tr>
+      <tr><td>Net income</td><td id="d_i90"></td><td id="d_i91"></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_3">
+  <table class="treg">
+    <thead>
+      <tr>
+        <th colspan="2">Calculate FCF, ROIC and EVA for 2021</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>NOPAT - 2021</td><td><input id="d_n0" type="text" /></td></tr>
+      <tr><td colspan="2"></td></tr>
+      <tr><td>NOWC - 2021</td><td></td></tr>
+      <tr><td>Operating current assets</td><td><input id="d_n1" type="text" /></td></tr>
+      <tr><td>Operating current liabilities</td><td><input id="d_n2" type="text" /></td></tr>
+      <tr><td>NOWC (2021)</td><td><input id="d_n3" type="text" /></td></tr>
+      <tr><td colspan="2"></td></tr>
+      <tr><td>NOWC - 2020</td><td></td></tr>
+      <tr><td>Operating current assets</td><td><input id="d_n4" type="text" /></td></tr>
+      <tr><td>Operating current liabilities</td><td><input id="d_n5" type="text" /></td></tr>
+      <tr><td>NOWC (2020)</td><td><input id="d_n6" type="text" /></td></tr>
+      <tr><td colspan="2"></td></tr>
+      <tr><td>TNOC - 2021</td><td><input id="d_n7" type="text" /></td></tr>
+      <tr><td>TNOC - 2020</td><td><input id="d_n8" type="text" /></td></tr>
+      <tr><td colspan="2"></td></tr>
+      <tr><td>Free cash flow - 2021</td><td><input id="d_n9" type="text" /></td></tr>
+      <tr><td>ROIC - 2021</td><td><input id="d_n10" type="text" /></td></tr>
+      <tr><td>EVA - 2021</td><td><input id="d_n11" type="text" /></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_4">
+  <table class="treg">
+    <thead>
+      <tr>
+        <th colspan="2">Five Uses of FCF</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>After-tax interest payment</td><td><input id="d_o0" type="text" /></td></tr>
+      <tr><td>(Increase) or reduction in debt</td><td><input id="d_o1" type="text" /></td></tr>
+      <tr><td>Cash dividend</td><td><input id="d_o2" type="text" /></td></tr>
+      <tr><td>Stock buy back or issuance</td><td><input id="d_o3" type="text" /></td></tr>
+      <tr><td>Purchase or (sale) of mark. securities</td><td><input id="d_o4" type="text" /></td></tr>
+      <tr><td>Sum</td><td><input id="d_o5" type="text" /></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_5">
+  <table class="treg">
+    <thead>
+      <tr>
+        <th colspan="2">Calculate FCF, ROIC and EVA for 2021</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Operating cash flows</td><td><input id="d_p0" type="text" /></td></tr>
+      <tr><td colspan="2"></td></tr>
+      <tr><td>NOWC - 2021</td><td></td></tr>
+      <tr><td>Operating current assets</td><td><input id="d_p1" type="text" /></td></tr>
+      <tr><td>Operating current liabilities</td><td><input id="d_p2" type="text" /></td></tr>
+      <tr><td>NOWC (2021)</td><td><input id="d_p3" type="text" /></td></tr>
+      <tr><td colspan="2"></td></tr>
+      <tr><td>NOWC - 2020</td><td></td></tr>
+      <tr><td>Operating current assets</td><td><input id="d_p4" type="text" /></td></tr>
+      <tr><td>Operating current liabilities</td><td><input id="d_p5" type="text" /></td></tr>
+      <tr><td>NOWC (2020)</td><td><input id="d_p6" type="text" /></td></tr>
+      <tr><td colspan="2"></td></tr>
+      <tr><td>Change in NOWC</td><td><input id="d_p7" type="text" /></td></tr>
+      <tr><td>Change in P, P and E</td><td><input id="d_p8" type="text" /></td></tr>
+      <tr><td colspan="2"></td></tr>
+      <tr><td>Free cash flow - 2021</td><td><input id="d_p9" type="text" /></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_6">
+  <table class="treg">
+    <thead>
+      <tr>
+        <th colspan="2">Calculate the following</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Net working capital - 2021</td><td><input id="d_q0" type="text" /></td></tr>
+      <tr><td colspan="2"></td></tr>
+      <tr><td>Inventory conversion period - 2021</td><td><input id="d_q1" type="text" /></td></tr>
+      <tr><td>Receivables collection period - 2021</td><td><input id="d_q2" type="text" /></td></tr>
+      <tr><td>Operating cycle - 2021</td><td><input id="d_q3" type="text" /></td></tr>
+      <tr><td>Payable deferral period - 2021</td><td><input id="d_q4" type="text" /></td></tr>
+      <tr><td>Cash conversion cycle - 2021</td><td><input id="d_q5" type="text" /></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_7">
+  <table class="treg">
+    <thead>
+      <tr>
+        <th colspan="2">Calculate the following</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Net working capital - 2020</td><td><input id="d_r0" type="text" /></td></tr>
+      <tr><td colspan="2"></td></tr>
+      <tr><td>Inventory conversion period - 2020</td><td><input id="d_r1" type="text" /></td></tr>
+      <tr><td>Receivables collection period - 2020</td><td><input id="d_r2" type="text" /></td></tr>
+      <tr><td>Payable deferral period - 2020</td><td><input id="d_r3" type="text" /></td></tr>
+      <tr><td>Cash conversion cycle - 2020</td><td><input id="d_r4" type="text" /></td></tr>
+      <tr><td colspan="2"></td></tr>
+      <tr><td>Increase (decrease) in CCC</td><td><input id="d_r5" type="text" /></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_8">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th>Section</th>
+        <th>Item</th>
+        <th>Your answer</th>
+        <th>Expected answer</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>NOPAT - 2021</td><td id="d_s00"></td><td id="d_s01"></td><td id="d_s02"></td></tr>
+      <tr><td>1</td><td>Operating current assets</td><td id="d_s10"></td><td id="d_s11"></td><td id="d_s12"></td></tr>
+      <tr><td>1</td><td>Operating current liabilities</td><td id="d_s20"></td><td id="d_s21"></td><td id="d_s22"></td></tr>
+      <tr><td>1</td><td>NOWC (2021)</td><td id="d_s30"></td><td id="d_s31"></td><td id="d_s32"></td></tr>
+      <tr><td>1</td><td>Operating current assets</td><td id="d_s40"></td><td id="d_s41"></td><td id="d_s42"></td></tr>
+      <tr><td>1</td><td>Operating current liabilities</td><td id="d_s50"></td><td id="d_s51"></td><td id="d_s52"></td></tr>
+      <tr><td>1</td><td>NOWC (2020)</td><td id="d_s60"></td><td id="d_s61"></td><td id="d_s62"></td></tr>
+      <tr><td>1</td><td>TNOC - 2021</td><td id="d_s70"></td><td id="d_s71"></td><td id="d_s72"></td></tr>
+      <tr><td>1</td><td>TNOC - 2020</td><td id="d_s80"></td><td id="d_s81"></td><td id="d_s82"></td></tr>
+      <tr><td>1</td><td>Free cash flow - 2021</td><td id="d_s90"></td><td id="d_s91"></td><td id="d_s92"></td></tr>
+      <tr><td>1</td><td>ROIC - 2021</td><td id="d_s100"></td><td id="d_s101"></td><td id="d_s102"></td></tr>
+      <tr><td>1</td><td>EVA - 2021</td><td id="d_s110"></td><td id="d_s111"></td><td id="d_s112"></td></tr>
+      <tr><td>2</td><td>After-tax interest payment</td><td id="d_s120"></td><td id="d_s121"></td><td id="d_s122"></td></tr>
+      <tr><td>2</td><td>(Increase) or reduction in debt</td><td id="d_s130"></td><td id="d_s131"></td><td id="d_s132"></td></tr>
+      <tr><td>2</td><td>Cash dividend</td><td id="d_s140"></td><td id="d_s141"></td><td id="d_s142"></td></tr>
+      <tr><td>2</td><td>Stock buy back or issuance</td><td id="d_s150"></td><td id="d_s151"></td><td id="d_s152"></td></tr>
+      <tr><td>2</td><td>Purchase or (sale) of mark. securities</td><td id="d_s160"></td><td id="d_s161"></td><td id="d_s162"></td></tr>
+      <tr><td>2</td><td>Sum</td><td id="d_s170"></td><td id="d_s171"></td><td id="d_s172"></td></tr>
+      <tr><td>3</td><td>Operating cash flows</td><td id="d_s180"></td><td id="d_s181"></td><td id="d_s182"></td></tr>
+      <tr><td>3</td><td>Operating current assets</td><td id="d_s190"></td><td id="d_s191"></td><td id="d_s192"></td></tr>
+      <tr><td>3</td><td>Operating current liabilities</td><td id="d_s200"></td><td id="d_s201"></td><td id="d_s202"></td></tr>
+      <tr><td>3</td><td>NOWC (2021)</td><td id="d_s210"></td><td id="d_s211"></td><td id="d_s212"></td></tr>
+      <tr><td>3</td><td>Operating current assets</td><td id="d_s220"></td><td id="d_s221"></td><td id="d_s222"></td></tr>
+      <tr><td>3</td><td>Operating current liabilities</td><td id="d_s230"></td><td id="d_s231"></td><td id="d_s232"></td></tr>
+      <tr><td>3</td><td>NOWC (2020)</td><td id="d_s240"></td><td id="d_s241"></td><td id="d_s242"></td></tr>
+      <tr><td>3</td><td>Change in NOWC</td><td id="d_s250"></td><td id="d_s251"></td><td id="d_s252"></td></tr>
+      <tr><td>3</td><td>Change in P, P and E</td><td id="d_s260"></td><td id="d_s261"></td><td id="d_s262"></td></tr>
+      <tr><td>3</td><td>Free cash flow - 2021</td><td id="d_s270"></td><td id="d_s271"></td><td id="d_s272"></td></tr>
+      <tr><td>4</td><td>Net working capital - 2021</td><td id="d_s280"></td><td id="d_s281"></td><td id="d_s282"></td></tr>
+      <tr><td>4</td><td>Inventory conversion period - 2021</td><td id="d_s290"></td><td id="d_s291"></td><td id="d_s292"></td></tr>
+      <tr><td>4</td><td>Receivables collection period - 2021</td><td id="d_s300"></td><td id="d_s301"></td><td id="d_s302"></td></tr>
+      <tr><td>4</td><td>Operating cycle - 2021</td><td id="d_s310"></td><td id="d_s311"></td><td id="d_s312"></td></tr>
+      <tr><td>4</td><td>Payable deferral period - 2021</td><td id="d_s320"></td><td id="d_s321"></td><td id="d_s322"></td></tr>
+      <tr><td>4</td><td>Cash conversion cycle - 2021</td><td id="d_s330"></td><td id="d_s331"></td><td id="d_s332"></td></tr>
+      <tr><td>5</td><td>Net working capital - 2020</td><td id="d_s340"></td><td id="d_s341"></td><td id="d_s342"></td></tr>
+      <tr><td>5</td><td>Inventory conversion period - 2020</td><td id="d_s350"></td><td id="d_s351"></td><td id="d_s352"></td></tr>
+      <tr><td>5</td><td>Receivables collection period - 2020</td><td id="d_s360"></td><td id="d_s361"></td><td id="d_s362"></td></tr>
+      <tr><td>5</td><td>Payable deferral period - 2020</td><td id="d_s370"></td><td id="d_s371"></td><td id="d_s372"></td></tr>
+      <tr><td>5</td><td>Cash conversion cycle -2020</td><td id="d_s380"></td><td id="d_s381"></td><td id="d_s382"></td></tr>
+      <tr><td>5</td><td>Increase (decrease) in CCC</td><td id="d_s390"></td><td id="d_s391"></td><td id="d_s392"></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div><b>Your score:</b> <span id="d_tscore"></span></div>
+    <div><b>Maximum score:</b> <span id="d_mscore"></span></div>
+  </div>
+  <button type="button" class="c_nav" onClick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onClick="window.location.reload();">Retry with different numbers</button>
+</div>
+
+<script>
+
+goNext();
+
+</script>
+
 <style>
 body {
   font-family: sans-serif;
@@ -16,7 +728,8 @@ table td, table th {
   padding: 8px;
 }
 
-table tr:nth-child(even){background-color: #f2f2f2;}
+.tstripe tr:nth-child(even){background-color: #f2f2f2;}
+.treg tbody td[colspan="2"]{background-color: #f2f2f2;}
 
 table th {
   padding-top: 12px;
@@ -26,7 +739,7 @@ table th {
   color: white;
 }
 
-.c_next {
+.c_nav {
   background-color: #4CAF50;
   border: none;
   color: white;
@@ -51,696 +764,7 @@ table th {
 
 input[type=text] {
   width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
   font-size: 16px;
   box-sizing: border-box;
 }
 </style>
-</head>
-<script>
-
-function uniroot(func) {
-  var a = 0
-    , b = 10
-    , c = a
-    , fa = func(a)
-    , fb = func(b)
-    , fc = fa
-    , s = 0
-    , fs = 0
-    , tol_act   // Actual tolerance
-    , new_step  // Step at this iteration
-    , prev_step // Distance from the last but one to the last approximation
-    , p         // Interpolation step is calculated in the form p/q; division is delayed until the last moment
-    , q
-    ;
-
-  errorTol = 0.00001;
-  maxIter = 100000;
-
-  while ( maxIter-- > 0 ) {
-  
-    prev_step = b - a;
-   
-    if ( Math.abs(fc) < Math.abs(fb) ) {
-      // Swap data for b to be the best approximation
-      a = b, b = c, c = a;
-      fa = fb, fb = fc, fc = fa;
-    }
-
-    tol_act = 1e-15 * Math.abs(b) + errorTol / 2;
-    new_step = ( c - b ) / 2;
-
-    if ( Math.abs(new_step) <= tol_act || fb === 0 ) {
-      return b; // Acceptable approx. is found
-    }
-
-    // Decide if the interpolation can be tried
-    if ( Math.abs(prev_step) >= tol_act && Math.abs(fa) > Math.abs(fb) ) {
-      // If prev_step was large enough and was in true direction, Interpolatiom may be tried
-      var t1, cb, t2;
-      cb = c - b;
-      if ( a === c ) { // If we have only two distinct points linear interpolation can only be applied
-        t1 = fb / fa;
-        p = cb * t1;
-        q = 1.0 - t1;
-      }
-      else { // Quadric inverse interpolation
-        q = fa / fc, t1 = fb / fc, t2 = fb / fa;
-        p = t2 * (cb * q * (q - t1) - (b - a) * (t1 - 1));
-        q = (q - 1) * (t1 - 1) * (t2 - 1);
-      }
-
-      if ( p > 0 ) {
-        q = -q;  // p was calculated with the opposite sign; make p positive
-      }
-      else {
-        p = -p;  // and assign possible minus to q
-      }
-
-      if ( p < ( 0.75 * cb * q - Math.abs( tol_act * q ) / 2 ) &&
-           p < Math.abs( prev_step * q / 2 ) ) { 
-        // If (b + p / q) falls in [b,c] and isn't too large it is accepted
-        new_step = p / q;
-      }
- 
-      // If p/q is too large then the bissection procedure can reduce [b,c] range to more extent
-    }
-
-    if ( Math.abs( new_step ) < tol_act ) { // Adjust the step to be not less than tolerance
-      new_step = ( new_step > 0 ) ? tol_act : -tol_act;
-    }
-
-    a = b, fa = fb;     // Save the previous approx.
-    b += new_step, fb = func(b);  // Do step to a new approxim.
-
-    if ( (fb > 0 && fc > 0) || (fb < 0 && fc < 0) ) {
-      c = a, fc = fa; // Adjust c for it to have a sign opposite to that of b
-    }
-  }
-}
-
-s_story1 = "Executive Transportation Company (ETC) is an Edmonton based business group " + 
-  "that offers executive transportation to business executives travelling within Alberta. " +
-  "The company currently has a fleet of luxury sedans, stretch limousines and executive SUVs. <br><br>" +
-  "The company is contemplating buying a pre-owned Bell 427 helicopter for its transportation fleet. " +
-  "Although the helicopter is expensive, its versatility is expected to give the company access to " +
-  "a wider market. Alisha Jones, the Controller of the company has summarized the financial " +
-  "aspects of this capital investment project in the table given on the next slide. <br><br>" +
-  "She has asked you to do the capital budgeting analysis of this investment.";
-
-s_story2 = "Executive Transportation Company (ETC) is also considering the purchase " +
-  "of a luxury sedan. <br><br>The company has collected the data (on next slide) for two " +
-  "different models. The controller has  asked you to analyze the two options and " +
-  "make necessary recommendations.";
-
-s_ci = "Net after-tax operating cash inflows";
-s_y1 = "Year 1";
-s_y2 = "Year 2";
-s_y3 = "Year 3";
-s_y4 = "Year 4";
-s_y5 = "Year 5";
-s_y6 = "Year 6";
-
-s_cip = "Data - Capital Investment Project";
-s_v1  = s_coh = "Cost of helicopter";
-s_v2  = s_iwc = "Initial working capital requirement";
-s_v3  = s_ci1 = s_ci + " - " + s_y1;
-s_v4  = s_ci2 = s_ci + " - " + s_y2;
-s_v5  = s_ci3 = s_ci + " - " + s_y3;
-s_v6  = s_ci4 = s_ci + " - " + s_y4;
-s_v7  = s_ci5 = s_ci + " - " + s_y5;
-s_v8  = s_ci6 = s_ci + " - " + s_y6;
-s_v9  = s_srv = "Salvage (resale) value";
-s_v10 = s_wcr = "Working capital recovery";
-s_v11 = s_drc = "Discount rate (Cost of capital)";
-s_v12 = s_mpp = "Maximum payback period";
-s_ien = "Initial Expenditure Now";
-
-s_it0 = "Payback period";
-s_it1 = "Discounted payback period";
-s_it2 = "Net present value";
-s_it3 = "IRR";
-s_it4 = "PI";
-
-h_ppp = "What is the <b><u>payback period</u></b> of this project?";
-h_dpp = "What is the <b><u>discounted payback period</u></b> of this project?";
-h_npv = "What is the <b><u>net present value</u></b> of this project?";
-h_irr = "What is the <b><u>IRR</u></b> of this project?";
-h_pip = "What is the <b><u>PI</u></b> of this project?";
-
-a_hq1 = [h_ppp, h_dpp, h_npv, h_irr, h_pip];
-
-h_dec = "Should ETC undertake this project?";
-
-r_v1 = [15, 20, -100000];
-r_v2 = [10, 20, -10000];
-r_v3 = [50, 100, 10000];
-r_v4 = [45, 90, 10000];
-r_v5 = [40, 80, 10000];
-r_v6 = [35, 75, 10000];
-r_v7 = [35, 75, 10000];
-r_v8 = [30, 70, 10000];
-r_v9 = [40, 45, 10000];
-r_v11 = [7, 14, 0.01];
-r_v12 = [3, 5, 1];
-
-function randbws(arr) {
-  var min = arr[0];
-  var max = arr[1];
-  var scale = arr[2];
-  return (Math.floor(Math.random() * (max - min + 1) + min)) * scale;
-}
-
-v1 = randbws(r_v1);
-v2 = randbws(r_v2);
-v3 = randbws(r_v3);
-v4 = randbws(r_v4);
-v5 = randbws(r_v5);
-v6 = randbws(r_v6);
-v7 = randbws(r_v7);
-v8 = randbws(r_v8);
-v9 = randbws(r_v9);
-v10 = -v2;
-v11 = randbws(r_v11);
-v12 = randbws(r_v12);
-
-cf = [v1+v2, v3, v4, v5, v6, v7, v8+v9+v10];
-cf0 = cf[0];
-cf1 = cf[1];
-cf2 = cf[2];
-cf3 = cf[3];
-cf4 = cf[4];
-cf5 = cf[5];
-cf6 = cf[6];
-
-function irrfun(x) {
-  var x1 = 1 / (1 + x);
-  var x2 = x1 * x1;
-  var x3 = x2 * x1;
-  var x4 = x3 * x1;
-  var x5 = x4 * x1;
-  var x6 = x5 * x1;
-  return cf0 + (cf1 * x1) + (cf2 * x2) + (cf3 * x3) + (cf4 * x4) + (cf5 * x5) + (cf6 * x6);
-}
-
-pv = [cf[0]];
-for (var i = 1; i < 7; i++) {
-    pv[i] = cf[i] / Math.pow(1 + v11, i);
-}
-r_npv = 0;
-r_pi = 0;
-for (i = 0; i < 7; i++) {
-  r_npv += pv[i];
-  if (i != 0) r_pi += pv[i];
-}
-r_pi /= -pv[0];
-
-ccf = [cf[0]];
-for (var i = 1; i < 7; i++) {
-    ccf[i] = cf[i] + ccf[i-1];
-}
-r_ppa = [0];
-for (var i = 1; i < 7; i++) {
-    r_ppa[i] = (ccf[i] < 0) ? 1 : ((ccf[i-1] < 0) ? (-ccf[i-1]/cf[i]) : 0);
-}
-r_pp = 0;
-for (var i = 0; i < 7; i++) {
-    r_pp += r_ppa[i];
-}
-
-r_irr = uniroot(irrfun) * 100;
-
-pvccf= [pv[0]];
-for (var i = 1; i < 7; i++) {
-    pvccf[i] = pv[i] + pvccf[i-1];
-}
-r_dppa = [0];
-for (var i = 1; i < 7; i++) {
-    r_dppa[i] = (pvccf[i] < 0) ? 1 : ((pvccf[i-1] < 0) ? (-pvccf[i-1]/pv[i]) : 0);
-}
-r_dpp = 0;
-for (var i = 0; i < 7; i++) {
-    r_dpp += r_dppa[i];
-}
-
-function gen_th(table_el, arr, drc) {
-  var thead = table_el.createTHead();
-  var row = thead.insertRow();
-  for (i = 0; i < 8; i++) {
-    var th = document.createElement("th");
-    var text = document.createTextNode(arr[0][i]);
-    th.appendChild(text);
-    row.appendChild(th);
-  }
-}
-
-function gen_td(table_el, arr, drc) {
-  for (i = 1; i < 7; i++) {
-    var row = table_el.insertRow();
-    if ((i < 6) || drc) {
-      for (j = 0; j < 8; j++) {
-        var cell = row.insertCell();
-        var text = document.createTextNode(arr[i][j]);
-        cell.appendChild(text);
-      }
-    }
-  }
-}
-
-function gen_table(table, arr, drc) {
-  var table_el = get_el(table);
-  gen_td(table_el, arr, drc);
-  gen_th(table_el, arr, drc);
-}
-
-function addCommas(nStr) {
-  nStr += '';
-  var x = nStr.split('.');
-  var x1 = x[0];
-  var x2 = x.length > 1 ? '.' + x[1] : '';
-  var rgx = /(\d+)(\d{3})/;
-  while (rgx.test(x1)) {
-    x1 = x1.replace(rgx, '$1' + ',' + '$2');
-  }
-  return x1 + x2;
-}
-
-function sf(num) {
-  return addCommas(num);
-}
-
-function fmt_pct(num) {
-  return (num * 100).toFixed(2) + "%";
-}
-
-tbl_arr = [["", s_ien, s_y1, s_y2, s_y3, s_y4, s_y5, s_y6],
-  [s_coh, sf(v1), "", "", "", "", "", ""],
-  [s_iwc, sf(v2), "", "", "", "", "", ""],
-  [s_ci,  "", sf(v3), sf(v4), sf(v5), sf(v6), sf(v7), sf(v8)],
-  [s_srv, "", "", "", "", "", "", sf(v9)],
-  [s_wcr, "", "", "", "", "", "", sf(v10)],
-  [s_drc, fmt_pct(v11), "", "", "", "", "", ""]];
-  
-
-function get_el(str) {
-  return document.getElementById(str);
-}
-
-function hide_el(str) {
-  get_el(str).style.display = "none";
-}
-
-function show_el(str) {
-  get_el(str).style.display = "block";
-}
-
-function doshow_el(str, doshow) {
-  if (doshow == 0) {
-    hide_el(str);
-  } else {
-    show_el(str);
-  }
-}
-
-function focus_el(arr) {
-  doshow_el("ds_story", arr[0]);
-  doshow_el("ds_data", arr[1]);
-  doshow_el("ds_main", arr[2]);
-  doshow_el("ds_score", arr[3]);
-}
-
-function set_el(str, txt) {
-  return get_el(str).innerHTML = txt;
-}
-
-function ael_el(str, func) {
-  get_el(str).addEventListener("click", func);
-}
-
-function clear_rad(str) {
-  get_el(str).checked = false;
-}
-
-function clear_txt(str) {
-  get_el(str).value = "";
-}
-
-function clear_table(str) {
-  get_el(str).innerHTML = "";
-}
-
-function get_rad(rad1, rad0) {
-  if (get_el(rad1).checked) return 1;
-  if (get_el(rad0).checked) return 0;
-  return null;
-}
-
-function is_numeric_val(value) {
-  return /^-{0,1}\d*\.{0,1}\d+$/.test(value);
-}
-
-function get_txtnum(str) {
-  var elval = get_el(str).value;
-  if (elval == "") return null;
-  if (elval[0] == "$") elval = elval.substring(1);
-  if (elval.endsWith("%")) elval = elval.substring(elval.length - 1);
-  elval = elval.replace(",", "");
-  if (!is_numeric_val(elval)) return null;
-  var pelval = parseFloat(elval);
-  return pelval;
-}
-
-function gather_results(str, rad1, rad0) {
-  var res0 = get_txtnum(str);
-  var res1 = get_rad(rad1, rad0);
-  if ((res0 == null) || (res1 == null)) return null;
-  return [res0, res1];
-}
-
-num_intro_slides = 2;
-num_main_slides = 5;
-num_outro_slides = 1;
-max_slide_index = num_intro_slides + num_main_slides + num_outro_slides - 1;
-
-function next_slide_is_main(idx) {
-  var nidx = idx + 1;
-  return ((nidx >= num_intro_slides) &&
-    (nidx < num_intro_slides + num_main_slides));
-}
-
-function curr_slide_is_main(idx) {
-  return next_slide_is_main(idx - 1);
-}
-
-function get_midx(sidx) {
-  return sidx - num_intro_slides;
-}
-
-function gen_main_table(sidx) {
-  var drc = !next_slide_is_main(sidx);
-  gen_table("d_table", tbl_arr, drc);
-}
-
-function gen_main(sidx) {
-  clear_table("d_table");
-  gen_main_table(sidx);
-  set_el("d_q1", a_hq1[get_midx(sidx)]);
-  clear_txt("d_a1");
-  set_el("d_q2", h_dec);
-  clear_rad("d_rady");
-  clear_rad("d_radn");
-}
-
-exp_vals = [r_pp, r_dpp, r_npv, r_irr, r_pi];
-exp_decs = [0, 1, 0, 0, 1];
-exp_decs[0] = (exp_vals[0] > v12) ? 0 : 1;
-exp_decs[1] = (exp_vals[1] > v12) ? 0 : 1;
-exp_decs[2] = (exp_vals[2] < 0) ? 0 : 1;
-exp_decs[3] = (exp_vals[3] < v11) ? 0 : 1;
-exp_decs[4] = (exp_vals[4] < 1) ? 0 : 1;
-
-res_vals = [];
-res_decs = [];
-
-res_scos = [];
-exp_scos = [];
-
-function sum_arr(arr) {
-  var res = 0;
-  var alen = arr.length;
-  for (i = 0; i < alen; i++) {
-    res += arr[i];
-  }
-  return res;
-}
-
-function fmt_val(num) {
-  return addCommas(num.toFixed(2));
-}
-
-function fmt_dec(num) {
-  if (num == 0) return "No";
-  return "Yes";
-}
-
-function fmt_sco(num) {
-  return num;
-}
-
-function sim_vals(v1, v2) {
-  return (Math.abs(v1 - v2) < 0.011);
-}
-
-function sim_vals_whole(v1, v2) {
-    return (Math.abs(v1 - v2) < 1.1);
-}
-
-function sim_decs(d1, d2) {
-  return d1 == d2;
-}
-
-function gen_scores() {
-  for (var i = 0; i < num_main_slides; i++) {
-    var ev = exp_vals[i];
-    var rv = res_vals[i];
-    var ed = exp_decs[i];
-    var rd = res_decs[i];
-    var sv = sim_vals(ev, rv);
-    var sd = sim_decs(ed, rd);
-    exp_scos[i] = 2;
-    var score = 0;
-    if (sv) score++;
-    if (sd) score++;
-    res_scos[i] = score;
-  }
-}
-
-function gen_scoreb() {
-  gen_scores();
-  
-  set_el("d_yv0", fmt_val(res_vals[0]));
-  set_el("d_yv1", fmt_val(res_vals[1]));
-  set_el("d_yv2", fmt_val(res_vals[2]));
-  set_el("d_yv3", fmt_val(res_vals[3]));
-  set_el("d_yv4", fmt_val(res_vals[4]));
-  
-  set_el("d_yd0", fmt_dec(res_decs[0]));
-  set_el("d_yd1", fmt_dec(res_decs[1]));
-  set_el("d_yd2", fmt_dec(res_decs[2]));
-  set_el("d_yd3", fmt_dec(res_decs[3]));
-  set_el("d_yd4", fmt_dec(res_decs[4]));
-  
-  set_el("d_ev0", fmt_val(exp_vals[0]));
-  set_el("d_ev1", fmt_val(exp_vals[1]));
-  set_el("d_ev2", fmt_val(exp_vals[2]));
-  set_el("d_ev3", fmt_val(exp_vals[3]));
-  set_el("d_ev4", fmt_val(exp_vals[4]));
-  
-  set_el("d_ed0", fmt_dec(exp_decs[0]));
-  set_el("d_ed1", fmt_dec(exp_decs[1]));
-  set_el("d_ed2", fmt_dec(exp_decs[2]));
-  set_el("d_ed3", fmt_dec(exp_decs[3]));
-  set_el("d_ed4", fmt_dec(exp_decs[4]));
-  
-  set_el("d_sc0", fmt_sco(res_scos[0]));
-  set_el("d_sc1", fmt_sco(res_scos[1]));
-  set_el("d_sc2", fmt_sco(res_scos[2]));
-  set_el("d_sc3", fmt_sco(res_scos[3]));
-  set_el("d_sc4", fmt_sco(res_scos[4]));
-  
-  var tscore = sum_arr(res_scos);
-  var mscore = sum_arr(exp_scos);
-  set_el("d_tscore", fmt_sco(tscore));
-  set_el("d_mscore", fmt_sco(mscore));
-}
-
-slide_index = -1;
-
-function move_next() {
-  if (slide_index == max_slide_index) {
-    return;
-  }
-  
-  if (slide_index == -1) {
-    focus_el([1, 0, 0, 0]);
-  } else if (slide_index == 0) {
-    focus_el([0, 1, 0, 0]);
-  } else {
-    if (curr_slide_is_main(slide_index)) {
-      var results = gather_results("d_a1", "d_rady", "d_radn");
-      if (results == null) {
-        alert("Please enter a valid number and choose a valid yes/no response");
-        return;
-      } else {
-        var midx = get_midx(slide_index);
-        res_vals[midx] = results[0];
-        res_decs[midx] = results[1];
-      }
-    }
-    if (next_slide_is_main(slide_index)) {
-      gen_main(slide_index + 1);
-      focus_el([0, 0, 1, 0]);
-    } else {
-      gen_scoreb();
-      focus_el([0, 0, 0, 1]);
-    }
-  }
-  
-  slide_index += 1;
-}
-
-function init_data() {
-  set_el("d_story", s_story1);
-  set_el("d_datah", s_cip);
-  set_el("d_hv1", s_v1);
-  set_el("d_hv2", s_v2);
-  set_el("d_hv3", s_v3);
-  set_el("d_hv4", s_v4);
-  set_el("d_hv5", s_v5);
-  set_el("d_hv6", s_v6);
-  set_el("d_hv7", s_v7);
-  set_el("d_hv8", s_v8);
-  set_el("d_hv9", s_v9);
-  set_el("d_hv11", s_v11);
-  set_el("d_hv12", s_v12);
-  set_el("d_bv1", sf(v1));
-  set_el("d_bv2", sf(v2));
-  set_el("d_bv3", sf(v3));
-  set_el("d_bv4", sf(v4));
-  set_el("d_bv5", sf(v5));
-  set_el("d_bv6", sf(v6));
-  set_el("d_bv7", sf(v7));
-  set_el("d_bv8", sf(v8));
-  set_el("d_bv9", sf(v9));
-  set_el("d_bv11", fmt_pct(v11));
-  set_el("d_bv12", sf(v12));
-  ael_el("d_next1", move_next);
-  ael_el("d_next2", move_next);
-  ael_el("d_next3", move_next);
-  set_el("d_it0", s_it0);
-  set_el("d_it1", s_it1);
-  set_el("d_it2", s_it2);
-  set_el("d_it3", s_it3);
-  set_el("d_it4", s_it4);
-}
-
-function init() {
-  init_data();
-  move_next();
-}
-
-</script>
-
-<div id="ds_story">
-  <div id="d_story" class="d_boxed"></div>
-  <button type="button" class="c_next" id="d_next1">Next &nbsp;&gt;&gt;</button>
-</div>
-
-<div id="ds_data">
-  <table id="d_data">
-    <thead><tr><th></th><th id="d_datah"></th></tr></thead>
-    <tbody>
-      <tr><td id="d_hv1" ></td><td id="d_bv1" ></td></tr>
-      <tr><td id="d_hv2" ></td><td id="d_bv2" ></td></tr>
-      <tr><td id="d_hv3" ></td><td id="d_bv3" ></td></tr>
-      <tr><td id="d_hv4" ></td><td id="d_bv4" ></td></tr>
-      <tr><td id="d_hv5" ></td><td id="d_bv5" ></td></tr>
-      <tr><td id="d_hv6" ></td><td id="d_bv6" ></td></tr>
-      <tr><td id="d_hv7" ></td><td id="d_bv7" ></td></tr>
-      <tr><td id="d_hv8" ></td><td id="d_bv8" ></td></tr>
-      <tr><td id="d_hv9" ></td><td id="d_bv9" ></td></tr>
-      <tr><td id="d_hv11"></td><td id="d_bv11"></td></tr>
-      <tr><td id="d_hv12"></td><td id="d_bv12"></td></tr>
-    </tbody>
-  </table>
-  <button type="button" class="c_next" id="d_next2">Next &nbsp;&gt;&gt;</button>
-</div>
-
-<div id="ds_main">
-  <table id="d_table">
-  </table>
-  <div class="d_boxed">
-    <div id="d_sec1">
-      <span id="d_q1"></span>
-      <input type="text" id="d_a1" autocomplete="off" />
-    </div>
-    <div id="d_sec2">
-      <div id="d_q2"></div>
-      <label><input type="radio" class="c_rad" name="n_rad" id="d_rady" value="y" />Yes</label>
-      <label><input type="radio" class="c_rad" name="n_rad" id="d_radn" value="n" />No</label>
-    </div>
-  </div>
-  <button type="button" class="c_next" id="d_next3">Next &nbsp;&gt;&gt;</button>
-</div>
-
-<div id="ds_score">
-  <table id="d_score">
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Your value</th>
-        <th>Your decision</th>
-        <th>Expected value</th>
-        <th>Expected decision</th>
-        <th>Score</th>
-      </tr>
-    </thead>
-    <tbody id="d_scoreb">
-      <tr>
-        <td id="d_it0"></td>
-        <td id="d_yv0"></td>
-        <td id="d_yd0"></td>
-        <td id="d_ev0"></td>
-        <td id="d_ed0"></td>
-        <td id="d_sc0"></td>
-      </tr>
-      <tr>
-        <td id="d_it1"></td>
-        <td id="d_yv1"></td>
-        <td id="d_yd1"></td>
-        <td id="d_ev1"></td>
-        <td id="d_ed1"></td>
-        <td id="d_sc1"></td>
-      </tr>
-      <tr>
-        <td id="d_it2"></td>
-        <td id="d_yv2"></td>
-        <td id="d_yd2"></td>
-        <td id="d_ev2"></td>
-        <td id="d_ed2"></td>
-        <td id="d_sc2"></td>
-      </tr>
-      <tr>
-        <td id="d_it3"></td>
-        <td id="d_yv3"></td>
-        <td id="d_yd3"></td>
-        <td id="d_ev3"></td>
-        <td id="d_ed3"></td>
-        <td id="d_sc3"></td>
-      </tr>
-      <tr>
-        <td id="d_it4"></td>
-        <td id="d_yv4"></td>
-        <td id="d_yd4"></td>
-        <td id="d_ev4"></td>
-        <td id="d_ed4"></td>
-        <td id="d_sc4"></td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="d_boxed">
-    <div><b>Your score:</b> <span id="d_tscore"></span></div>
-    <div><b>Maximum score:</b> <span id="d_mscore"></span></div>
-  </div>
-  <button type="button" class="c_next" onClick="window.location.reload();">Retry with different numbers</button>
-</div>
-
-<script>
-
-init();
-
-</script>
-
-</html>
