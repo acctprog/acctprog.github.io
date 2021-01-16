@@ -3,31 +3,85 @@
 </head>
 <script>
 
-function rate(nper, pmt, pv, fv) {
-    var guess = 0.1;
-    var lowLimit = 0;
-    var highLimit = 1;
-    var tolerance = Math.abs(0.00000005 * pmt);
+function uniroot(func) {
+  var a = 0
+    , b = 10
+    , c = a
+    , fa = func(a)
+    , fb = func(b)
+    , fc = fa
+    , s = 0
+    , fs = 0
+    , tol_act   // Actual tolerance
+    , new_step  // Step at this iteration
+    , prev_step // Distance from the last but one to the last approximation
+    , p         // Interpolation step is calculated in the form p/q; division is delayed until the last moment
+    , q
+    ;
 
-    for (var i = 0; i < 40; i++) {
-        var balance = pv;
+  errorTol = 0.00001;
+  maxIter = 100000;
 
-        for (var j = 0; j < nper; j++ ) {
-            balance = balance * (1 + guess) + pmt;
-        }
-
-        if (Math.abs(balance + fv) < tolerance) {
-            return guess;
-        } else if (balance + fv > 0) {
-            highLimit = guess;
-        } else  {
-            lowLimit = guess;
-        }
-
-        guess = (highLimit + lowLimit) / 2;
+  while ( maxIter-- > 0 ) {
+  
+    prev_step = b - a;
+   
+    if ( Math.abs(fc) < Math.abs(fb) ) {
+      // Swap data for b to be the best approximation
+      a = b, b = c, c = a;
+      fa = fb, fb = fc, fc = fa;
     }
 
-    return null;
+    tol_act = 1e-15 * Math.abs(b) + errorTol / 2;
+    new_step = ( c - b ) / 2;
+
+    if ( Math.abs(new_step) <= tol_act || fb === 0 ) {
+      return b; // Acceptable approx. is found
+    }
+
+    // Decide if the interpolation can be tried
+    if ( Math.abs(prev_step) >= tol_act && Math.abs(fa) > Math.abs(fb) ) {
+      // If prev_step was large enough and was in true direction, Interpolatiom may be tried
+      var t1, cb, t2;
+      cb = c - b;
+      if ( a === c ) { // If we have only two distinct points linear interpolation can only be applied
+        t1 = fb / fa;
+        p = cb * t1;
+        q = 1.0 - t1;
+      }
+      else { // Quadric inverse interpolation
+        q = fa / fc, t1 = fb / fc, t2 = fb / fa;
+        p = t2 * (cb * q * (q - t1) - (b - a) * (t1 - 1));
+        q = (q - 1) * (t1 - 1) * (t2 - 1);
+      }
+
+      if ( p > 0 ) {
+        q = -q;  // p was calculated with the opposite sign; make p positive
+      }
+      else {
+        p = -p;  // and assign possible minus to q
+      }
+
+      if ( p < ( 0.75 * cb * q - Math.abs( tol_act * q ) / 2 ) &&
+           p < Math.abs( prev_step * q / 2 ) ) { 
+        // If (b + p / q) falls in [b,c] and isn't too large it is accepted
+        new_step = p / q;
+      }
+ 
+      // If p/q is too large then the bissection procedure can reduce [b,c] range to more extent
+    }
+
+    if ( Math.abs( new_step ) < tol_act ) { // Adjust the step to be not less than tolerance
+      new_step = ( new_step > 0 ) ? tol_act : -tol_act;
+    }
+
+    a = b, fa = fb;     // Save the previous approx.
+    b += new_step, fb = func(b);  // Do step to a new approxim.
+
+    if ( (fb > 0 && fc > 0) || (fb < 0 && fc < 0) ) {
+      c = a, fc = fa; // Adjust c for it to have a sign opposite to that of b
+    }
+  }
 }
 
 function addCommas0(x) {
@@ -125,7 +179,26 @@ b3 = randbws(r_b3);
 b4 = randbws(r_b4);
 b5 = randbws(r_b5);
 b6 = randchoose(r_b6);
-b7 = rate(b1*2, b2*b4/2, -b3*(1-b5), b4) * 2;
+
+bf0 = -b3*(1-b5);
+bf = b4*b2;
+bf10 = b4+bf;
+
+function irrfun(x) {
+  var x1 = 1 / (1 + x);
+  var x2 = x1 * x1;
+  var x3 = x2 * x1;
+  var x4 = x3 * x1;
+  var x5 = x4 * x1;
+  var x6 = x5 * x1;
+  var x7 = x6 * x1;
+  var x8 = x7 * x1;
+  var x9 = x8 * x1;
+  var x10 = x9 * x1;
+  return bf0 + (bf * x1) + (bf * x2) + (bf * x3) + (bf * x4) + (bf * x5) + (bf * x6) + (bf * x7) + (bf * x8) + (bf * x9) + (bf10 * x10);
+}
+
+b7 = uniroot(irrfun);
 b8 = b7*(1-b6);
 
 c1 = randbws(r_c1);
