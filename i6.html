@@ -1,0 +1,593 @@
+<html>
+<head>
+</head>
+<script>
+
+function rate(nper, pmt, pv, fv) {
+    var guess = 0.1;
+    var lowLimit = 0;
+    var highLimit = 1;
+    var tolerance = Math.abs(0.00000005 * pmt);
+
+    for (var i = 0; i < 40; i++) {
+        var balance = pv;
+
+        for (var j = 0; j < nper; j++ ) {
+            balance = balance * (1 + guess) + pmt;
+        }
+
+        if (Math.abs(balance + fv) < tolerance) {
+            return guess;
+        } else if (balance + fv > 0) {
+            highLimit = guess;
+        } else  {
+            lowLimit = guess;
+        }
+
+        guess = (highLimit + lowLimit) / 2;
+    }
+
+    return null;
+}
+
+function addCommas0(x) {
+  x += '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x)) {
+    x = x.replace(rgx, '$1' + ',' + '$2');
+  }
+  return x;
+}
+
+function set_el(str, txt) {
+  document.getElementById(str).innerHTML = txt;
+}
+
+function get_el_value(str) {
+  return document.getElementById(str).value;
+}
+
+function doshow_el(str, doshow) {
+  if (doshow == 0) {
+    document.getElementById(str).style.display = "none";
+  } else {
+    document.getElementById(str).style.display = "block";
+  }
+}
+
+function sd0(str, v) {
+  document.getElementById(str).innerHTML = v.toFixed(0);
+}
+
+function sd2(str, v) {
+  document.getElementById(str).innerHTML = v.toFixed(2);
+}
+
+function sc0(str, v) {
+  document.getElementById(str).innerHTML = addCommas0(v.toFixed(0));
+}
+
+function sp2(str, v) {
+  document.getElementById(str).innerHTML = ((v*100).toFixed(2)) + "%";
+}
+
+r_a1 = [85, 105, 1];
+r_a2 = [100, 100, 1];
+r_a3 = [7, 9, 0.01];
+r_a4 = [2, 3, 0.005];
+
+r_b1 = [10, 10, 1];
+r_b2 = [11, 18, 0.005];
+r_b3 = [985, 1015, 1];
+r_b4 = [1000, 1000, 1];
+r_b5 = [2, 4, 0.005];
+r_b6 = [35, 40, 0.01];
+
+r_c1 = [8, 9, 0.2];
+r_c2 = [9, 11, 0.005];
+r_c3 = [6, 9, 0.005];
+r_c4 = [1, 3, 0.005];
+
+r_d1 = [8, 10, 0.005];
+
+r_e4 = [9, 16, 0.1];
+r_e5 = [35, 45, 0.5];
+r_e6 = [8, 12, 0.005];
+
+r_f1 = [35, 40, 0.01];
+r_f2 = [10, 15, 0.01];
+
+function randbws(arr) {
+    var min = arr[0];
+    var max = arr[1];
+    var scale = arr[2];
+    if (min == max) return min * scale;
+    return (Math.floor(Math.random() * (max - min + 1) + min)) * scale;
+}
+
+function randchoose(arr) {
+    var x1 = arr[0];
+    var x2 = arr[1];
+    var scale = arr[2];
+    var x = Math.random() < 0.5 ? x1 : x2;
+    return x * scale;
+}
+
+a1 = randbws(r_a1);
+a2 = randbws(r_a2);
+a3 = randbws(r_a3);
+a4 = randbws(r_a4);
+a5 = (a3*a2) / (a1*(1-a4));
+
+b1 = randbws(r_b1);
+b2 = randbws(r_b2);
+b3 = randbws(r_b3);
+b4 = randbws(r_b4);
+b5 = randbws(r_b5);
+b6 = randchoose(r_b6);
+b7 = rate(b1*2, b2*b4/2, -b3*(1-b5), b4) * 2;
+b8 = b7*(1-b6);
+
+c1 = randbws(r_c1);
+c2 = randbws(r_c2);
+c3 = randbws(r_c3);
+c4 = randbws(r_c4);
+c5 = c3+(c2*c1);
+
+d1 = randbws(r_d1);
+d2 = b7;
+d3 = c3;
+d4 = c4;
+d5 = d2+d1;
+
+e4 = randbws(r_e4);
+e5 = randbws(r_e5);
+e6 = randbws(r_e6);
+e3 = 0.95235*e4;
+e2 = 0.95235*e3;
+e1 = 0.95235*e2;
+e7 = (e4-e3)/e3;
+e8 = (e4*(1+e7))/e5+e7;
+
+f1 = randchoose(r_f1);
+f2 = randchoose(r_f2);
+f3 = 1-f1-f2;
+
+g1 = f1;
+g2 = f2;
+g3 = f3;
+
+w1 = [f1, f2, f3];
+w2 = [b8, a5, (c5+d5+e8)/3];
+w3 = [w1[0]*w2[0], w1[1]*w2[1], w1[2]*w2[2]];
+wacc = w3[0]+w3[1]+w3[2];
+h = [w2[0], w3[0], w2[1], w3[1], w2[2], w3[2], wacc];
+
+function set_all() {
+    sd2("d_a1", a1);
+    sd2("d_a2", a2);
+    sp2("d_a3", a3);
+    sp2("d_a4", a4);
+    sd2("d_b1", b1);
+    sp2("d_b2", b2);
+    sc0("d_b3", b3);
+    sc0("d_b4", b4);
+    sp2("d_b5", b5);
+    sp2("d_b6", b6);
+    sd2("d_c1", c1);
+    sp2("d_c2", c2);
+    sp2("d_c3", c3);
+    sp2("d_c4", c4);
+    sp2("d_d1", d1);
+    sp2("d_d2", d2);
+    sp2("d_d3", d3);
+    sp2("d_d4", d4);
+    sd2("d_e1", e1);
+    sd2("d_e2", e2);
+    sd2("d_e3", e3);
+    sd2("d_e4", e4);
+    sd2("d_e5", e5);
+    sp2("d_e6", e6);
+    sp2("d_f1", f1);
+    sp2("d_f2", f2);
+    sp2("d_f3", f3);
+    sp2("d_g1", g1);
+    sp2("d_g2", g2);
+    sp2("d_g3", g3);
+}
+
+function is_numeric_val(value) {
+  return /^-{0,1}\d*\.{0,1}\d+$/.test(value);
+}
+
+function get_txtnum_pct(elval) {
+  elval = elval.replace(" ", "");
+  if (elval == "") return null;
+  if (elval[0] == "$") return null;
+  if (elval.endsWith("%")) elval = elval.substring(elval.length - 1);
+  elval = elval.replace(",", "");
+  if (!is_numeric_val(elval)) return null;
+  var pelval = parseFloat(elval);
+  return pelval;
+}
+
+function cmpnum_pct2(num, str) {
+  inp = get_txtnum_pct(str);
+  if (inp == null) return 0;
+  num *= 100;
+  inp *= 100;
+  num *= 100;
+  if (Math.abs(num - inp) < 1.1) return 1;
+  return 0;
+}
+
+function sum_arr(arr) {
+  var res = 0;
+  for (var i = 0; i < arr.length; i++) {
+    res += arr[i];
+  }
+  return res;
+}
+
+sc_you = [];
+sc_era = [];
+sc_exp = [];
+sc_sco = [];
+
+function get_all_values() {
+    sc_you[0] = get_el_value("d_a5");
+    sc_you[1] = get_el_value("d_b7");
+    sc_you[2] = get_el_value("d_b8");
+    sc_you[3] = get_el_value("d_c5");
+    sc_you[4] = get_el_value("d_d5");
+    sc_you[5] = get_el_value("d_e7");
+    sc_you[6] = get_el_value("d_e8");
+    for (var i = 0; i < 7; i++) {
+        sc_you[7 + i] = get_el_value("d_h" + i);
+    }
+}
+
+function set_era_values() {
+    sc_era[0] = a5;
+    sc_era[1] = b7;
+    sc_era[2] = b8;
+    sc_era[3] = c5;
+    sc_era[4] = d5;
+    sc_era[5] = e7;
+    sc_era[6] = e8;
+    for (var i = 0; i < 7; i++) {
+        sc_era[7 + i] = h[i];
+    }
+}
+
+function gen_scores() {
+    get_all_values();
+    set_era_values();
+    var len = sc_you.length;
+    for (var i = 0; i < len; i++) {
+        sc_exp[i] = (sc_era[i]*100).toFixed(2) + "%";
+    }
+    for (var i = 0; i < len; i++) {
+        sc_sco[i] = cmpnum_pct2(sc_era[i], sc_you[i]);
+    }
+    for (var i = 0; i < len; i++) {
+      set_el("d_s" + i + "0", sc_you[i]);
+      set_el("d_s" + i + "1", sc_exp[i]);
+      set_el("d_s" + i + "2", sc_sco[i]);
+    }
+    var tscore = sum_arr(sc_sco);
+    var mscore = len;
+    set_el("d_tscore", tscore);
+    set_el("d_mscore", mscore);
+}
+
+var slide_index = -1;
+var num_slides = 8;
+
+function goNext() {
+  if (slide_index == -1) {
+    set_all();
+  }
+  slide_index++;
+  if (slide_index == num_slides - 1) {
+    gen_scores();
+  }
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+function goPrev() {
+  slide_index--;
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+</script>
+
+<div id="ds_0">
+  <div id="d_story" class="d_boxed">
+    Cohen Chen and Qazi LLC (CCQ) is a boutique investment bank that focuses primarily on the transportation sector. Since its inception in 1995, CCQ has completed more than 150 capital raising transactions on North American debt and equity markets.<br><br>One of their old clients, Executive Transportation Company (ETC), is thinking of expanding its business and buying several capital assets, such as luxury coaches and a Bell helicopter, and has approached the investment bank for advice. They would also like CCQ to raise debt and equity capital for them if the investment bank feels strongly that it is the right time to do so.
+  </div>
+  <button type="button" class="c_nav" onclick="window.location.href='/index.html'">Back to menu</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_1">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data - Preferred Stock</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Price-preferred</td><td id="d_a1" class=r></td></tr>
+      <tr><td>Par value</td><td id="d_a2" class=r></td></tr>
+      <tr><td>Dividend rate</td><td id="d_a3" class=r></td></tr>
+      <tr><td>Flotation cost</td><td id="d_a4" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div>
+      <span>What is ETC's cost of preferred stock?</span>
+      <input type="text" id="d_a5" autocomplete="off" />
+    </div>
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_2">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data - Bonds</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Years to maturity</td><td id="d_b1" class=r></td></tr>
+      <tr><td>Coupon rate</td><td id="d_b2" class=r></td></tr>
+      <tr><td>Current price</td><td id="d_b3" class=r></td></tr>
+      <tr><td>Par value</td><td id="d_b4" class=r></td></tr>
+      <tr><td>Flotation costs</td><td id="d_b5" class=r></td></tr>
+      <tr><td>Marginal tax rate</td><td id="d_b6" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div>
+      <span>What is ETC's before-tax cost of bonds?</span>
+      <input type="text" id="d_b7" autocomplete="off" />
+    </div>
+    <div>
+      <span>What is ETC's after-tax cost of bonds?</span>
+      <input type="text" id="d_b8" autocomplete="off" />
+    </div>
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_3">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data - Equity (CAPM approach)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Beta</td><td id="d_c1" class=r></td></tr>
+      <tr><td>Market risk premium</td><td id="d_c2" class=r></td></tr>
+      <tr><td>10 yrs govt bond yield</td><td id="d_c3" class=r></td></tr>
+      <tr><td>3 months T-bill yield</td><td id="d_c4" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div>
+      <span>What is ETC's cost of common equity?</span>
+      <input type="text" id="d_c5" autocomplete="off" />
+    </div>
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_4">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data - Equity (bond yld + risk premium approach)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Risk premium</td><td id="d_d1" class=r></td></tr>
+      <tr><td>Bond yield - ETC's bond</td><td id="d_d2" class=r></td></tr>
+      <tr><td>10 yrs govt bond yield</td><td id="d_d3" class=r></td></tr>
+      <tr><td>3 months T-bill yield</td><td id="d_d4" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div>
+      <span>What is ETC's cost of common equity?</span>
+      <input type="text" id="d_d5" autocomplete="off" />
+    </div>
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_5">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data - Equity (DCF approach)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Dividend 3 years ago</td><td id="d_e1" class=r></td></tr>
+      <tr><td>Dividend 2 years ago</td><td id="d_e2" class=r></td></tr>
+      <tr><td>Last year's dividend</td><td id="d_e3" class=r></td></tr>
+      <tr><td>Most recent dividend</td><td id="d_e4" class=r></td></tr>
+      <tr><td>Current price</td><td id="d_e5" class=r></td></tr>
+      <tr><td>Flotation costs</td><td id="d_e6" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div>
+      <span>What is the dividend growth rate?</span>
+      <input type="text" id="d_e7" autocomplete="off" />
+    </div>
+    <div>
+      <span>What is ETC's cost of common equity?</span>
+      <input type="text" id="d_e8" autocomplete="off" />
+    </div>
+    <div>
+      <span><br><b>Note: ETC will not issue new common equity.</b></span>
+    </div>
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_6">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data - Weighted Average Cost of Capital</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><b>Target capital structure</b></td><td></td></tr>
+      <tr><td>Debt</td><td id="d_f1" class=r></td></tr>
+      <tr><td>Preferred stock</td><td id="d_f2" class=r></td></tr>
+      <tr><td>Common equity</td><td id="d_f3" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div>
+      <span>What is ETC's WACC?</span>
+    </div>
+  </div>
+  <table class="tstripe" style="margin-top: 8px">
+    <thead>
+      <tr>
+        <th>Sources of capital</th>
+        <th>Weight</th>
+        <th>After-tax cost</th>
+        <th>Weighted cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Debt</td><td id="d_g1" class=r></td><td><input id="d_h0" type="text" /></td><td><input id="d_h1" type="text" /></td></tr>
+      <tr><td>Preferred stock</td><td id="d_g2" class=r></td><td><input id="d_h2" type="text" /></td><td><input id="d_h3" type="text" /></td></tr>
+      <tr><td>Common equity</td><td id="d_g3" class=r></td><td><input id="d_h4" type="text" /></td><td><input id="d_h5" type="text" /></td></tr>
+      <tr><td></td><td></td><td><b>WACC</b></td><td><input id="d_h6" type="text" /></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_7">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th>Table</th>
+        <th>Item</th>
+        <th>Your answer</th>
+        <th>Expected answer</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>ETC's cost of preferred stock</td><td id="d_s00" class=r></td><td id="d_s01" class=r></td><td id="d_s02"></td></tr>
+      <tr><td>2</td><td>ETC's before-tax cost of bonds</td><td id="d_s10" class=r></td><td id="d_s11" class=r></td><td id="d_s12"></td></tr>
+      <tr><td>2</td><td>ETC's after-tax cost of bonds</td><td id="d_s20" class=r></td><td id="d_s21" class=r></td><td id="d_s22"></td></tr>
+      <tr><td>3</td><td>ETC's cost of common equity</td><td id="d_s30" class=r></td><td id="d_s31" class=r></td><td id="d_s32"></td></tr>
+      <tr><td>4</td><td>ETC's cost of common equity</td><td id="d_s40" class=r></td><td id="d_s41" class=r></td><td id="d_s42"></td></tr>
+      <tr><td>5</td><td>Dividend growth rate</td><td id="d_s50" class=r></td><td id="d_s51" class=r></td><td id="d_s52"></td></tr>
+      <tr><td>5</td><td>ETC's cost of common equity</td><td id="d_s60" class=r></td><td id="d_s61" class=r></td><td id="d_s62"></td></tr>
+      <tr><td>6</td><td>Debt: after-tax cost</td><td id="d_s70" class=r></td><td id="d_s71" class=r></td><td id="d_s72"></td></tr>
+      <tr><td>6</td><td>Debt: weighted cost</td><td id="d_s80" class=r></td><td id="d_s81" class=r></td><td id="d_s82"></td></tr>
+      <tr><td>6</td><td>Preferred stock: after-tax cost</td><td id="d_s90" class=r></td><td id="d_s91" class=r></td><td id="d_s92"></td></tr>
+      <tr><td>6</td><td>Preferred stock: weighted cost</td><td id="d_s100" class=r></td><td id="d_s101" class=r></td><td id="d_s102"></td></tr>
+      <tr><td>6</td><td>Common equity: after-tax cost</td><td id="d_s110" class=r></td><td id="d_s111" class=r></td><td id="d_s112"></td></tr>
+      <tr><td>6</td><td>Common equity: weighted cost</td><td id="d_s120" class=r></td><td id="d_s121" class=r></td><td id="d_s122"></td></tr>
+      <tr><td>6</td><td>WACC</td><td id="d_s130" class=r></td><td id="d_s131" class=r></td><td id="d_s132"></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div><b>Your score:</b> <span id="d_tscore"></span></div>
+    <div><b>Maximum score:</b> <span id="d_mscore"></span></div>
+  </div>
+  <button type="button" class="c_nav" onClick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onClick="window.location.reload();">Retry with different numbers</button>
+  <button type="button" class="c_nav" onclick="window.location.href='/index.html'">Return to menu</button>
+</div>
+
+<script>
+
+goNext();
+
+</script>
+
+<style>
+body {
+  font-family: sans-serif;
+  background-color: #ffdd22;
+}
+
+table {
+  border-collapse: collapse;
+  background-color: white;
+}
+
+table td, table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+td.r {
+  text-align: right;
+}
+
+.tstripe tr:nth-child(even){background-color: #f2f2f2;}
+.treg tbody td[colspan="2"]{background-color: #f2f2f2;}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.c_nav {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.d_boxed {
+  margin-top: 8px;
+  border: 1px solid green;
+  width: 40em;
+  padding: 15px;
+  line-height: 1.5;
+  background-color: white;
+}
+
+input[type=text] {
+  width: 100%;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+</style>
