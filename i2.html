@@ -40,6 +40,10 @@ function addCommas(nStr) {
   return x1 + x2;
 }
 
+function sp1(str, v) {
+  document.getElementById(str).innerHTML = v.toFixed(1) + "%";
+}
+
 function sfn(str, v, n) {
   document.getElementById(str).innerHTML = addCommas(v.toFixed(n));
 }
@@ -241,7 +245,7 @@ special_index_n = 10;
 o_c = [];
 o_c[0] = i_iex[0]*(1-c6);
 o_c[1] = -((h_snp[0]+h_ltd[0])-(h_snp[1]+h_ltd[1]));
-o_c[2] = (h_ree[1]+i_nic[0])-h_ree[1];
+o_c[2] = (h_ree[1]+i_nic[0])-h_ree[0];
 o_c[3] = h_cos[0]-h_cos[1];
 o_c[4] = -(h_sti[1]-h_sti[0]);
 o_c[5] = o_c[0]+o_c[1]+o_c[2]+o_c[3]+o_c[4];
@@ -294,6 +298,7 @@ function set_all() {
   sd0("d_h17", h_ree);
   sd0("d_h18", h_teq);
   sd0("d_h19", h_tle);
+  sp1("d_hb0", a14);
   sd0("d_i0", i_sal);
   sd0("d_i1", i_cgs);
   sd0("d_i2", i_grp);
@@ -304,6 +309,7 @@ function set_all() {
   sd0("d_i7", i_ebt);
   sd0("d_i8", i_tax);
   sd0("d_i9", i_nic);
+  sp1("d_ib0", c6);
 }
 
 n_b = [];
@@ -504,6 +510,9 @@ function goPrev() {
       <tr><td><b>Total equity</b></td><td class=r><b><span id="d_h180"></span></b></td><td class=r><b><span id="d_h181"></span></b></td></tr>
       <tr><td><b>Total liabilities and equity</b></td><td class=r><b><span id="d_h190"></span></b></td><td class=r><b><span id="d_h191"></span></b></td></tr>
   </table>
+  <div class="d_boxed">
+    <b>WACC: </b><span id="d_hb0"></span>
+  </div>
   <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
   <button type="button" class="c_nav" onclick="goNext()">Next</button>
 </div>
@@ -529,6 +538,9 @@ function goPrev() {
       <tr><td>Net income</td><td id="d_i90" class=r></td><td id="d_i91" class=r></td></tr>
     </tbody>
   </table>
+  <div class="d_boxed">
+    <b>Tax rate: </b><span id="d_ib0"></span>
+  </div>
   <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
   <button type="button" class="c_nav" onclick="goNext()">Next</button>
 </div>
