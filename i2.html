@@ -41,7 +41,7 @@ function addCommas(nStr) {
 }
 
 function sp1(str, v) {
-  document.getElementById(str).innerHTML = v.toFixed(1) + "%";
+  document.getElementById(str).innerHTML = (v*100).toFixed(1) + "%";
 }
 
 function sfn(str, v, n) {
