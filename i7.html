@@ -1,0 +1,698 @@
+<html>
+<head>
+</head>
+<script>
+
+function uniroot(func) {
+  var a = 0
+    , b = 10
+    , c = a
+    , fa = func(a)
+    , fb = func(b)
+    , fc = fa
+    , s = 0
+    , fs = 0
+    , tol_act   // Actual tolerance
+    , new_step  // Step at this iteration
+    , prev_step // Distance from the last but one to the last approximation
+    , p         // Interpolation step is calculated in the form p/q; division is delayed until the last moment
+    , q
+    ;
+
+  errorTol = 0.00001;
+  maxIter = 100000;
+
+  while ( maxIter-- > 0 ) {
+  
+    prev_step = b - a;
+   
+    if ( Math.abs(fc) < Math.abs(fb) ) {
+      // Swap data for b to be the best approximation
+      a = b, b = c, c = a;
+      fa = fb, fb = fc, fc = fa;
+    }
+
+    tol_act = 1e-15 * Math.abs(b) + errorTol / 2;
+    new_step = ( c - b ) / 2;
+
+    if ( Math.abs(new_step) <= tol_act || fb === 0 ) {
+      return b; // Acceptable approx. is found
+    }
+
+    // Decide if the interpolation can be tried
+    if ( Math.abs(prev_step) >= tol_act && Math.abs(fa) > Math.abs(fb) ) {
+      // If prev_step was large enough and was in true direction, Interpolatiom may be tried
+      var t1, cb, t2;
+      cb = c - b;
+      if ( a === c ) { // If we have only two distinct points linear interpolation can only be applied
+        t1 = fb / fa;
+        p = cb * t1;
+        q = 1.0 - t1;
+      }
+      else { // Quadric inverse interpolation
+        q = fa / fc, t1 = fb / fc, t2 = fb / fa;
+        p = t2 * (cb * q * (q - t1) - (b - a) * (t1 - 1));
+        q = (q - 1) * (t1 - 1) * (t2 - 1);
+      }
+
+      if ( p > 0 ) {
+        q = -q;  // p was calculated with the opposite sign; make p positive
+      }
+      else {
+        p = -p;  // and assign possible minus to q
+      }
+
+      if ( p < ( 0.75 * cb * q - Math.abs( tol_act * q ) / 2 ) &&
+           p < Math.abs( prev_step * q / 2 ) ) { 
+        // If (b + p / q) falls in [b,c] and isn't too large it is accepted
+        new_step = p / q;
+      }
+ 
+      // If p/q is too large then the bissection procedure can reduce [b,c] range to more extent
+    }
+
+    if ( Math.abs( new_step ) < tol_act ) { // Adjust the step to be not less than tolerance
+      new_step = ( new_step > 0 ) ? tol_act : -tol_act;
+    }
+
+    a = b, fa = fb;     // Save the previous approx.
+    b += new_step, fb = func(b);  // Do step to a new approxim.
+
+    if ( (fb > 0 && fc > 0) || (fb < 0 && fc < 0) ) {
+      c = a, fc = fa; // Adjust c for it to have a sign opposite to that of b
+    }
+  }
+}
+
+r_v1 = [15, 20, -100000];
+r_v2 = [10, 20, -10000];
+r_v3 = [50, 100, 10000];
+r_v4 = [45, 90, 10000];
+r_v5 = [40, 80, 10000];
+r_v6 = [35, 75, 10000];
+r_v7 = [35, 75, 10000];
+r_v8 = [30, 70, 10000];
+r_v9 = [40, 45, 10000];
+r_v11 = [7, 14, 0.01];
+r_v12 = [3, 5, 1];
+
+function randbws(arr) {
+    var min = arr[0];
+    var max = arr[1];
+    var scale = arr[2];
+    if (min == max) return min * scale;
+    return (Math.floor(Math.random() * (max - min + 1) + min)) * scale;
+}
+
+v1 = randbws(r_v1);
+v2 = randbws(r_v2);
+v3 = randbws(r_v3);
+v4 = randbws(r_v4);
+v5 = randbws(r_v5);
+v6 = randbws(r_v6);
+v7 = randbws(r_v7);
+v8 = randbws(r_v8);
+v9 = randbws(r_v9);
+v10 = -v2;
+v11 = randbws(r_v11);
+v12 = randbws(r_v12);
+
+cf = [v1+v2, v3, v4, v5, v6, v7, v8+v9+v10];
+cf0 = cf[0];
+cf1 = cf[1];
+cf2 = cf[2];
+cf3 = cf[3];
+cf4 = cf[4];
+cf5 = cf[5];
+cf6 = cf[6];
+
+function irrfun(x) {
+  var x1 = 1 / (1 + x);
+  var x2 = x1 * x1;
+  var x3 = x2 * x1;
+  var x4 = x3 * x1;
+  var x5 = x4 * x1;
+  var x6 = x5 * x1;
+  return cf0 + (cf1 * x1) + (cf2 * x2) + (cf3 * x3) + (cf4 * x4) + (cf5 * x5) + (cf6 * x6);
+}
+
+pv = [cf[0]];
+for (var i = 1; i < 7; i++) {
+    pv[i] = cf[i] / Math.pow(1 + v11, i);
+}
+r_npv = 0;
+r_pi = 0;
+for (i = 0; i < 7; i++) {
+  r_npv += pv[i];
+  if (i != 0) r_pi += pv[i];
+}
+r_pi /= -pv[0];
+
+ccf = [cf[0]];
+for (var i = 1; i < 7; i++) {
+    ccf[i] = cf[i] + ccf[i-1];
+}
+r_ppa = [0];
+for (var i = 1; i < 7; i++) {
+    r_ppa[i] = (ccf[i] < 0) ? 1 : ((ccf[i-1] < 0) ? (-ccf[i-1]/cf[i]) : 0);
+}
+r_pp = 0;
+for (var i = 0; i < 7; i++) {
+    r_pp += r_ppa[i];
+}
+
+r_irr = uniroot(irrfun);
+
+pvccf = [pv[0]];
+for (var i = 1; i < 7; i++) {
+    pvccf[i] = pv[i] + pvccf[i-1];
+}
+r_dppa = [0];
+for (var i = 1; i < 7; i++) {
+    r_dppa[i] = (pvccf[i] < 0) ? 1 : ((pvccf[i-1] < 0) ? (-pvccf[i-1]/pv[i]) : 0);
+}
+r_dpp = 0;
+for (var i = 0; i < 7; i++) {
+    r_dpp += r_dppa[i];
+}
+
+function addCommas0(x) {
+  x += '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x)) {
+    x = x.replace(rgx, '$1' + ',' + '$2');
+  }
+  return x;
+}
+
+function sd2(str, v) {
+  document.getElementById(str).innerHTML = v.toFixed(2);
+}
+
+function sc0(str, v) {
+  document.getElementById(str).innerHTML = addCommas0(v.toFixed(0));
+}
+
+function sp2(str, v) {
+  document.getElementById(str).innerHTML = (v*100).toFixed(2) + "%";
+}
+
+function sc0_c(str, v) {
+  var x = addCommas0(v.toFixed(0));
+  var els = document.getElementsByClassName(str);
+  for (var i = 0; i < els.length; i++) {
+    els[i].innerHTML = x;
+  }
+}
+
+function sp2_c(str, v) {
+  var x = (v*100).toFixed(2) + "%";
+  var els = document.getElementsByClassName(str);
+  for (var i = 0; i < els.length; i++) {
+    els[i].innerHTML = x;
+  }
+}
+
+function get_el(str) {
+  return document.getElementById(str);
+}
+
+function set_el(str, txt) {
+  document.getElementById(str).innerHTML = txt;
+}
+
+function get_el_value(str) {
+  return document.getElementById(str).value;
+}
+
+function doshow_el(str, doshow) {
+  if (doshow == 0) {
+    document.getElementById(str).style.display = "none";
+  } else {
+    document.getElementById(str).style.display = "block";
+  }
+}
+
+function get_rad_value(str) {
+  var rad0 = str + "0";
+  var rad1 = str + "1";
+  if (get_el(rad0).checked) return "Yes";
+  if (get_el(rad1).checked) return "No";
+  return "";
+}
+
+function is_numeric_val(value) {
+  return /^-{0,1}\d*\.{0,1}\d+$/.test(value);
+}
+
+function get_txtnum(elval) {
+  elval = elval.replace(" ", "");
+  if (elval == "") return null;
+  if (elval[0] == "$") elval = elval.substring(1);
+  if (elval.endsWith("%")) elval = elval.substring(0, elval.length - 1);
+  elval = elval.replace(",", "");
+  if (!is_numeric_val(elval)) return null;
+  var pelval = parseFloat(elval);
+  return pelval;
+}
+
+function cmpnum(num, str, fla) {
+  inp = get_txtnum(str);
+  if (inp == null) return 0;
+  if (fla == "2p") num *= 100;
+  if (fla == "2p" || fla == "2d") {
+    num *= 100;
+    inp *= 100;
+  }
+  if (Math.abs(num - inp) < 1.1) return 1;
+  return 0;
+}
+
+function cmprad(r0, r1) {
+    return (r0 == r1) ? 1 : 0;
+}
+
+function doformat(v, fla) {
+    if (fla == "0d") return v.toFixed(0);
+    if (fla == "0c") return addCommas0(v.toFixed(0));
+    if (fla == "2d") return v.toFixed(2);
+    if (fla == "2p") return (v*100).toFixed(2) + "%";
+}
+
+function mergearr2(arr0, arr1, arr2) {
+    var len = arr1.length;
+    for (var i = 0; i < len; i++) {
+        arr0[i*2] = arr1[i];
+        arr0[i*2+1] = arr2[i];
+    }
+}
+
+function set_all() {
+    sc0("d_h0", v1);
+    sc0("d_h1", v2);
+    sc0("d_h2", v3);
+    sc0("d_h3", v4);
+    sc0("d_h4", v5);
+    sc0("d_h5", v6);
+    sc0("d_h6", v7);
+    sc0("d_h7", v8);
+    sc0("d_h8", v9);
+    sp2("d_h9", v11);
+    sc0("d_h10", v12);
+    sc0_c("d_i0", -v1);
+    sc0_c("d_i1", -v2);
+    sc0_c("d_i20", v3);
+    sc0_c("d_i21", v4);
+    sc0_c("d_i22", v5);
+    sc0_c("d_i23", v6);
+    sc0_c("d_i24", v7);
+    sc0_c("d_i25", v8);
+    sc0_c("d_i3", v9);
+    sc0_c("d_i4", v2);
+    sp2_c("d_i5", v11);
+}
+
+var fla0 = ["2d", "2d", "0c", "2p", "2d"];
+var exp0 = [r_pp, r_dpp, r_npv, r_irr, r_pi];
+var exp0_f = [];
+var exp1 = [];
+exp1[0] = (exp0[0] > v12) ? "No" : "Yes";
+exp1[1] = (exp0[1] > v12) ? "No" : "Yes";
+exp1[2] = (exp0[2] < 0) ? "No" : "Yes";
+exp1[3] = (exp0[3] < v11) ? "No" : "Yes";
+exp1[4] = (exp0[4] < 1) ? "No" : "Yes";
+var sc_exp = [];
+
+var you0 = [];
+var you1 = [];
+var sc_you = [];
+
+var sco0 = [];
+var sco1 = [];
+var sc_sco = [];
+
+function sum_arr(arr) {
+  var res = 0;
+  for (var i = 0; i < arr.length; i++) {
+    res += arr[i];
+  }
+  return res;
+}
+
+function gen_scores() {
+  var qlength = 5;
+  for (var i = 0; i < qlength; i++) {
+      you0[i] = get_el_value("d_p" + i);
+      you1[i] = get_rad_value("d_q" + i);
+      sco0[i] = cmpnum(exp0[i], you0[i], fla0[i]);
+      sco1[i] = cmprad(exp1[i], you1[i]);
+      exp0_f[i] = doformat(exp0[i], fla0[i]);
+  }
+  mergearr2(sc_you, you0, you1);
+  mergearr2(sc_exp, exp0_f, exp1);
+  mergearr2(sc_sco, sco0, sco1);
+  for (var i = 0; i < qlength * 2; i++) {
+     set_el("d_s" + i + "0", sc_you[i]);
+     set_el("d_s" + i + "1", sc_exp[i]);
+     set_el("d_s" + i + "2", sc_sco[i]);
+  }
+  var tscore = sum_arr(sc_sco);
+  var mscore = sc_sco.length;
+  set_el("d_tscore", tscore);
+  set_el("d_mscore", mscore);
+}
+
+var slide_index = -1;
+var num_slides = 8;
+
+function goNext() {
+  if (slide_index == -1) {
+    set_all();
+  }
+  slide_index++;
+  if (slide_index == num_slides - 1) {
+    gen_scores();
+  }
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+function goPrev() {
+  slide_index--;
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+</script>
+
+<div id="ds_0">
+  <div id="d_story" class="d_boxed">
+    Executive Transportation Company (ETC) is an Edmonton based business group that offers executive transportation to business executives travelling within Alberta. The company currently has a fleet of luxury sedans, stretch limousines and executive SUVs. <br><br>The company is contemplating buying a pre-owned Bell 427 helicopter for its transportation fleet. Although the helicopter is expensive, its versatility is expected to give the company access to a wider market. Alisha Jones, the Controller of the company has summarized the financial aspects of this capital investment project in the table given on the next slide. <br><br>She has asked you to do the capital budgeting analysis of this investment.
+  </div>
+  <button type="button" class="c_nav" onclick="window.location.href='/index.html'">Back to menu</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_1">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data - Capital Investment Project</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Cost of helicopter</td><td id="d_h0" class=r></td></tr>
+      <tr><td>Initial working capital requirement</td><td id="d_h1" class=r></td></tr>
+      <tr><td>Net after-tax operating cash inflows - Year 1</td><td id="d_h2" class=r></td></tr>
+      <tr><td>Net after-tax operating cash inflows - Year 2</td><td id="d_h3" class=r></td></tr>
+      <tr><td>Net after-tax operating cash inflows - Year 3</td><td id="d_h4" class=r></td></tr>
+      <tr><td>Net after-tax operating cash inflows - Year 4</td><td id="d_h5" class=r></td></tr>
+      <tr><td>Net after-tax operating cash inflows - Year 5</td><td id="d_h6" class=r></td></tr>
+      <tr><td>Net after-tax operating cash inflows - Year 6</td><td id="d_h7" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td id="d_h8" class=r></td></tr>
+      <tr><td>Discount rate (Cost of capital)</td><td id="d_h9" class=r></td></tr>
+      <tr><td>Maximum payback period</td><td id="d_h10" class=r></td></tr>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_2">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Initial Expenditure Now</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>Year 4</th>
+        <th>Year 5</th>
+        <th>Year 6</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Cost of helicopter</td><td class="d_i0" class=r></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Working capital requirement</td><td class="d_i1" class=r></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash inflows</td><td></td><td class="d_i20" class=r></td><td class="d_i21" class=r></td><td class="d_i22" class=r></td><td class="d_i23" class=r></td><td class="d_i24" class=r></td><td class="d_i25" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="d_i3" class=r></td></tr>
+      <tr><td>Working capital recovery</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="d_i4" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div>
+      <span>What is the <b><u>payback period</u></b> of this project?</span>
+      <input type="text" id="d_p0" autocomplete="off" />
+      <span>Should ETC undertake this project?</span>
+      <label><input type="radio" name="d_q0" id="d_q00" value="y" />Yes</label>
+      <label><input type="radio" name="d_q0" id="d_q01" value="n" />No</label>
+    </div>
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_3">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Initial Expenditure Now</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>Year 4</th>
+        <th>Year 5</th>
+        <th>Year 6</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Cost of helicopter</td><td class="d_i0" class=r></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Working capital requirement</td><td class="d_i1" class=r></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash inflows</td><td></td><td class="d_i20" class=r></td><td class="d_i21" class=r></td><td class="d_i22" class=r></td><td class="d_i23" class=r></td><td class="d_i24" class=r></td><td class="d_i25" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="d_i3" class=r></td></tr>
+      <tr><td>Working capital recovery</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="d_i4" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div>
+      <span>What is the <b><u>discounted payback period</u></b> of this project?</span>
+      <input type="text" id="d_p1" autocomplete="off" />
+      <span>Should ETC undertake this project?</span>
+      <label><input type="radio" name="d_q1" id="d_q10" value="y" />Yes</label>
+      <label><input type="radio" name="d_q1" id="d_q11" value="n" />No</label>
+    </div>
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_4">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Initial Expenditure Now</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>Year 4</th>
+        <th>Year 5</th>
+        <th>Year 6</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Cost of helicopter</td><td class="d_i0" class=r></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Working capital requirement</td><td class="d_i1" class=r></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash inflows</td><td></td><td class="d_i20" class=r></td><td class="d_i21" class=r></td><td class="d_i22" class=r></td><td class="d_i23" class=r></td><td class="d_i24" class=r></td><td class="d_i25" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="d_i3" class=r></td></tr>
+      <tr><td>Working capital recovery</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="d_i4" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div>
+      <span>What is the <b><u>net present value</u></b> of this project?</span>
+      <input type="text" id="d_p2" autocomplete="off" />
+      <span>Should ETC undertake this project?</span>
+      <label><input type="radio" name="d_q2" id="d_q20" value="y" />Yes</label>
+      <label><input type="radio" name="d_q2" id="d_q21" value="n" />No</label>
+    </div>
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_5">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Initial Expenditure Now</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>Year 4</th>
+        <th>Year 5</th>
+        <th>Year 6</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Cost of helicopter</td><td class="d_i0" class=r></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Working capital requirement</td><td class="d_i1" class=r></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash inflows</td><td></td><td class="d_i20" class=r></td><td class="d_i21" class=r></td><td class="d_i22" class=r></td><td class="d_i23" class=r></td><td class="d_i24" class=r></td><td class="d_i25" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="d_i3" class=r></td></tr>
+      <tr><td>Working capital recovery</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="d_i4" class=r></td></tr>
+      <tr><td>Discount rate (Cost of capital)</td><td class="d_i5" class=r></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div>
+      <span>What is the <b><u>IRR</u></b> of this project?</span>
+      <input type="text" id="d_p3" autocomplete="off" />
+      <span>Should ETC undertake this project?</span>
+      <label><input type="radio" name="d_q3" id="d_q30" value="y" />Yes</label>
+      <label><input type="radio" name="d_q3" id="d_q31" value="n" />No</label>
+    </div>
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_6">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Initial Expenditure Now</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>Year 4</th>
+        <th>Year 5</th>
+        <th>Year 6</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Cost of helicopter</td><td class="d_i0" class=r></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Working capital requirement</td><td class="d_i1" class=r></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash inflows</td><td></td><td class="d_i20" class=r></td><td class="d_i21" class=r></td><td class="d_i22" class=r></td><td class="d_i23" class=r></td><td class="d_i24" class=r></td><td class="d_i25" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="d_i3" class=r></td></tr>
+      <tr><td>Working capital recovery</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="d_i4" class=r></td></tr>
+      <tr><td>Discount rate (Cost of capital)</td><td class="d_i5" class=r></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div>
+      <span>What is the <b><u>PI</u></b> of this project?</span>
+      <input type="text" id="d_p4" autocomplete="off" />
+      <span>Should ETC undertake this project?</span>
+      <label><input type="radio" name="d_q4" id="d_q40" value="y" />Yes</label>
+      <label><input type="radio" name="d_q4" id="d_q41" value="n" />No</label>
+    </div>
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_7">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th>Table</th>
+        <th>Item</th>
+        <th>Your answer</th>
+        <th>Expected answer</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Payback period</td><td id="d_s00" class=r></td><td id="d_s01" class=r></td><td id="d_s02"></td></tr>
+      <tr><td>1</td><td>Should undertake project</td><td id="d_s10" class=r></td><td id="d_s11" class=r></td><td id="d_s12"></td></tr>
+      <tr><td>2</td><td>Discounted payback period</td><td id="d_s20" class=r></td><td id="d_s21" class=r></td><td id="d_s22"></td></tr>
+      <tr><td>2</td><td>Should undertake project</td><td id="d_s30" class=r></td><td id="d_s31" class=r></td><td id="d_s32"></td></tr>
+      <tr><td>3</td><td>Net present value</td><td id="d_s40" class=r></td><td id="d_s41" class=r></td><td id="d_s42"></td></tr>
+      <tr><td>3</td><td>Should undertake project</td><td id="d_s50" class=r></td><td id="d_s51" class=r></td><td id="d_s52"></td></tr>
+      <tr><td>4</td><td>IRR</td><td id="d_s60" class=r></td><td id="d_s61" class=r></td><td id="d_s62"></td></tr>
+      <tr><td>4</td><td>Should undertake project</td><td id="d_s70" class=r></td><td id="d_s71" class=r></td><td id="d_s72"></td></tr>
+      <tr><td>5</td><td>PI</td><td id="d_s80" class=r></td><td id="d_s81" class=r></td><td id="d_s82"></td></tr>
+      <tr><td>5</td><td>Should undertake project</td><td id="d_s90" class=r></td><td id="d_s91" class=r></td><td id="d_s92"></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div><b>Your score:</b> <span id="d_tscore"></span></div>
+    <div><b>Maximum score:</b> <span id="d_mscore"></span></div>
+  </div>
+  <button type="button" class="c_nav" onClick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onClick="window.location.reload();">Retry with different numbers</button>
+  <button type="button" class="c_nav" onclick="window.location.href='/index.html'">Return to menu</button>
+</div>
+
+<script>
+
+goNext();
+
+</script>
+
+<style>
+body {
+  font-family: sans-serif;
+  background-color: #ffdd22;
+}
+
+table {
+  border-collapse: collapse;
+  background-color: white;
+}
+
+table td, table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+td.r {
+  text-align: right;
+}
+
+.tstripe tr:nth-child(even){background-color: #f2f2f2;}
+.treg tbody td[colspan="2"]{background-color: #f2f2f2;}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.c_nav {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.d_boxed {
+  margin-top: 8px;
+  border: 1px solid green;
+  width: 40em;
+  padding: 15px;
+  line-height: 1.5;
+  background-color: white;
+}
+
+input[type=text] {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+</style>

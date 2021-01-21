@@ -344,7 +344,7 @@ function get_txtnum(elval) {
   elval = elval.replace(" ", "");
   if (elval == "") return null;
   if (elval[0] == "$") elval = elval.substring(1);
-  if (elval.endsWith("%")) elval = elval.substring(elval.length - 1);
+  if (elval.endsWith("%")) elval = elval.substring(0, elval.length - 1);
   elval = elval.replace(",", "");
   if (!is_numeric_val(elval)) return null;
   var pelval = parseFloat(elval);
