@@ -1,0 +1,767 @@
+<html>
+<head>
+</head>
+<script>
+
+function uniroot(func) {
+  var a = 0
+    , b = 10
+    , c = a
+    , fa = func(a)
+    , fb = func(b)
+    , fc = fa
+    , s = 0
+    , fs = 0
+    , tol_act   // Actual tolerance
+    , new_step  // Step at this iteration
+    , prev_step // Distance from the last but one to the last approximation
+    , p         // Interpolation step is calculated in the form p/q; division is delayed until the last moment
+    , q
+    ;
+
+  errorTol = 0.00001;
+  maxIter = 100000;
+
+  while ( maxIter-- > 0 ) {
+  
+    prev_step = b - a;
+   
+    if ( Math.abs(fc) < Math.abs(fb) ) {
+      // Swap data for b to be the best approximation
+      a = b, b = c, c = a;
+      fa = fb, fb = fc, fc = fa;
+    }
+
+    tol_act = 1e-15 * Math.abs(b) + errorTol / 2;
+    new_step = ( c - b ) / 2;
+
+    if ( Math.abs(new_step) <= tol_act || fb === 0 ) {
+      return b; // Acceptable approx. is found
+    }
+
+    // Decide if the interpolation can be tried
+    if ( Math.abs(prev_step) >= tol_act && Math.abs(fa) > Math.abs(fb) ) {
+      // If prev_step was large enough and was in true direction, Interpolatiom may be tried
+      var t1, cb, t2;
+      cb = c - b;
+      if ( a === c ) { // If we have only two distinct points linear interpolation can only be applied
+        t1 = fb / fa;
+        p = cb * t1;
+        q = 1.0 - t1;
+      }
+      else { // Quadric inverse interpolation
+        q = fa / fc, t1 = fb / fc, t2 = fb / fa;
+        p = t2 * (cb * q * (q - t1) - (b - a) * (t1 - 1));
+        q = (q - 1) * (t1 - 1) * (t2 - 1);
+      }
+
+      if ( p > 0 ) {
+        q = -q;  // p was calculated with the opposite sign; make p positive
+      }
+      else {
+        p = -p;  // and assign possible minus to q
+      }
+
+      if ( p < ( 0.75 * cb * q - Math.abs( tol_act * q ) / 2 ) &&
+           p < Math.abs( prev_step * q / 2 ) ) { 
+        // If (b + p / q) falls in [b,c] and isn't too large it is accepted
+        new_step = p / q;
+      }
+ 
+      // If p/q is too large then the bissection procedure can reduce [b,c] range to more extent
+    }
+
+    if ( Math.abs( new_step ) < tol_act ) { // Adjust the step to be not less than tolerance
+      new_step = ( new_step > 0 ) ? tol_act : -tol_act;
+    }
+
+    a = b, fa = fb;     // Save the previous approx.
+    b += new_step, fb = func(b);  // Do step to a new approxim.
+
+    if ( (fb > 0 && fc > 0) || (fb < 0 && fc < 0) ) {
+      c = a, fc = fa; // Adjust c for it to have a sign opposite to that of b
+    }
+  }
+}
+
+function randbws(arr) {
+    var min = arr[0];
+    var max = arr[1];
+    var scale = arr[2];
+    if (min == max) return min * scale;
+    return (Math.floor(Math.random() * (max - min + 1) + min)) * scale;
+}
+
+r_v1 = [75, 110, -1000];
+r_v2 = [35, 40, 1000];
+r_v3 = [35, 40, 1000];
+r_v4 = [30, 35, 1000];
+r_v5 = [30, 35, 1000];
+r_v6 = [20, 25, 1000];
+r_v7 = [25, 30, 1000];
+
+r_x2 = [40, 45, 1000];
+r_x3 = [35, 40, 1000];
+r_x4 = [25, 30, 1000];
+r_x5 = [25, 30, 1000];
+r_x6 = [10, 15, 1000];
+r_x7 = [20, 25, 1000];
+
+r_z1 = [7, 12, 0.01];
+r_z2 = [2, 4, 1];
+
+v1 = randbws(r_v1);
+v2 = randbws(r_v2);
+v3 = randbws(r_v3);
+v4 = randbws(r_v4);
+v5 = randbws(r_v5);
+v6 = randbws(r_v6);
+v7 = randbws(r_v7);
+
+x1 = v1;
+x2 = randbws(r_x2);
+x3 = randbws(r_x3);
+x4 = randbws(r_x4);
+x5 = randbws(r_x5);
+x6 = randbws(r_x6);
+x7 = randbws(r_x7);
+
+z1 = randbws(r_z1);
+z2 = randbws(r_z2);
+
+v_cf = [v1, v2, v3, v4, v5, v6+v7];
+x_cf = [x1, x2, x3, x4, x5, x6+x7];
+
+v_cf0 = v_cf[0];
+v_cf1 = v_cf[1];
+v_cf2 = v_cf[2];
+v_cf3 = v_cf[3];
+v_cf4 = v_cf[4];
+v_cf5 = v_cf[5];
+
+x_cf0 = x_cf[0];
+x_cf1 = x_cf[1];
+x_cf2 = x_cf[2];
+x_cf3 = x_cf[3];
+x_cf4 = x_cf[4];
+x_cf5 = x_cf[5];
+
+function v_irrfun(x) {
+  var x1 = 1 / (1 + x);
+  var x2 = x1 * x1;
+  var x3 = x2 * x1;
+  var x4 = x3 * x1;
+  var x5 = x4 * x1;
+  return v_cf0 + (v_cf1 * x1) + (v_cf2 * x2) + (v_cf3 * x3) + (v_cf4 * x4) + (v_cf5 * x5);
+}
+
+function x_irrfun(x) {
+  var x1 = 1 / (1 + x);
+  var x2 = x1 * x1;
+  var x3 = x2 * x1;
+  var x4 = x3 * x1;
+  var x5 = x4 * x1;
+  return x_cf0 + (x_cf1 * x1) + (x_cf2 * x2) + (x_cf3 * x3) + (x_cf4 * x4) + (x_cf5 * x5);
+}
+
+v_r_irr = uniroot(v_irrfun);
+x_r_irr = uniroot(x_irrfun);
+
+function calc_rs(cf, z) {
+    pv = [cf[0]];
+    for (var i = 1; i < 6; i++) {
+        pv[i] = cf[i] / Math.pow(1 + z, i);
+    }
+    r_npv = 0;
+    r_pi = 0;
+    for (i = 0; i < 6; i++) {
+        r_npv += pv[i];
+        if (i != 0) r_pi += pv[i];
+    }
+    r_pi /= -pv[0];
+    
+    ccf = [cf[0]];
+    for (var i = 1; i < 6; i++) {
+        ccf[i] = cf[i] + ccf[i-1];
+    }
+    r_ppa = [0];
+    for (var i = 1; i < 6; i++) {
+        r_ppa[i] = (ccf[i] < 0) ? 1 : ((ccf[i-1] < 0) ? (-ccf[i-1]/cf[i]) : 0);
+    }
+    r_pp = 0;
+    for (var i = 0; i < 6; i++) {
+        r_pp += r_ppa[i];
+    }
+    
+    pvccf = [pv[0]];
+    for (var i = 1; i < 6; i++) {
+        pvccf[i] = pv[i] + pvccf[i-1];
+    }
+    r_dppa = [0];
+    for (var i = 1; i < 6; i++) {
+        r_dppa[i] = (pvccf[i] < 0) ? 1 : ((pvccf[i-1] < 0) ? (-pvccf[i-1]/pv[i]) : 0);
+    }
+    r_dpp = 0;
+    for (var i = 0; i < 6; i++) {
+        r_dpp += r_dppa[i];
+    }
+    
+    return [r_pp, r_dpp, r_npv, r_pi];
+}
+
+v_calc = calc_rs(v_cf, z1);
+x_calc = calc_rs(x_cf, z1);
+
+v_r_pp = v_calc[0];
+v_r_dpp = v_calc[1];
+v_r_npv = v_calc[2];
+v_r_pi = v_calc[3];
+
+x_r_pp = x_calc[0];
+x_r_dpp = x_calc[1];
+x_r_npv = x_calc[2];
+x_r_pi = x_calc[3];
+
+function addCommas0(x) {
+  x += '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x)) {
+    x = x.replace(rgx, '$1' + ',' + '$2');
+  }
+  return x;
+}
+
+function sd2(str, v) {
+  document.getElementById(str).innerHTML = v.toFixed(2);
+}
+
+function sc0(str, v) {
+  document.getElementById(str).innerHTML = addCommas0(v.toFixed(0));
+}
+
+function sp2(str, v) {
+  document.getElementById(str).innerHTML = (v*100).toFixed(2) + "%";
+}
+
+function sc0_c(str, v) {
+  var x = addCommas0(v.toFixed(0));
+  var els = document.getElementsByClassName(str);
+  for (var i = 0; i < els.length; i++) {
+    els[i].innerHTML = x;
+  }
+}
+
+function sp2_c(str, v) {
+  var x = (v*100).toFixed(2) + "%";
+  var els = document.getElementsByClassName(str);
+  for (var i = 0; i < els.length; i++) {
+    els[i].innerHTML = x;
+  }
+}
+
+function get_el(str) {
+  return document.getElementById(str);
+}
+
+function set_el(str, txt) {
+  document.getElementById(str).innerHTML = txt;
+}
+
+function get_el_value(str) {
+  return document.getElementById(str).value;
+}
+
+function doshow_el(str, doshow) {
+  if (doshow == 0) {
+    document.getElementById(str).style.display = "none";
+  } else {
+    document.getElementById(str).style.display = "block";
+  }
+}
+
+function get_rad_value(str) {
+  var rad0 = str + "0";
+  var rad1 = str + "1";
+  if (get_el(rad0).checked) return "Model A";
+  if (get_el(rad1).checked) return "Model B";
+  return "";
+}
+
+function is_numeric_val(value) {
+  return /^-{0,1}\d*\.{0,1}\d+$/.test(value);
+}
+
+function get_txtnum(elval) {
+  elval = elval.replace(" ", "");
+  if (elval == "") return null;
+  if (elval[0] == "$") elval = elval.substring(1);
+  if (elval.endsWith("%")) elval = elval.substring(0, elval.length - 1);
+  elval = elval.replace(",", "");
+  if (!is_numeric_val(elval)) return null;
+  var pelval = parseFloat(elval);
+  return pelval;
+}
+
+function cmpnum(num, str, f) {
+  inp = get_txtnum(str);
+  if (inp == null) return 0;
+  if (f == "2p") num *= 100;
+  if (f == "2p" || f == "2d") {
+    num *= 100;
+    inp *= 100;
+  }
+  if (Math.abs(num - inp) < 1.1) return 1;
+  return 0;
+}
+
+function cmprad(r0, r1) {
+    return (r0 == r1) ? 1 : 0;
+}
+
+function doformat(v, f) {
+    if (f == "0d") return v.toFixed(0);
+    if (f == "0c") return addCommas0(v.toFixed(0));
+    if (f == "2d") return v.toFixed(2);
+    if (f == "2p") return (v*100).toFixed(2) + "%";
+}
+
+function mergearr3(arr0, arr1, arr2, arr3) {
+    var len = arr1.length;
+    for (var i = 0; i < len; i++) {
+        arr0[i*3] = arr1[i];
+        arr0[i*3+1] = arr2[i];
+        arr0[i*3+2] = arr3[i];
+    }
+}
+
+function sum_arr(arr) {
+  var res = 0;
+  for (var i = 0; i < arr.length; i++) {
+    res += arr[i];
+  }
+  return res;
+}
+
+function set_all() {
+    sc0_c("d_h0", v1);
+    sc0_c("d_h10", v2);
+    sc0_c("d_h11", v3);
+    sc0_c("d_h12", v4);
+    sc0_c("d_h13", v5);
+    sc0_c("d_h14", v6);
+    sc0_c("d_h2", v7);
+    
+    sc0_c("d_i0", x1);
+    sc0_c("d_i10", x2);
+    sc0_c("d_i11", x3);
+    sc0_c("d_i12", x4);
+    sc0_c("d_i13", x5);
+    sc0_c("d_i14", x6);
+    sc0_c("d_i2", x7);
+    
+    sp2_c("d_j0", z1);
+    sc0_c("d_j1", z2);
+}
+
+var flags = ["2d", "2d", "0c", "2p", "2d"];
+var exp0 = [v_r_pp, v_r_dpp, v_r_npv, v_r_irr, v_r_pi];
+var exp0_f = [];
+var exp1 = [x_r_pp, x_r_dpp, x_r_npv, x_r_irr, x_r_pi];
+var exp1_f = [];
+var exp2 = [];
+exp2[0] = (exp0[0] < exp1[0]) ? "Model A" : "Model B";
+exp2[1] = (exp0[1] < exp1[1]) ? "Model A" : "Model B";
+exp2[2] = (exp0[2] > exp1[2]) ? "Model A" : "Model B";
+exp2[3] = (exp0[3] > exp1[3]) ? "Model A" : "Model B";
+exp2[4] = (exp0[4] > exp1[4]) ? "Model A" : "Model B";
+var sc_exp = [];
+
+var you0 = [];
+var you1 = [];
+var you2 = [];
+var sc_you = [];
+
+var sco0 = [];
+var sco1 = [];
+var sco2 = [];
+var sc_sco = [];
+
+function gen_scores() {
+  var qlength = 5;
+  for (var i = 0; i < qlength; i++) {
+      you0[i] = get_el_value("d_p" + i);
+      you1[i] = get_el_value("d_q" + i);
+      you2[i] = get_rad_value("d_r" + i);
+      sco0[i] = cmpnum(exp0[i], you0[i], flags[i]);
+      sco1[i] = cmpnum(exp1[i], you1[i], flags[i]);
+      sco2[i] = cmprad(exp2[i], you2[i]);
+      exp0_f[i] = doformat(exp0[i], flags[i]);
+      exp1_f[i] = doformat(exp1[i], flags[i]);
+  }
+  mergearr3(sc_you, you0, you1, you2);
+  mergearr3(sc_exp, exp0_f, exp1_f, exp2);
+  mergearr3(sc_sco, sco0, sco1, sco2);
+  for (var i = 0; i < qlength * 3; i++) {
+     set_el("d_s" + i + "0", sc_you[i]);
+     set_el("d_s" + i + "1", sc_exp[i]);
+     set_el("d_s" + i + "2", sc_sco[i]);
+  }
+  var tscore = sum_arr(sc_sco);
+  var mscore = sc_sco.length;
+  set_el("d_tscore", tscore);
+  set_el("d_mscore", mscore);
+}
+
+var slide_index = -1;
+var num_slides = 7;
+
+function goNext() {
+  if (slide_index == -1) {
+    set_all();
+  }
+  slide_index++;
+  if (slide_index == num_slides - 1) {
+    gen_scores();
+  }
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+function goPrev() {
+  slide_index--;
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+</script>
+
+<div id="ds_0">
+  <div id="d_story" class="d_boxed">
+    Executive Transportation Company (ETC) is also considering the purchase of a luxury sedan.<br><br>The company has collected the data for two different models. The controller has asked you to analyze the two options and make the necessary recommendations.
+  </div>
+  <button type="button" class="c_nav" onclick="window.location.href='/index.html'">Back to menu</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_1">
+  <table class="tstripe ttop">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Initial Expenditure Now</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>Year 4</th>
+        <th>Year 5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Cost of Model A</td><td class="d_h0" class=r></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash flows</td><td></td><td class="d_h10" class=r></td><td class="d_h11" class=r></td><td class="d_h12" class=r></td><td class="d_h13" class=r></td><td class="d_h14" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td class="d_h2" class=r></td></tr>
+      <tr><td colspan="7"></td></tr>
+      <tr><td>Cost of Model B</td><td class="d_i0" class=r></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash flows</td><td></td><td class="d_i10" class=r></td><td class="d_i11" class=r></td><td class="d_i12" class=r></td><td class="d_i13" class=r></td><td class="d_i14" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td class="d_i2" class=r></td></tr>
+      <tr><td colspan="7"></td></tr>
+      <tr><td>Discount rate (Cost of capital)</td><td class="d_j0" class=r></td><td colspan="5"></td></tr>
+      <tr><td>Maximum payback period</td><td class="d_j1" class=r></td><td colspan="5"></td></tr>
+    </tbody>
+  </table>
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Model A</th>
+        <th>Model B</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>What is the <u>payback period</u>?</td><td><input id="d_p0" type="text" /></td><td><input id="d_q0" type="text" /></td></tr>
+      <tr><td>Which model would you recommend the company to<br>purchase (the two models are mutually exclusive)?</td><td><label><input type="radio" name="d_n" id="d_r00" value="y" />Model A</label></td><td><label><input type="radio" name="d_n" id="d_r01" value="n" />Model B</label></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_2">
+  <table class="tstripe ttop">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Initial Expenditure Now</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>Year 4</th>
+        <th>Year 5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Cost of Model A</td><td class="d_h0" class=r></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash flows</td><td></td><td class="d_h10" class=r></td><td class="d_h11" class=r></td><td class="d_h12" class=r></td><td class="d_h13" class=r></td><td class="d_h14" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td class="d_h2" class=r></td></tr>
+      <tr><td colspan="7"></td></tr>
+      <tr><td>Cost of Model B</td><td class="d_i0" class=r></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash flows</td><td></td><td class="d_i10" class=r></td><td class="d_i11" class=r></td><td class="d_i12" class=r></td><td class="d_i13" class=r></td><td class="d_i14" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td class="d_i2" class=r></td></tr>
+      <tr><td colspan="7"></td></tr>
+      <tr><td>Discount rate (Cost of capital)</td><td class="d_j0" class=r></td><td colspan="5"></td></tr>
+      <tr><td>Maximum payback period</td><td class="d_j1" class=r></td><td colspan="5"></td></tr>
+    </tbody>
+  </table>
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Model A</th>
+        <th>Model B</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>What is the <u>discounted payback period</u>?</td><td><input id="d_p1" type="text" /></td><td><input id="d_q1" type="text" /></td></tr>
+      <tr><td>Which model would you recommend the company to<br>purchase (the two models are mutually exclusive)?</td><td><label><input type="radio" name="d_o" id="d_r10" value="y" />Model A</label></td><td><label><input type="radio" name="d_o" id="d_r11" value="n" />Model B</label></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_3">
+  <table class="tstripe ttop">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Initial Expenditure Now</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>Year 4</th>
+        <th>Year 5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Cost of Model A</td><td class="d_h0" class=r></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash flows</td><td></td><td class="d_h10" class=r></td><td class="d_h11" class=r></td><td class="d_h12" class=r></td><td class="d_h13" class=r></td><td class="d_h14" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td class="d_h2" class=r></td></tr>
+      <tr><td colspan="7"></td></tr>
+      <tr><td>Cost of Model B</td><td class="d_i0" class=r></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash flows</td><td></td><td class="d_i10" class=r></td><td class="d_i11" class=r></td><td class="d_i12" class=r></td><td class="d_i13" class=r></td><td class="d_i14" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td class="d_i2" class=r></td></tr>
+      <tr><td colspan="7"></td></tr>
+      <tr><td>Discount rate (Cost of capital)</td><td class="d_j0" class=r></td><td colspan="5"></td></tr>
+    </tbody>
+  </table>
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Model A</th>
+        <th>Model B</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>What is the <u>NPV</u>?</td><td><input id="d_p2" type="text" /></td><td><input id="d_q2" type="text" /></td></tr>
+      <tr><td>Which model would you recommend the company to<br>purchase (the two models are mutually exclusive)?</td><td><label><input type="radio" name="d_p" id="d_r20" value="y" />Model A</label></td><td><label><input type="radio" name="d_p" id="d_r21" value="n" />Model B</label></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_4">
+  <table class="tstripe ttop">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Initial Expenditure Now</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>Year 4</th>
+        <th>Year 5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Cost of Model A</td><td class="d_h0" class=r></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash flows</td><td></td><td class="d_h10" class=r></td><td class="d_h11" class=r></td><td class="d_h12" class=r></td><td class="d_h13" class=r></td><td class="d_h14" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td class="d_h2" class=r></td></tr>
+      <tr><td colspan="7"></td></tr>
+      <tr><td>Cost of Model B</td><td class="d_i0" class=r></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash flows</td><td></td><td class="d_i10" class=r></td><td class="d_i11" class=r></td><td class="d_i12" class=r></td><td class="d_i13" class=r></td><td class="d_i14" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td class="d_i2" class=r></td></tr>
+      <tr><td colspan="7"></td></tr>
+      <tr><td>Discount rate (Cost of capital)</td><td class="d_j0" class=r></td><td colspan="5"></td></tr>
+    </tbody>
+  </table>
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Model A</th>
+        <th>Model B</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>What is the <u>IRR</u>?</td><td><input id="d_p3" type="text" /></td><td><input id="d_q3" type="text" /></td></tr>
+      <tr><td>Which model would you recommend the company to<br>purchase (the two models are mutually exclusive)?</td><td><label><input type="radio" name="d_q" id="d_r30" value="y" />Model A</label></td><td><label><input type="radio" name="d_q" id="d_r31" value="n" />Model B</label></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_5">
+  <table class="tstripe ttop">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Initial Expenditure Now</th>
+        <th>Year 1</th>
+        <th>Year 2</th>
+        <th>Year 3</th>
+        <th>Year 4</th>
+        <th>Year 5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Cost of Model A</td><td class="d_h0" class=r></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash flows</td><td></td><td class="d_h10" class=r></td><td class="d_h11" class=r></td><td class="d_h12" class=r></td><td class="d_h13" class=r></td><td class="d_h14" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td class="d_h2" class=r></td></tr>
+      <tr><td colspan="7"></td></tr>
+      <tr><td>Cost of Model B</td><td class="d_i0" class=r></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Net after-tax operating cash flows</td><td></td><td class="d_i10" class=r></td><td class="d_i11" class=r></td><td class="d_i12" class=r></td><td class="d_i13" class=r></td><td class="d_i14" class=r></td></tr>
+      <tr><td>Salvage (resale) value</td><td></td><td></td><td></td><td></td><td></td><td class="d_i2" class=r></td></tr>
+      <tr><td colspan="7"></td></tr>
+      <tr><td>Discount rate (Cost of capital)</td><td class="d_j0" class=r></td><td colspan="5"></td></tr>
+    </tbody>
+  </table>
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Model A</th>
+        <th>Model B</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>What is the <u>PI</u>?</td><td><input id="d_p4" type="text" /></td><td><input id="d_q4" type="text" /></td></tr>
+      <tr><td>Which model would you recommend the company to<br>purchase (the two models are mutually exclusive)?</td><td><label><input type="radio" name="d_r" id="d_r40" value="y" />Model A</label></td><td><label><input type="radio" name="d_r" id="d_r41" value="n" />Model B</label></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_6">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th>Table</th>
+        <th>Item</th>
+        <th>Your answer</th>
+        <th>Expected answer</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Payback period - Model A</td><td id="d_s00" class=r></td><td id="d_s01" class=r></td><td id="d_s02"></td></tr>
+      <tr><td></td><td>Payback period - Model B</td><td id="d_s10" class=r></td><td id="d_s11" class=r></td><td id="d_s12"></td></tr>
+      <tr><td></td><td>Which model?</td><td id="d_s20"></td><td id="d_s21"></td><td id="d_s22"></td></tr>
+      <tr><td>2</td><td>Discounted payback period - Model A</td><td id="d_s30" class=r></td><td id="d_s31" class=r></td><td id="d_s32"></td></tr>
+      <tr><td></td><td>Discounted payback period - Model B</td><td id="d_s40" class=r></td><td id="d_s41" class=r></td><td id="d_s42"></td></tr>
+      <tr><td></td><td>Which model?</td><td id="d_s50"></td><td id="d_s51"></td><td id="d_s52"></td></tr>
+      <tr><td>3</td><td>Net present value - Model A</td><td id="d_s60" class=r></td><td id="d_s61" class=r></td><td id="d_s62"></td></tr>
+      <tr><td></td><td>Net present value - Model B</td><td id="d_s70" class=r></td><td id="d_s71" class=r></td><td id="d_s72"></td></tr>
+      <tr><td></td><td>Which model?</td><td id="d_s80"></td><td id="d_s81"></td><td id="d_s82"></td></tr>
+      <tr><td>4</td><td>IRR - Model A</td><td id="d_s90" class=r></td><td id="d_s91" class=r></td><td id="d_s92"></td></tr>
+      <tr><td></td><td>IRR - Model B</td><td id="d_s100" class=r></td><td id="d_s101" class=r></td><td id="d_s102"></td></tr>
+      <tr><td></td><td>Which model?</td><td id="d_s110"></td><td id="d_s111"></td><td id="d_s112"></td></tr>
+      <tr><td>5</td><td>PI - Model A</td><td id="d_s120" class=r></td><td id="d_s121" class=r></td><td id="d_s122"></td></tr>
+      <tr><td></td><td>PI - Model B</td><td id="d_s130" class=r></td><td id="d_s131" class=r></td><td id="d_s132"></td></tr>
+      <tr><td></td><td>Which model?</td><td id="d_s140"></td><td id="d_s141"></td><td id="d_s142"></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div><b>Your score:</b> <span id="d_tscore"></span></div>
+    <div><b>Maximum score:</b> <span id="d_mscore"></span></div>
+  </div>
+  <button type="button" class="c_nav" onClick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onClick="window.location.reload();">Retry with different numbers</button>
+  <button type="button" class="c_nav" onclick="window.location.href='/index.html'">Return to menu</button>
+</div>
+
+<script>
+
+goNext();
+
+</script>
+
+<style>
+body {
+  font-family: sans-serif;
+  background-color: #ffdd22;
+}
+
+table {
+  border-collapse: collapse;
+  background-color: white;
+}
+
+table td, table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+td.r {
+  text-align: right;
+}
+
+.tstripe tr:nth-child(even){background-color: #f2f2f2;}
+.treg tbody td[colspan="2"]{background-color: #f2f2f2;}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.ttop {
+  margin-bottom: 8px;
+}
+
+.c_nav {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.d_boxed {
+  margin-top: 8px;
+  border: 1px solid green;
+  width: 40em;
+  padding: 15px;
+  line-height: 1.5;
+  background-color: white;
+}
+
+input[type=text] {
+  width: 100%;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+</style>
