@@ -1,0 +1,466 @@
+<html>
+<head>
+</head>
+<script>
+
+function addCommas0(x) {
+  x += '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x)) {
+    x = x.replace(rgx, '$1' + ',' + '$2');
+  }
+  return x;
+}
+
+function sc0(str, v) {
+  document.getElementById(str).innerHTML = addCommas0(v.toFixed(0));
+}
+
+function sp2(str, v) {
+  document.getElementById(str).innerHTML = (v*100).toFixed(2) + "%";
+}
+
+r_v1 = [20, 35, 10000];
+r_v2 = [10, 15, 1000];
+r_v3 = [105, 115, 10];
+r_v4 = [2, 5, 0.01];
+r_v5 = [35, 45, 10];
+r_v6 = [8, 10, 10000];
+r_v7 = [40, 50, 0.01];
+r_v8 = [5, 6, 10000];
+r_v9 = [10, 13, 0.01];
+r_v10 = [25, 30, 0.01];
+r_v11 = [30, 35, 0.01];
+r_v12 = [4, 4, 1];
+
+function randbws(arr) {
+    var min = arr[0];
+    var max = arr[1];
+    var scale = arr[2];
+    if (min == max) return min * scale;
+    return (Math.floor(Math.random() * (max - min + 1) + min)) * scale;
+}
+
+
+function randchoose(arr) {
+    var x1 = arr[0];
+    var x2 = arr[1];
+    var scale = arr[2];
+    var x = Math.random() < 0.5 ? x1 : x2;
+    return x * scale;
+}
+
+v1 = randbws(r_v1);
+v2 = randbws(r_v2);
+v3 = randbws(r_v3);
+v4 = randbws(r_v4);
+v5 = randbws(r_v5);
+v6 = randbws(r_v6);
+v7 = randbws(r_v7);
+v8 = randbws(r_v8);
+v9 = randbws(r_v9);
+v10 = randchoose(r_v10);
+v11 = randchoose(r_v11);
+v12 = randbws(r_v12);
+
+function get_el(str) {
+  return document.getElementById(str);
+}
+
+function set_el(str, txt) {
+  document.getElementById(str).innerHTML = txt;
+}
+
+function get_el_value(str) {
+  return document.getElementById(str).value;
+}
+
+function doshow_el(str, doshow) {
+  if (doshow == 0) {
+    document.getElementById(str).style.display = "none";
+  } else {
+    document.getElementById(str).style.display = "block";
+  }
+}
+
+function get_rad_value(str) {
+  var rad0 = str + "0";
+  var rad1 = str + "1";
+  if (get_el(rad0).checked) return "Yes";
+  if (get_el(rad1).checked) return "No";
+  return "";
+}
+
+function is_numeric_val(value) {
+  return /^-{0,1}\d*\.{0,1}\d+$/.test(value);
+}
+
+function get_txtnum(elval) {
+  elval = elval.replace(" ", "");
+  if (elval == "") return null;
+  if (elval[0] == "$") elval = elval.substring(1);
+  if (elval.endsWith("%")) elval = elval.substring(0, elval.length - 1);
+  elval = elval.replace(",", "");
+  if (!is_numeric_val(elval)) return null;
+  var pelval = parseFloat(elval);
+  return pelval;
+}
+
+function cmpnum(num, str) {
+  inp = get_txtnum(str);
+  if (inp == null) return 0;
+  if (Math.abs(num - inp) < 1.1) return 1;
+  return 0;
+}
+
+function cmprad(r0, r1) {
+    return (r0 == r1) ? 1 : 0;
+}
+
+function doformat(v) {
+    return addCommas0(v.toFixed(0));
+}
+
+onepv4r0 = 1;
+onepv4r1 = (1 + v4);
+onepv4r2 = onepv4r1 * onepv4r1;
+onepv4r3 = onepv4r1 * onepv4r2;
+
+invonepv9r1 = 1 / (1 + v9);
+invonepv9r2 = invonepv9r1 * invonepv9r1;
+invonepv9r3 = invonepv9r1 * invonepv9r2;
+invonepv9r4 = invonepv9r1 * invonepv9r3;
+
+var exp = [];
+exp[0] = -v1;
+exp[1] = v8;
+exp[2] = -v2;
+exp[3] = v2;
+exp[4] = v3 * onepv4r0;
+exp[5] = v3 * onepv4r1;
+exp[6] = v3 * onepv4r2;
+exp[7] = v3 * onepv4r3;
+exp[8] = v5;
+exp[9] = v5;
+exp[10] = v5;
+exp[11] = v5;
+exp[12] = exp[4] * exp[8];
+exp[13] = exp[5] * exp[9];
+exp[14] = exp[6] * exp[10];
+exp[15] = exp[7] * exp[11];
+exp[16] = exp[12] * v7;
+exp[17] = exp[13] * v7;
+exp[18] = exp[14] * v7;
+exp[19] = exp[15] * v7;
+exp[20] = v6;
+exp[21] = v6;
+exp[22] = v6;
+exp[23] = v6;
+exp[24] = exp[12] - (exp[16] + exp[20]);
+exp[25] = exp[13] - (exp[17] + exp[21]);
+exp[26] = exp[14] - (exp[18] + exp[22]);
+exp[27] = exp[15] - (exp[19] + exp[23]);
+exp[28] = exp[24] * v11;
+exp[29] = exp[25] * v11;
+exp[30] = exp[26] * v11;
+exp[31] = exp[27] * v11;
+exp[32] = exp[24] - exp[28];
+exp[33] = exp[25] - exp[29];
+exp[34] = exp[26] - exp[30];
+exp[35] = exp[27] - exp[31];
+exp[36] = exp[0] + exp[2];
+exp[37] = exp[32];
+exp[38] = exp[33];
+exp[39] = exp[34];
+exp[40] = exp[35] + exp[1] + exp[3];
+exp[41] = exp[36];
+exp[42] = exp[37] * invonepv9r1;
+exp[43] = exp[38] * invonepv9r2;
+exp[44] = exp[39] * invonepv9r3;
+exp[45] = exp[40] * invonepv9r4;
+
+eyl = (v1 * v10 * v11) / (v9 + v10);
+eym = (1 + (0.5 * v9)) / (1 + v9);
+eyn = (v8 * v10 * v11) / (v9 + v10);
+eyo = 1 / Math.pow(1 + v9, v12);
+
+exp[46] = (eyl * eym) - (eyn * eyo);
+exp[47] = exp[41] + exp[42] + exp[43] + exp[44] + exp[45] + exp[46];
+exp[48] = (exp[47] > 0) ? "Yes" : "No";
+
+function set_all() {
+    sc0("d_g0", v1);
+    sc0("d_g1", v2);
+    sc0("d_g2", v3);
+    sp2("d_g3", v4);
+    sc0("d_g4", v5);
+    sc0("d_g5", v6);
+    sp2("d_g6", v7);
+    sc0("d_g7", v8);
+    sp2("d_g8", v9);
+    sp2("d_g9", v10);
+    sp2("d_g10", v11);
+    sc0("d_g11", v12);
+}
+
+function set_sco(sid, syou, sexp, correct) {
+    if (correct) {
+        set_el(sid, syou);
+        get_el(sid).style.backgroundColor = "#b6edb6";
+    } else {
+        set_el(sid, "&nbsp;" + syou + "<hr>" + sexp);
+        get_el(sid).style.backgroundColor = "white";
+    }
+}
+
+function sum_arr(arr) {
+  var res = 0;
+  for (var i = 0; i < arr.length; i++) {
+    res += arr[i];
+  }
+  return res;
+}
+
+var sc_you = [];
+var sc_sco = [];
+var sc_exp = [];
+
+function gen_scores() {
+    var tlength = 48;
+    for (var i = 0; i < tlength; i++) {
+        sc_you[i] = get_el_value("d_h" + i);
+        sc_sco[i] = cmpnum(exp[i], sc_you[i]);
+        sc_exp[i] = doformat(exp[i]);
+    }
+    sc_you[tlength] = get_rad_value("d_r");
+    sc_sco[tlength] = cmprad(exp[tlength], sc_you[tlength]);
+    sc_exp[tlength] = exp[tlength];
+    
+    for (var i = 0; i < tlength + 1; i++) {
+        set_sco("d_i" + i, sc_you[i], sc_exp[i], sc_sco[i]);
+    }
+    
+    var tscore = sum_arr(sc_sco);
+    var mscore = sc_sco.length;
+    set_el("d_tscore", tscore);
+    set_el("d_mscore", mscore);
+}
+
+var slide_index = -1;
+var num_slides = 4;
+
+function goNext() {
+  if (slide_index == -1) {
+    set_all();
+  }
+  slide_index++;
+  if (slide_index == num_slides - 1) {
+    gen_scores();
+  }
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+function goPrev() {
+  slide_index--;
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+</script>
+
+<div id="ds_0">
+  <div id="d_story" class="d_boxed">
+    Executive Transportation Company (ETC) is thinking of expanding its business into British Columbia.<br><br>The company is looking into buying luxury coaches. These coaches will make daily trips to Vancouver from Edmonton. Although company's senior management is excited about this investment opportunity, they are hesitant to make a large financial commitment initially. They have decided to purchase a few second-hand luxury coaches to test the market. If this pilot project proves successful, then the plan is to expand the project by buying several new coaches.<br><br>Aisha Jones, the Controller of the company has summarized the financial aspects of this capital investment project in the table given on the next slide. She has asked you to do the capital budgeting analysis of this investment and make necessary recommendations.
+  </div>
+  <button type="button" class="c_nav" onclick="window.location.href='/index.html'">Back to menu</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_1">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data - Capital Budgeting</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Cost of coaches</td><td id="d_g0" class=r></td></tr>
+      <tr><td>Initial working capital requirement</td><td id="d_g1" class=r></td></tr>
+      <tr><td>Tickets sold - Year 1</td><td id="d_g2" class=r></td></tr>
+      <tr><td>Growth in tickets sold</td><td id="d_g3" class=r></td></tr>
+      <tr><td>Price per ticket</td><td id="d_g4" class=r></td></tr>
+      <tr><td>Fixed operating expenses</td><td id="d_g5" class=r></td></tr>
+      <tr><td>Variable operating expenses (% of sales)</td><td id="d_g6" class=r></td></tr>
+      <tr><td>Salvage value</td><td id="d_g7" class=r></td></tr>
+      <tr><td>Discount rate</td><td id="d_g8" class=r></td></tr>
+      <tr><td>CCA rate</td><td id="d_g9" class=r></td></tr>
+      <tr><td>Firm's tax rate</td><td id="d_g10" class=r></td></tr>
+      <tr><td>Project life (years)</td><td id="d_g11" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    On the next page, calculate the NPV of the project and determine whether ETC should invest in this project.
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_2">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th></th><th colspan="5" class=c>Years</th>
+      </tr>
+      <tr>
+        <th></th><th class=c>0</th><th class=c>1</th><th class=c>2</th><th class=c>3</th><th class=c>4</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Investment (Cost of coaches)</td><td><input id="d_h0" type="text" /></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Resale value (Coaches)</td><td></td><td></td><td></td><td></td><td><input id="d_h1" type="text" /></td></tr>
+      <tr><td colspan="6">&nbsp;</td></tr>
+      <tr><td>Investment in working capital</td><td><input id="d_h2" type="text" /></td><td></td><td></td><td></td><td><input id="d_h3" type="text" /></td></tr>
+      <tr><td colspan="6">&nbsp;</td></tr>
+      <tr><td>Expected sales per year (number of tickets)</td><td></td><td><input id="d_h4" type="text" /></td><td><input id="d_h5" type="text" /></td><td><input id="d_h6" type="text" /></td><td><input id="d_h7" type="text" /></td></tr>
+      <tr><td>Sales price</td><td></td><td><input id="d_h8" type="text" /></td><td><input id="d_h9" type="text" /></td><td><input id="d_h10" type="text" /></td><td><input id="d_h11" type="text" /></td></tr>
+      <tr><td>Sales revenue</td><td></td><td><input id="d_h12" type="text" /></td><td><input id="d_h13" type="text" /></td><td><input id="d_h14" type="text" /></td><td><input id="d_h15" type="text" /></td></tr>
+      <tr><td>Variable operating expenses</td><td></td><td><input id="d_h16" type="text" /></td><td><input id="d_h17" type="text" /></td><td><input id="d_h18" type="text" /></td><td><input id="d_h19" type="text" /></td></tr>
+      <tr><td>Fixed operating expenses</td><td></td><td><input id="d_h20" type="text" /></td><td><input id="d_h21" type="text" /></td><td><input id="d_h22" type="text" /></td><td><input id="d_h23" type="text" /></td></tr>
+      <tr><td>Operating Income (profit) before tax</td><td></td><td><input id="d_h24" type="text" /></td><td><input id="d_h25" type="text" /></td><td><input id="d_h26" type="text" /></td><td><input id="d_h27" type="text" /></td></tr>
+      <tr><td>Tax</td><td></td><td><input id="d_h28" type="text" /></td><td><input id="d_h29" type="text" /></td><td><input id="d_h30" type="text" /></td><td><input id="d_h31" type="text" /></td></tr>
+      <tr><td>Operating Income (profit) after tax</td><td></td><td><input id="d_h32" type="text" /></td><td><input id="d_h33" type="text" /></td><td><input id="d_h34" type="text" /></td><td><input id="d_h35" type="text" /></td></tr>
+      <tr><td colspan="6">&nbsp;</td></tr>
+      <tr><td>Project cash flows</td><td><input id="d_h36" type="text" /></td><td><input id="d_h37" type="text" /></td><td><input id="d_h38" type="text" /></td><td><input id="d_h39" type="text" /></td><td><input id="d_h40" type="text" /></td></tr>
+      <tr><td>Present value of cash flows</td><td><input id="d_h41" type="text" /></td><td><input id="d_h42" type="text" /></td><td><input id="d_h43" type="text" /></td><td><input id="d_h44" type="text" /></td><td><input id="d_h45" type="text" /></td></tr>
+      <tr><td>Present value of CCA tax shield (formula)</td><td><input id="d_h46" type="text" /></td><td colspan="4"></td></tr>
+      <tr><td>Net present value</td><td><input id="d_h47" type="text" /></td><td colspan="4"></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div>
+      <span>Should ETC undertake this project?</span>
+      <label><input type="radio" name="d_rad" id="d_r0" value="y" />Yes</label>
+      <label><input type="radio" name="d_rad" id="d_r1" value="n" />No</label>
+    </div>
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_3">
+  <table>
+    <thead>
+      <tr>
+        <th></th><th colspan="5" class=c>Years</th>
+      </tr>
+      <tr>
+        <th></th><th class=c>0</th><th class=c>1</th><th class=c>2</th><th class=c>3</th><th class=c>4</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Investment (Cost of coaches)</td><td id="d_i0" class=r></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Resale value (Coaches)</td><td></td><td></td><td></td><td></td><td id="d_i1" class=r></td></tr>
+      <tr><td colspan="6">&nbsp;</td></tr>
+      <tr><td>Investment in working capital</td><td id="d_i2" class=r></td><td colspan="3"></td><td id="d_i3" class=r></td></tr>
+      <tr><td colspan="6">&nbsp;</td></tr>
+      <tr><td>Expected sales per year (number of tickets)</td><td></td><td id="d_i4" class=r></td><td id="d_i5" class=r></td><td id="d_i6" class=r></td><td id="d_i7" class=r></td></tr>
+      <tr><td>Sales price</td><td></td><td id="d_i8" class=r></td><td id="d_i9" class=r></td><td id="d_i10" class=r></td><td id="d_i11" class=r></td></tr>
+      <tr><td>Sales revenue</td><td></td><td id="d_i12" class=r></td><td id="d_i13" class=r></td><td id="d_i14" class=r></td><td id="d_i15" class=r></td></tr>
+      <tr><td>Variable operating expenses</td><td></td><td id="d_i16" class=r></td><td id="d_i17" class=r></td><td id="d_i18" class=r></td><td id="d_i19" class=r></td></tr>
+      <tr><td>Fixed operating expenses</td><td></td><td id="d_i20" class=r></td><td id="d_i21" class=r></td><td id="d_i22" class=r></td><td id="d_i23" class=r></td></tr>
+      <tr><td>Operating Income (profit) before tax</td><td></td><td id="d_i24" class=r></td><td id="d_i25" class=r></td><td id="d_i26" class=r></td><td id="d_i27" class=r></td></tr>
+      <tr><td>Tax</td><td></td><td id="d_i28" class=r></td><td id="d_i29" class=r></td><td id="d_i30" class=r></td><td id="d_i31" class=r></td></tr>
+      <tr><td>Operating Income (profit) after tax</td><td></td><td id="d_i32" class=r></td><td id="d_i33" class=r></td><td id="d_i34" class=r></td><td id="d_i35" class=r></td></tr>
+      <tr><td colspan="6">&nbsp;</td></tr>
+      <tr><td>Project cash flows</td><td id="d_i36" class=r></td><td id="d_i37" class=r></td><td id="d_i38" class=r></td><td id="d_i39" class=r></td><td id="d_i40" class=r></td></tr>
+      <tr><td>Present value of cash flows</td><td id="d_i41" class=r></td><td id="d_i42" class=r></td><td id="d_i43" class=r></td><td id="d_i44" class=r></td><td id="d_i45" class=r></td></tr>
+      <tr><td>Present value of CCA tax shield (formula)</td><td id="d_i46" class=r></td><td colspan="4"></td></tr>
+      <tr><td>Net present value</td><td id="d_i47" class=r></td><td colspan="4"></td></tr>
+      <tr><td colspan="6">&nbsp;</td></tr>
+      <tr><td>Should ETC undertake this project?</td><td id="d_i48"></td><td colspan="4"></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div><i>Note: for incorrect or missing entries, the correct value is shown below the line in the respective cell.</i><br><br></div>
+    <div></div>
+    <div><b>Your score:</b> <span id="d_tscore"></span></div>
+    <div><b>Maximum score:</b> <span id="d_mscore"></span></div>
+  </div>
+  <button type="button" class="c_nav" onClick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onClick="window.location.reload();">Retry with different numbers</button>
+  <button type="button" class="c_nav" onclick="window.location.href='/index.html'">Return to menu</button>
+</div>
+
+<script>
+
+goNext();
+
+</script>
+
+<style>
+body {
+  font-family: sans-serif;
+  background-color: #ffdd22;
+}
+
+table {
+  border-collapse: collapse;
+  background-color: white;
+}
+
+table td, table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+td.r {
+  text-align: right;
+}
+
+th.c {
+  text-align: center;
+}
+
+.tstripe tr:nth-child(even){background-color: #f2f2f2;}
+.treg tbody td[colspan="2"]{background-color: #f2f2f2;}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.c_nav {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.d_boxed {
+  margin-top: 8px;
+  border: 1px solid green;
+  width: 40em;
+  padding: 15px;
+  line-height: 1.5;
+  background-color: white;
+}
+
+input[type=text] {
+  width: 100%;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+</style>
