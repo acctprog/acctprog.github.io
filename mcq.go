@@ -46,7 +46,7 @@ type Mcq struct {
 
 func readMcqs(fin string) []Mcq {
     content, _ := ioutil.ReadFile(fin)
-	sin := string(content)
+	sin := strings.Replace(string(content), "\r", "", -1)
 	mcqs := strings.Split(sin, "\n\n")
 	var models []Mcq
 	for i, mcq := range mcqs {
