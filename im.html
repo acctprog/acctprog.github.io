@@ -1,0 +1,175 @@
+<html>
+<head>
+</head>
+<script>
+
+var exp = ["C", "D"];
+
+function doshow_el(str, doshow) {
+  if (doshow == 0) {
+    document.getElementById(str).style.display = "none";
+  } else {
+    document.getElementById(str).style.display = "block";
+  }
+}
+
+function set_el(str, txt) {
+  document.getElementById(str).innerHTML = txt;
+}
+
+function sum_arr(arr) {
+  var res = 0;
+  for (var i = 0; i < arr.length; i++) {
+    res += arr[i];
+  }
+  return res;
+}
+
+var box_colors = ["#ffb3af", "#b6edb6"];
+
+function style_box(str, sco) {
+    document.getElementById(str).style.backgroundColor = box_colors[sco];
+}
+
+function get_rad_value(str) {
+  var radios = document.getElementsByName(str);
+  for (var i = 0; i < 4; i++) {
+    if (radios[i].checked) {
+      return radios[i].value;
+    }
+  }
+  return "No answer";
+}
+
+var you = [];
+var sc_sco = [];
+
+function gen_scores() {
+  var qlength = exp.length;
+  for (var i = 0; i < qlength; i++) {
+      you[i] = get_rad_value("d_" + i);
+      set_el("d_ya" + i, you[i]);
+      set_el("d_ca" + i, exp[i]);
+      sc_sco[i] = (exp[i] == you[i]) ? 1 : 0;
+      style_box("d_b" + i, sc_sco[i]);
+  }
+  var tscore = sum_arr(sc_sco);
+  var mscore = sc_sco.length;
+  set_el("d_tscore", tscore);
+  set_el("d_mscore", mscore);
+}
+
+var slide_index = -1;
+var num_slides = 3;
+
+function goNext() {
+  slide_index++;
+  if (slide_index == num_slides - 1) {
+    gen_scores();
+  }
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+function goPrev() {
+  slide_index--;
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+</script>
+
+<div id="ds_0">
+  <div id="d_story" class="d_boxed">
+    Answer the multiple choice questions on the next page.
+  </div>
+  <button type="button" class="c_nav" onclick="window.location.href='index.html'">Back to menu</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_1">
+  <div class="d_boxed">
+    <div>1. What is 1 + 2 equal to?</div>
+    <br><label><input type=radio name=d_0 value=A />A. 1</label>
+    <br><label><input type=radio name=d_0 value=B />B. 2</label>
+    <br><label><input type=radio name=d_0 value=C />C. 3</label>
+    <br><label><input type=radio name=d_0 value=D />D. 4</label>
+  </div>
+  <div class="d_boxed">
+    <div>2. What is 2 + 2 equal to?</div>
+    <br><label><input type=radio name=d_1 value=A />A. 1</label>
+    <br><label><input type=radio name=d_1 value=B />B. 2</label>
+    <br><label><input type=radio name=d_1 value=C />C. 3</label>
+    <br><label><input type=radio name=d_1 value=D />D. 4</label>
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_2">
+  <div class="d_boxed" id="d_b0">
+    <div>1. What is 1 + 2 equal to?</div>
+    <br><label>A. 1</label>
+    <br><label>B. 2</label>
+    <br><label>C. 3</label>
+    <br><label>D. 4</label>
+    <br><br>
+    <div><b>Your answer:</b> <span id=d_ya0></span></div>
+    <div><b>Correct answer:</b> <span id=d_ca0></span></div>
+  </div>
+  <div class="d_boxed" id="d_b1">
+    <div>2. What is 2 + 2 equal to?</div>
+    <br><label>A. 1</label>
+    <br><label>B. 2</label>
+    <br><label>C. 3</label>
+    <br><label>D. 4</label>
+    <br><br>
+    <div><b>Your answer:</b> <span id=d_ya1></span></div>
+    <div><b>Correct answer:</b> <span id=d_ca1></span></div>
+  </div>
+  <div class="d_boxed">
+    <div><b>Your score:</b> <span id="d_tscore"></span></div>
+    <div><b>Maximum score:</b> <span id="d_mscore"></span></div>
+  </div>
+  <button type="button" class="c_nav" onClick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onClick="window.location.reload();">Retry</button>
+  <button type="button" class="c_nav" onclick="window.location.href='index.html'">Return to menu</button>
+</div>
+
+<script>
+
+goNext();
+
+</script>
+
+<style>
+body {
+  font-family: sans-serif;
+  background-color: #ffdd22;
+}
+
+.c_nav {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.d_boxed {
+  margin-top: 8px;
+  border: 1px solid green;
+  width: 40em;
+  padding: 15px;
+  line-height: 1.5;
+  background-color: white;
+}
+</style>
