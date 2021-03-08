@@ -1,0 +1,235 @@
+<html>
+<head>
+</head>
+<script>
+
+var exp = ["B", "A", "B", "A", "C", ];
+
+function doshow_el(str, doshow) {
+  if (doshow == 0) {
+    document.getElementById(str).style.display = "none";
+  } else {
+    document.getElementById(str).style.display = "block";
+  }
+}
+
+function set_el(str, txt) {
+  document.getElementById(str).innerHTML = txt;
+}
+
+function sum_arr(arr) {
+  var res = 0;
+  for (var i = 0; i < arr.length; i++) {
+    res += arr[i];
+  }
+  return res;
+}
+
+var box_colors = ["#ffb3af", "#b6edb6"];
+
+function style_box(str, sco) {
+    document.getElementById(str).style.backgroundColor = box_colors[sco];
+}
+
+function get_rad_value(str) {
+  var radios = document.getElementsByName(str);
+  var numRadios = radios.length;
+  for (var i = 0; i < numRadios; i++) {
+    if (radios[i].checked) {
+      return radios[i].value;
+    }
+  }
+  return "No answer";
+}
+
+var you = [];
+var sc_sco = [];
+
+function gen_scores() {
+  var qlength = exp.length;
+  for (var i = 0; i < qlength; i++) {
+      you[i] = get_rad_value("d_" + i);
+      set_el("d_ya" + i, you[i]);
+      set_el("d_ca" + i, exp[i]);
+      sc_sco[i] = (exp[i] == you[i]) ? 1 : 0;
+      style_box("d_b" + i, sc_sco[i]);
+  }
+  var tscore = sum_arr(sc_sco);
+  var mscore = sc_sco.length;
+  set_el("d_tscore", tscore);
+  set_el("d_mscore", mscore);
+}
+
+var slide_index = -1;
+var num_slides = 3;
+
+function goNext() {
+  slide_index++;
+  if (slide_index == num_slides - 1) {
+    gen_scores();
+  }
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+function goPrev() {
+  slide_index--;
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+</script>
+
+<div id="ds_0">
+  <div id="d_story" class="d_boxed">
+    Answer the multiple choice questions on the next page.
+  </div>
+  <button type="button" class="c_nav" onclick="window.location.href='index.html'">Back to menu</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_1">
+  <div class="d_boxed">
+    <div>1. Maple bonds are issued by the government of Canada in Canadian dollars but sold to only foreign investors.</div>
+    <br><label><input type=radio name=d_0 value=A />A. True</label>
+    <br><label><input type=radio name=d_0 value=B />B. False</label>
+    
+  </div>
+  <div class="d_boxed">
+    <div>2. Sinking funds are devices used to force companies to retire bonds on a scheduled basis prior to their maturity. Many bond indentures allow the company to acquire bonds for a sinking fund by either purchasing bonds in the market or selecting the bonds to be acquired by a lottery administered by the trustee through a call at face value.</div>
+    <br><label><input type=radio name=d_1 value=A />A. True</label>
+    <br><label><input type=radio name=d_1 value=B />B. False</label>
+    
+  </div>
+  <div class="d_boxed">
+    <div>3. Which bond has the greatest interest rate price risk?</div>
+    <br><label><input type=radio name=d_2 value=A />A. a 10-year $100 annuity</label>
+    <br><label><input type=radio name=d_2 value=B />B. a 10-year, $1,000 face value, zero coupon bond</label>
+    
+    <br><label><input type=radio name=d_2 value=C />C. a 10-year, $1,000 face value, 10% coupon bond with annual interest payments</label>
+    <br><label><input type=radio name=d_2 value=D />D. All 10-year bonds have the same price risk since they have the same maturity.</label>
+    
+  </div>
+  <div class="d_boxed">
+    <div>4. Assume that a 10-year Treasury bond has a 12% annual coupon, while a 15-year T-bond has an 8% annual coupon. Assume also that the yield curve is flat, and all Treasury securities have a 10% yield to maturity. Which of the following statements is correct?</div>
+    <br><label><input type=radio name=d_3 value=A />A. If interest rates decline, the prices of both bonds will increase, but the 15-year bond would have a larger percentage increase in price.</label>
+    <br><label><input type=radio name=d_3 value=B />B. If interest rates decline, the prices of both bonds will increase, but the 10-year bond would have a larger percentage increase in price.</label>
+    
+    <br><label><input type=radio name=d_3 value=C />C. The 10-year bond would sell at a discount, while the 15-year bond would sell at a premium.</label>
+    <br><label><input type=radio name=d_3 value=D />D. The 10-year bond would sell at a premium, while the 15-year bond would sell at par.</label>
+    
+  </div>
+  <div class="d_boxed">
+    <div>5. If the yield to maturity is 5.5%, what is the price of a 15-year, zero-coupon bond with a par value of $1,000?</div>
+    <br><label><input type=radio name=d_4 value=A />A. $413.35</label>
+    <br><label><input type=radio name=d_4 value=B />B. $429.48</label>
+    
+    <br><label><input type=radio name=d_4 value=C />C. $447.93</label>
+    <br><label><input type=radio name=d_4 value=D />D. $469.72</label>
+    
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_2">
+  <div class="d_boxed" id="d_b0">
+    <div>1. Maple bonds are issued by the government of Canada in Canadian dollars but sold to only foreign investors.</div>
+    <br><label>A. True</label>
+    <br><label>B. False</label>
+    
+    <br><br>
+    <div><b>Your answer:</b> <span id=d_ya0></span></div>
+    <div><b>Correct answer:</b> <span id=d_ca0></span></div>
+  </div>
+  <div class="d_boxed" id="d_b1">
+    <div>2. Sinking funds are devices used to force companies to retire bonds on a scheduled basis prior to their maturity. Many bond indentures allow the company to acquire bonds for a sinking fund by either purchasing bonds in the market or selecting the bonds to be acquired by a lottery administered by the trustee through a call at face value.</div>
+    <br><label>A. True</label>
+    <br><label>B. False</label>
+    
+    <br><br>
+    <div><b>Your answer:</b> <span id=d_ya1></span></div>
+    <div><b>Correct answer:</b> <span id=d_ca1></span></div>
+  </div>
+  <div class="d_boxed" id="d_b2">
+    <div>3. Which bond has the greatest interest rate price risk?</div>
+    <br><label>A. a 10-year $100 annuity</label>
+    <br><label>B. a 10-year, $1,000 face value, zero coupon bond</label>
+    
+    <br><label>C. a 10-year, $1,000 face value, 10% coupon bond with annual interest payments</label>
+    <br><label>D. All 10-year bonds have the same price risk since they have the same maturity.</label>
+    
+    <br><br>
+    <div><b>Your answer:</b> <span id=d_ya2></span></div>
+    <div><b>Correct answer:</b> <span id=d_ca2></span></div>
+  </div>
+  <div class="d_boxed" id="d_b3">
+    <div>4. Assume that a 10-year Treasury bond has a 12% annual coupon, while a 15-year T-bond has an 8% annual coupon. Assume also that the yield curve is flat, and all Treasury securities have a 10% yield to maturity. Which of the following statements is correct?</div>
+    <br><label>A. If interest rates decline, the prices of both bonds will increase, but the 15-year bond would have a larger percentage increase in price.</label>
+    <br><label>B. If interest rates decline, the prices of both bonds will increase, but the 10-year bond would have a larger percentage increase in price.</label>
+    
+    <br><label>C. The 10-year bond would sell at a discount, while the 15-year bond would sell at a premium.</label>
+    <br><label>D. The 10-year bond would sell at a premium, while the 15-year bond would sell at par.</label>
+    
+    <br><br>
+    <div><b>Your answer:</b> <span id=d_ya3></span></div>
+    <div><b>Correct answer:</b> <span id=d_ca3></span></div>
+  </div>
+  <div class="d_boxed" id="d_b4">
+    <div>5. If the yield to maturity is 5.5%, what is the price of a 15-year, zero-coupon bond with a par value of $1,000?</div>
+    <br><label>A. $413.35</label>
+    <br><label>B. $429.48</label>
+    
+    <br><label>C. $447.93</label>
+    <br><label>D. $469.72</label>
+    
+    <br><br>
+    <div><b>Your answer:</b> <span id=d_ya4></span></div>
+    <div><b>Correct answer:</b> <span id=d_ca4></span></div>
+  </div>
+  <div class="d_boxed">
+    <div><b>Your score:</b> <span id="d_tscore"></span></div>
+    <div><b>Maximum score:</b> <span id="d_mscore"></span></div>
+  </div>
+  <button type="button" class="c_nav" onClick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onClick="window.location.reload();">Retry</button>
+  <button type="button" class="c_nav" onclick="window.location.href='index.html'">Return to menu</button>
+</div>
+
+<script>
+
+goNext();
+
+</script>
+
+<style>
+body {
+  font-family: sans-serif;
+  background-color: #ffdd22;
+}
+
+.c_nav {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.d_boxed {
+  margin-top: 8px;
+  border: 1px solid green;
+  width: 40em;
+  padding: 15px;
+  line-height: 1.5;
+  background-color: white;
+}
+</style>

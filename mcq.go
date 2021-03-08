@@ -2,35 +2,35 @@ package main
 
 import (
     "bytes"
-	"html"
-	"io/ioutil"
-	"os"
-	"path/filepath"
-	"regexp"
-	"strings"
-	"text/template"
+    "html"
+    "io/ioutil"
+    "os"
+    "path/filepath"
+    "regexp"
+    "strings"
+    "text/template"
 )
 
 func main() {
     pathwd, _ := os.Getwd()
     ext := "_mcq.txt"
-	files := checkExt(ext, pathwd)
-	for _, fnum := range files {
-	    makeMcq(fnum + ext, "m" + fnum + ".html")
-	}
+    files := checkExt(ext, pathwd)
+    for _, fnum := range files {
+        makeMcq(fnum + ext, "m" + fnum + ".html")
+    }
 }
 
 func checkExt(ext string, pathwd string) []string {
-	var files []string
-	filepath.Walk(pathwd, func(path string, f os.FileInfo, _ error) error {
-		if !f.IsDir() {
-			if strings.HasSuffix(f.Name(), ext) {
-				files = append(files, strings.TrimSuffix(f.Name(), ext))
-			}
-		}
-		return nil
-	})
-	return files
+    var files []string
+    filepath.Walk(pathwd, func(path string, f os.FileInfo, _ error) error {
+        if !f.IsDir() {
+            if strings.HasSuffix(f.Name(), ext) {
+                files = append(files, strings.TrimSuffix(f.Name(), ext))
+            }
+        }
+        return nil
+    })
+    return files
 }
 
 type Mcq struct {
@@ -48,85 +48,85 @@ type Mcq struct {
 func readAndFormatMcqs(sin string) string {
     re := regexp.MustCompile(`^\d+\.`)
     abcdLowers := [4]string{ "a. ", "b. ", "c. ", "d. " }
-	abcdUppers := [4]string{ "A. ", "B. ", "C. ", "D. " }
-	
-	var validLines bytes.Buffer
-	rawLines := strings.Split(sin, "\n")
-	
-	OUTERLOOP:
-	for _, rawLine := range rawLines {
-	    line := strings.TrimSpace(rawLine)
-	    if (len(line) < 3) {
-	        continue
-	    }
-	    if (strings.HasPrefix(line, "ANSWER: ")) {
-	        line = strings.TrimPrefix(line, "ANSWER: ")
-	        line = strings.TrimSpace(line)
-	        if (line == "True") {
-	            line = "A"
-	        } else if (line == "False") {
-	            line = "B"
-	        }
-	        line = "X. " + strings.ToUpper(line[:1]) + "\n\n"
-	        validLines.WriteString(line)
-	        continue
-	    }
-	    for j, abcdLower := range abcdLowers {
-	        if (strings.HasPrefix(line, abcdLower)) {
+    abcdUppers := [4]string{ "A. ", "B. ", "C. ", "D. " }
+    
+    var validLines bytes.Buffer
+    rawLines := strings.Split(sin, "\n")
+    
+    OUTERLOOP:
+    for _, rawLine := range rawLines {
+        line := strings.TrimSpace(rawLine)
+        if (len(line) < 3) {
+            continue
+        }
+        if (strings.HasPrefix(line, "ANSWER: ")) {
+            line = strings.TrimPrefix(line, "ANSWER: ")
+            line = strings.TrimSpace(line)
+            if (line == "True") {
+                line = "A"
+            } else if (line == "False") {
+                line = "B"
+            }
+            line = "X. " + strings.ToUpper(line[:1]) + "\n\n"
+            validLines.WriteString(line)
+            continue
+        }
+        for j, abcdLower := range abcdLowers {
+            if (strings.HasPrefix(line, abcdLower)) {
                 line = strings.TrimPrefix(line, abcdLower)
                 line = strings.TrimSpace(line)
                 line = abcdUppers[j] + line + "\n"
                 validLines.WriteString(line)
                 continue OUTERLOOP
-	        }
-	    }
-	    if (re.MatchString(line)) {
-	        dotIdx := strings.IndexByte(line, '.')
-	        line = line[dotIdx + 1:]
-	        line = strings.TrimSpace(line)
-	        line = "Q. " + line + "\n"
-	        validLines.WriteString(line)
+            }
+        }
+        if (re.MatchString(line)) {
+            dotIdx := strings.IndexByte(line, '.')
+            line = line[dotIdx + 1:]
+            line = strings.TrimSpace(line)
+            line = "Q. " + line + "\n"
+            validLines.WriteString(line)
             continue
-	    }
-	}
-	
-	return validLines.String()
+        }
+    }
+    
+    return validLines.String()
 }
 
 func readMcqs(fin string) []Mcq {
     content, _ := ioutil.ReadFile(fin)
-	sin := strings.Replace(string(content), "\r", "", -1)
-	sin = strings.Replace(sin, "\t", " ", -1)
-	reNonascii := regexp.MustCompile("[[:^ascii:]]")
+    sin := strings.Replace(string(content), "\r", "", -1)
+    sin = strings.Replace(sin, "\t", " ", -1)
+    reNonascii := regexp.MustCompile("[[:^ascii:]]")
     sin = reNonascii.ReplaceAllLiteralString(sin, "")
-	validLines := readAndFormatMcqs(sin)
-	// ioutil.WriteFile("validlines.txt", []byte(validLines), 0644)
-	
-	mcqs := strings.Split(validLines, "\n\n")
-	var models []Mcq
-	for i, mcq := range mcqs {
-	    lines := strings.Split(mcq, "\n")
-	    numLines := len(lines)
-	    if (numLines <= 1) {
-	        continue
-	    }
-	    var model Mcq
-	    model.N = i
-	    model.S = i + 1
-	    model.T = (numLines == 4)
-	    model.Q = html.EscapeString(strings.TrimPrefix(lines[0], "Q. "))
-	    model.A = html.EscapeString(strings.TrimPrefix(lines[1], "A. "))
-	    model.B = html.EscapeString(strings.TrimPrefix(lines[2], "B. "))
-	    if (model.T) {
-	        model.X = strings.TrimPrefix(lines[3], "X. ")
-	    } else {
-	        model.C = html.EscapeString(strings.TrimPrefix(lines[3], "C. "))
-	        model.D = html.EscapeString(strings.TrimPrefix(lines[4], "D. "))
-	        model.X = strings.TrimPrefix(lines[5], "X. ")
-	    }
-	    models = append(models, model)
-	}
-	return models
+    validLines := readAndFormatMcqs(sin)
+    // ioutil.WriteFile("validlines.txt", []byte(validLines), 0644)
+    
+    mcqs := strings.Split(validLines, "\n\n")
+    var models []Mcq
+    for i, mcq := range mcqs {
+        lines := strings.Split(mcq, "\n")
+        numLines := len(lines)
+        if (numLines <= 1) {
+            continue
+        }
+        var model Mcq
+        model.N = i
+        model.S = i + 1
+        model.T = (numLines == 4)
+        model.Q = html.EscapeString(strings.TrimPrefix(lines[0], "Q. "))
+        model.A = html.EscapeString(strings.TrimPrefix(lines[1], "A. "))
+        model.B = html.EscapeString(strings.TrimPrefix(lines[2], "B. "))
+        if (model.T) {
+            model.X = strings.TrimPrefix(lines[3], "X. ")
+        } else {
+            model.C = html.EscapeString(strings.TrimPrefix(lines[3], "C. "))
+            model.D = html.EscapeString(strings.TrimPrefix(lines[4], "D. "))
+            model.X = strings.TrimPrefix(lines[5], "X. ")
+        }
+        models = append(models, model)
+    }
+    return models
 }
 
 func writeMcqs(fout string, models []Mcq) {
@@ -307,11 +307,11 @@ body {
     t0 := template.Must(template.New("tmpl0").Parse(tmpl0))
     t1 := template.Must(template.New("tmpl1").Parse(tmpl1))
     for _, m := range models {
-    	t0.Execute(&buf0, m)
-    	t1.Execute(&buf1, m)
-    	buf2.WriteString("\"")
-    	buf2.WriteString(m.X)
-    	buf2.WriteString("\", ")
+        t0.Execute(&buf0, m)
+        t1.Execute(&buf1, m)
+        buf2.WriteString("\"")
+        buf2.WriteString(m.X)
+        buf2.WriteString("\", ")
     }
     s3 := buf0.String()
     s5 := buf1.String()
@@ -320,7 +320,7 @@ body {
     sout := s0 + s1 + s2 + s3 + s4 + s5 + s6
     
     cout := []byte(sout)
-	ioutil.WriteFile(fout, cout, 0644)
+    ioutil.WriteFile(fout, cout, 0644)
 }
 
 func makeMcq(fin string, fout string) {
