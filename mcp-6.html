@@ -1,0 +1,205 @@
+<html>
+<head>
+</head>
+<script>
+
+var exp = ["D", "D", "B", ];
+
+function doshow_el(str, doshow) {
+  if (doshow == 0) {
+    document.getElementById(str).style.display = "none";
+  } else {
+    document.getElementById(str).style.display = "block";
+  }
+}
+
+function set_el(str, txt) {
+  document.getElementById(str).innerHTML = txt;
+}
+
+function sum_arr(arr) {
+  var res = 0;
+  for (var i = 0; i < arr.length; i++) {
+    res += arr[i];
+  }
+  return res;
+}
+
+var box_colors = ["#ffb3af", "#b6edb6"];
+
+function style_box(str, sco) {
+    document.getElementById(str).style.backgroundColor = box_colors[sco];
+}
+
+function get_rad_value(str) {
+  var radios = document.getElementsByName(str);
+  var numRadios = radios.length;
+  for (var i = 0; i < numRadios; i++) {
+    if (radios[i].checked) {
+      return radios[i].value;
+    }
+  }
+  return "No answer";
+}
+
+var you = [];
+var sc_sco = [];
+
+function gen_scores() {
+  var qlength = exp.length;
+  for (var i = 0; i < qlength; i++) {
+      you[i] = get_rad_value("d_" + i);
+      set_el("d_ya" + i, you[i]);
+      set_el("d_ca" + i, exp[i]);
+      sc_sco[i] = (exp[i] == you[i]) ? 1 : 0;
+      style_box("d_b" + i, sc_sco[i]);
+  }
+  var tscore = sum_arr(sc_sco);
+  var mscore = sc_sco.length;
+  set_el("d_tscore", tscore);
+  set_el("d_mscore", mscore);
+}
+
+var slide_index = -1;
+var num_slides = 3;
+
+function goNext() {
+  slide_index++;
+  if (slide_index == num_slides - 1) {
+    gen_scores();
+  }
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+function goPrev() {
+  slide_index--;
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+</script>
+
+<div id="ds_0">
+  <div id="d_story" class="d_boxed">
+    Answer the multiple choice questions on the next page.
+  </div>
+  <button type="button" class="c_nav" onclick="window.location.href='index.html'">Back to menu</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_1">
+  <div class="d_boxed">
+    <div>1. Which bond would have the greatest percentage increase in value if all interest rates fall by 1%?</div>
+    <br><label><input type=radio name=d_0 value=A />A. 10-year, zero coupon bond</label>
+    <br><label><input type=radio name=d_0 value=B />B. 20-year, 10% coupon bond</label>
+    
+    <br><label><input type=radio name=d_0 value=C />C. 20-year, 5% coupon bond</label>
+    <br><label><input type=radio name=d_0 value=D />D. 20-year, zero coupon bond</label>
+    
+  </div>
+  <div class="d_boxed">
+    <div>2. Assume that all interest rates in the economy decline from 10% to 9%. Which bond would have the largest percentage increase in price?</div>
+    <br><label><input type=radio name=d_1 value=A />A. a 1-year bond with a 15% coupon</label>
+    <br><label><input type=radio name=d_1 value=B />B. a 3-year bond with a 10% coupon</label>
+    
+    <br><label><input type=radio name=d_1 value=C />C. an 8-year bond with a 9% coupon</label>
+    <br><label><input type=radio name=d_1 value=D />D. a 10-year zero coupon bond</label>
+    
+  </div>
+  <div class="d_boxed">
+    <div>3. Which bond has the greatest interest rate price risk?</div>
+    <br><label><input type=radio name=d_2 value=A />A. a 10-year $100 annuity</label>
+    <br><label><input type=radio name=d_2 value=B />B. a 10-year, $1,000 face value, zero coupon bond</label>
+    
+    <br><label><input type=radio name=d_2 value=C />C. a 10-year, $1,000 face value, 10% coupon bond with annual interest payments</label>
+    <br><label><input type=radio name=d_2 value=D />D. All 10-year bonds have the same price risk since they have the same maturity.</label>
+    
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_2">
+  <div class="d_boxed" id="d_b0">
+    <div>1. Which bond would have the greatest percentage increase in value if all interest rates fall by 1%?</div>
+    <br><label>A. 10-year, zero coupon bond</label>
+    <br><label>B. 20-year, 10% coupon bond</label>
+    
+    <br><label>C. 20-year, 5% coupon bond</label>
+    <br><label>D. 20-year, zero coupon bond</label>
+    
+    <br><br>
+    <div><b>Your answer:</b> <span id=d_ya0></span></div>
+    <div><b>Correct answer:</b> <span id=d_ca0></span></div>
+  </div>
+  <div class="d_boxed" id="d_b1">
+    <div>2. Assume that all interest rates in the economy decline from 10% to 9%. Which bond would have the largest percentage increase in price?</div>
+    <br><label>A. a 1-year bond with a 15% coupon</label>
+    <br><label>B. a 3-year bond with a 10% coupon</label>
+    
+    <br><label>C. an 8-year bond with a 9% coupon</label>
+    <br><label>D. a 10-year zero coupon bond</label>
+    
+    <br><br>
+    <div><b>Your answer:</b> <span id=d_ya1></span></div>
+    <div><b>Correct answer:</b> <span id=d_ca1></span></div>
+  </div>
+  <div class="d_boxed" id="d_b2">
+    <div>3. Which bond has the greatest interest rate price risk?</div>
+    <br><label>A. a 10-year $100 annuity</label>
+    <br><label>B. a 10-year, $1,000 face value, zero coupon bond</label>
+    
+    <br><label>C. a 10-year, $1,000 face value, 10% coupon bond with annual interest payments</label>
+    <br><label>D. All 10-year bonds have the same price risk since they have the same maturity.</label>
+    
+    <br><br>
+    <div><b>Your answer:</b> <span id=d_ya2></span></div>
+    <div><b>Correct answer:</b> <span id=d_ca2></span></div>
+  </div>
+  <div class="d_boxed">
+    <div><b>Your score:</b> <span id="d_tscore"></span></div>
+    <div><b>Maximum score:</b> <span id="d_mscore"></span></div>
+  </div>
+  <button type="button" class="c_nav" onClick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onClick="window.location.reload();">Retry</button>
+  <button type="button" class="c_nav" onclick="window.location.href='index.html'">Return to menu</button>
+</div>
+
+<script>
+
+goNext();
+
+</script>
+
+<style>
+body {
+  font-family: sans-serif;
+  background-color: #ffdd22;
+}
+
+.c_nav {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.d_boxed {
+  margin-top: 8px;
+  border: 1px solid green;
+  width: 40em;
+  padding: 15px;
+  line-height: 1.5;
+  background-color: white;
+}
+</style>
