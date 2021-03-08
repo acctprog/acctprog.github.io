@@ -1,5 +1,7 @@
 Instructions:
 
+0. Go to the mcq folder in the sidebar of the file explorer
+    (you may need to scroll up in the sidebar to see it).
 1. Prepare a text file that is called something_mcq.txt in Notepad.
     Make sure it is saved in the mcq folder.
     You can copy-paste from Word or prepare it from scratch.
