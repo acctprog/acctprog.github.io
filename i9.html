@@ -1,0 +1,655 @@
+<html>
+<head>
+</head>
+<script>
+
+function randbws(arr) {
+    var min = arr[0];
+    var max = arr[1];
+    var scale = arr[2];
+    if (min == max) return min * scale;
+    return (Math.floor(Math.random() * (max - min + 1) + min)) * scale;
+}
+
+function randchoose(arr) {
+    var x1 = arr[0];
+    var x2 = arr[1];
+    var scale = arr[2];
+    var x = Math.random() < 0.5 ? x1 : x2;
+    return x * scale;
+}
+
+r_v1 = [80, 100, 100];
+r_v2 = [30, 40, 10];
+r_v3 = [80, 90, 10000];
+r_v4 = [40, 50, 0.01];
+r_v5 = [5, 7, 0.01];
+r_v6 = [150, 200, 10000];
+r_v7 = [30, 35, 0.01];
+r_v8 = [100, 100, 1000];
+r_v9 = [20, 22, 100000];
+
+v1 = randbws(r_v1);
+v2 = randbws(r_v2);
+v3 = randbws(r_v3);
+v4 = randbws(r_v4);
+v5 = randbws(r_v5);
+v6 = randbws(r_v6);
+v7 = randchoose(r_v7);
+v8 = randbws(r_v8);
+v9 = randbws(r_v9);
+v10 = v5;
+v11 = v9 / 100000;
+v12 = v1 * 1.6;
+v13 = v2;
+v14 = v4 - 0.02;
+v15 = v3 * 1.35;
+v16 = 1;
+v17 = v9;
+v18 = v5 + 0.015;
+v19 = v12;
+v20 = v13;
+v21 = v4 - 0.06;
+v22 = v3 * 1.9;
+v23 = 1;
+v_dec = -0.35;
+v_inc = 0.35;
+
+var exp = [];
+exp[0] = v1 * v2;
+exp[1] = v4 * exp[0];
+exp[2] = exp[0] - exp[1];
+exp[3] = v3;
+exp[4] = exp[2] - exp[3];
+exp[5] = v6 * v5;
+exp[6] = exp[4] - exp[5];
+exp[7] = v7 * exp[6];
+exp[8] = exp[6] - exp[7];
+exp[9] = v8;
+exp[10] = exp[8] / exp[9];
+exp[11] = exp[2] / exp[4];
+exp[12] = exp[4] / (exp[4] - exp[5]);
+exp[13] = exp[11] * exp[12];
+
+exp[14] = v12 * v13;
+exp[15] = v14 * exp[14];
+exp[16] = exp[14] - exp[15];
+exp[17] = v15;
+exp[18] = exp[16] - exp[17];
+exp[19] = v5 * v6;
+exp[20] = exp[18] - exp[19];
+exp[21] = v7 * exp[20];
+exp[22] = exp[20] - exp[21];
+exp[23] = v8 + (v9 / v11);
+exp[24] = exp[22] / exp[23];
+exp[25] = exp[16] / exp[18];
+exp[26] = exp[18] / (exp[18] - exp[19]);
+exp[27] = exp[25] * exp[26];
+
+exp[28] = v19 * v20;
+exp[29] = exp[28] * v21;
+exp[30] = exp[28] - exp[29];
+exp[31] = v22;
+exp[32] = exp[30] - exp[31];
+exp[33] = (v5 * v6) + (v17 * v18);
+exp[34] = exp[32] - exp[33];
+exp[35] = exp[34] * v7;
+exp[36] = exp[34] - exp[35];
+exp[37] = v8;
+exp[38] = exp[36] / exp[37];
+exp[39] = exp[30] / exp[32];
+exp[40] = exp[32] / (exp[32] - exp[33]);
+exp[41] = exp[39] * exp[40];
+
+exp[42] = v_dec * exp[25];
+exp[43] = v_dec * exp[39];
+exp[44] = exp[18] * (1 + exp[42]);
+exp[45] = exp[32] * (1 + exp[43]);
+exp[46] = v_dec * exp[27];
+exp[47] = v_dec * exp[41];
+exp[48] = exp[24] * (1 + exp[46]);
+exp[49] = exp[38] * (1 + exp[47]);
+
+exp[50] = v_inc * exp[25];
+exp[51] = v_inc * exp[39];
+exp[52] = exp[18] * (1 + exp[50]);
+exp[53] = exp[32] * (1 + exp[51]);
+exp[54] = v_inc * exp[27];
+exp[55] = v_inc * exp[41];
+exp[56] = exp[24] * (1 + exp[54]);
+exp[57] = exp[38] * (1 + exp[55]);
+
+function set_all() {
+    sc0("d_g0", v1);
+    sc0("d_g1", v2);
+    sc0("d_g2", v3);
+    sp2("d_g3", v4);
+    sp2("d_g4", v5);
+    sc0("d_g5", v6);
+    sp2("d_g6", v7);
+    sc0("d_g7", v8);
+    sc0("d_g8", v9);
+    sp2("d_g9", v10);
+    sd2("d_g10", v11);
+    sc0("d_g11", v12);
+    sc0("d_g12", v13);
+    sp2("d_g13", v14);
+    sc0("d_g14", v15);
+    sp2("d_g15", v16);
+    sc0("d_g16", v17);
+    sp2("d_g17", v18);
+    sc0("d_g18", v19);
+    sc0("d_g19", v20);
+    sp2("d_g20", v21);
+    sc0("d_g21", v22);
+    sp2("d_g22", v23);
+}
+
+function get_flag(idx) {
+    if (idx < 10) return "0c";
+    if (idx < 14) return "2d";
+    if (idx < 24) return "0c";
+    if (idx < 28) return "2d";
+    if (idx < 38) return "0c";
+    if (idx < 42) return "2d";
+    if (idx < 44) return "2p";
+    if (idx < 46) return "0c";
+    if (idx < 48) return "2p";
+    if (idx < 50) return "2d";
+    if (idx < 52) return "2p";
+    if (idx < 54) return "0c";
+    if (idx < 56) return "2p";
+    if (idx < 58) return "2d";
+    return "0c";
+}
+
+function addCommas0(x) {
+    x += '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x)) {
+        x = x.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x;
+}
+
+function sd2(str, v) {
+    document.getElementById(str).innerHTML = v.toFixed(2);
+}
+
+function sc0(str, v) {
+    document.getElementById(str).innerHTML = addCommas0(v.toFixed(0));
+}
+
+function sp2(str, v) {
+    document.getElementById(str).innerHTML = (v*100).toFixed(2) + "%";
+}
+
+function set_el(str, txt) {
+    document.getElementById(str).innerHTML = txt;
+}
+
+function get_el_value(str) {
+    return document.getElementById(str).value;
+}
+
+function doshow_el(str, doshow) {
+    if (doshow == 0) {
+        document.getElementById(str).style.display = "none";
+    } else {
+        document.getElementById(str).style.display = "block";
+    }
+}
+
+function is_numeric_val(value) {
+    return /^-{0,1}\d*\.{0,1}\d+$/.test(value);
+}
+
+function get_txtnum(elval) {
+    elval = elval.replaceAll(" ", "");
+    if (elval == "") return null;
+    if (elval[0] == "$") elval = elval.substring(1);
+    if (elval.endsWith("%")) elval = elval.substring(0, elval.length - 1);
+    elval = elval.replaceAll(",", "");
+    if (!is_numeric_val(elval)) return null;
+    var pelval = parseFloat(elval);
+    return pelval;
+}
+
+function cmpnum(num, str, fla) {
+    inp = get_txtnum(str);
+    if (inp == null) return 0;
+    if (fla == "2p") num *= 100;
+    if (fla == "2p" || fla == "2d") {
+        num *= 100;
+        inp *= 100;
+    }
+    if (Math.abs(num - inp) < 1.1) return 1;
+    return 0;
+}
+
+function doformat(v, fla) {
+    if (fla == "0d") return v.toFixed(0);
+    if (fla == "0c") return addCommas0(v.toFixed(0));
+    if (fla == "2d") return v.toFixed(2);
+    if (fla == "2p") return (v*100).toFixed(2) + "%";
+}
+
+var sc_you = [];
+var sc_exp = [];
+var sc_sco = [];
+
+function sum_arr(arr) {
+    var res = 0;
+    for (var i = 0; i < arr.length; i++) {
+        res += arr[i];
+    }
+    return res;
+}
+
+function gen_scores() {
+    var tlength = 58;
+    for (var i = 0; i < tlength; i++) {
+        var flag = get_flag(i);
+        sc_you[i] = get_el_value("d_h" + i);
+        sc_sco[i] = cmpnum(exp[i], sc_you[i], flag);
+        sc_exp[i] = doformat(exp[i], flag);
+    }
+    for (var i = 0; i < tlength; i++) {
+        set_el("d_s" + i + "0", sc_you[i]);
+        set_el("d_s" + i + "1", sc_exp[i]);
+        set_el("d_s" + i + "2", sc_sco[i]);
+    }
+    var tscore = sum_arr(sc_sco);
+    var mscore = sc_sco.length;
+    set_el("d_tscore", tscore);
+    set_el("d_mscore", mscore);
+}
+
+var slide_index = -1;
+var num_slides = 9;
+
+function goNext() {
+  if (slide_index == -1) {
+    set_all();
+  }
+  slide_index++;
+  if (slide_index == num_slides - 2) {
+    window.scrollTo(0, 0);
+  }
+  if (slide_index == num_slides - 1) {
+    gen_scores();
+  }
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+function goPrev() {
+  slide_index--;
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+</script>
+
+<div id="ds_0">
+  <div id="d_story" class="d_boxed">
+    Executive Transportation Company (ETC) is thinking of expanding its business and buying several new coaches.<br><br>Two plans are under consideration by the senior management of ETC:<br><br>(a) Low leverage plan: Under this plan, ETC will buy hybrid coaches and the expansion will be financed 100% with equity.<br><br>(b) High leverage plan: Under this plan, ETC will buy electric coaches. These coaches will have lower variable operating costs as compared to hybrid coaches but higher fixed operating costs. This expansion will be financed 100% with debt.
+  </div>
+  <button type="button" class="c_nav" onclick="window.location.href='index.html'">Back to menu</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_1">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Current Data - Before Expansion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Tickets sold</td><td id="d_g0" class=r></td></tr>
+      <tr><td>Price per ticket</td><td id="d_g1" class=r></td></tr>
+      <tr><td>Fixed operating expenses</td><td id="d_g2" class=r></td></tr>
+      <tr><td>Variable operating expenses (% of sales)</td><td id="d_g3" class=r></td></tr>
+      <tr><td>Interest rate on debt</td><td id="d_g4" class=r></td></tr>
+      <tr><td>Debt</td><td id="d_g5" class=r></td></tr>
+      <tr><td>Firm's tax rate</td><td id="d_g6" class=r></td></tr>
+      <tr><td>Number of common shares</td><td id="d_g7" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    Use the data above and calculate the EPS, DOL, DFL and DCL of Executive Transportation Company (ETC) before expansion on the next page.
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_2">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Current Income Statement - Before</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Sales revenue</td><td><input id="d_h0" type="text" /></td></tr>
+      <tr><td>Variable operating expenses</td><td><input id="d_h1" type="text" /></td></tr>
+      <tr><td>Contribution margin</td><td><input id="d_h2" type="text" /></td></tr>
+      <tr><td>Fixed operating expenses</td><td><input id="d_h3" type="text" /></td></tr>
+      <tr><td>Operating income (EBIT)</td><td><input id="d_h4" type="text" /></td></tr>
+      <tr><td>Interest expense</td><td><input id="d_h5" type="text" /></td></tr>
+      <tr><td>Earnings before taxes</td><td><input id="d_h6" type="text" /></td></tr>
+      <tr><td>Taxes</td><td><input id="d_h7" type="text" /></td></tr>
+      <tr><td>Net income</td><td><input id="d_h8" type="text" /></td></tr>
+      <tr><td>Number of common shares</td><td><input id="d_h9" type="text" /></td></tr>
+      <tr><td>Earnings per share</td><td><input id="d_h10" type="text" /></td></tr>
+      <tr><td colspan="2">&nbsp;</td></tr>
+      <tr><td>DOL</td><td><input id="d_h11" type="text" /></td></tr>
+      <tr><td>DFL</td><td><input id="d_h12" type="text" /></td></tr>
+      <tr><td>DCL</td><td><input id="d_h13" type="text" /></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_3">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data - Expansion Plan (Low Leverage)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Total investment needed</td><td id="d_g8" class=r></td></tr>
+      <tr><td>Interest rate on debt</td><td id="d_g9" class=r></td></tr>
+      <tr><td>Net selling price new common shares</td><td id="d_g10" class=r></td></tr>
+      <tr><td>Tickets sold</td><td id="d_g11" class=r></td></tr>
+      <tr><td>Price per ticket</td><td id="d_g12" class=r></td></tr>
+      <tr><td>Variable operating expenses</td><td id="d_g13" class=r></td></tr>
+      <tr><td>Fixed operating expenses</td><td id="d_g14" class=r></td></tr>
+      <tr><td>Equity financing of expansion</td><td id="d_g15" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    Use the data above and calculate the EPS, DOL, DFL and DCL of Executive Transportation Company (ETC) after expansion on the next page, assuming that 100% of the expansion is financed by equity financing.
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_4">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Income Statement - 100% Equity Financing</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Sales revenue</td><td><input id="d_h14" type="text" /></td></tr>
+      <tr><td>Variable operating expenses</td><td><input id="d_h15" type="text" /></td></tr>
+      <tr><td>Contribution margin</td><td><input id="d_h16" type="text" /></td></tr>
+      <tr><td>Fixed operating expenses</td><td><input id="d_h17" type="text" /></td></tr>
+      <tr><td>Operating income (EBIT)</td><td><input id="d_h18" type="text" /></td></tr>
+      <tr><td>Interest expense</td><td><input id="d_h19" type="text" /></td></tr>
+      <tr><td>Earnings before taxes</td><td><input id="d_h20" type="text" /></td></tr>
+      <tr><td>Taxes</td><td><input id="d_h21" type="text" /></td></tr>
+      <tr><td>Net income</td><td><input id="d_h22" type="text" /></td></tr>
+      <tr><td>Number of common shares</td><td><input id="d_h23" type="text" /></td></tr>
+      <tr><td>Earnings per share</td><td><input id="d_h24" type="text" /></td></tr>
+      <tr><td colspan="2">&nbsp;</td></tr>
+      <tr><td>DOL</td><td><input id="d_h25" type="text" /></td></tr>
+      <tr><td>DFL</td><td><input id="d_h26" type="text" /></td></tr>
+      <tr><td>DCL</td><td><input id="d_h27" type="text" /></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_5">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data - Expansion Plan (High Leverage)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Total investment needed</td><td id="d_g16" class=r></td></tr>
+      <tr><td>Interest rate on debt</td><td id="d_g17" class=r></td></tr>
+      <tr><td>Tickets sold</td><td id="d_g18" class=r></td></tr>
+      <tr><td>Price per ticket</td><td id="d_g19" class=r></td></tr>
+      <tr><td>Variable operating expenses</td><td id="d_g20" class=r></td></tr>
+      <tr><td>Fixed operating expenses</td><td id="d_g21" class=r></td></tr>
+      <tr><td>Debt financing of expansion</td><td id="d_g22" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    Use the data above and calculate the EPS, DOL, DFL and DCL of Executive Transportation Company (ETC) after expansion on the next page, assuming that 100% of the expansion is financed by debt financing.
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_6">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Income Statement - 100% Debt Financing</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Sales revenue</td><td><input id="d_h28" type="text" /></td></tr>
+      <tr><td>Variable operating expenses</td><td><input id="d_h29" type="text" /></td></tr>
+      <tr><td>Contribution margin</td><td><input id="d_h30" type="text" /></td></tr>
+      <tr><td>Fixed operating expenses</td><td><input id="d_h31" type="text" /></td></tr>
+      <tr><td>Operating income (EBIT)</td><td><input id="d_h32" type="text" /></td></tr>
+      <tr><td>Interest expense</td><td><input id="d_h33" type="text" /></td></tr>
+      <tr><td>Earnings before taxes</td><td><input id="d_h34" type="text" /></td></tr>
+      <tr><td>Taxes</td><td><input id="d_h35" type="text" /></td></tr>
+      <tr><td>Net income</td><td><input id="d_h36" type="text" /></td></tr>
+      <tr><td>Number of common shares</td><td><input id="d_h37" type="text" /></td></tr>
+      <tr><td>Earnings per share</td><td><input id="d_h38" type="text" /></td></tr>
+      <tr><td colspan="2">&nbsp;</td></tr>
+      <tr><td>DOL</td><td><input id="d_h39" type="text" /></td></tr>
+      <tr><td>DFL</td><td><input id="d_h40" type="text" /></td></tr>
+      <tr><td>DCL</td><td><input id="d_h41" type="text" /></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_7">
+  <div class="d_boxed">
+    Sales in units in the previous two scenarios were the most likely values. However, the sales in units can be quite volatile and are likely to fluctuate between -35% to +35% around the most likely value.<br><br>Show the impact of this increase or decrease on the EBIT and EPS under the low leverage and the high leverage plans.
+  </div>
+  <table class="tstripe" style="margin-top:8px">
+    <thead>
+      <tr>
+        <th colspan="3">Impact of Decrease in Sales (-35%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td></td><td><b>Low leverage plan</b></td><td><b>High leverage plan</b></td></tr>
+      <tr><td>Percentage change in EBIT</td><td><input id="d_h42" type="text" /></td><td><input id="d_h43" type="text" /></td></tr>
+      <tr><td>New EBIT</td><td><input id="d_h44" type="text" /></td><td><input id="d_h45" type="text" /></td></tr>
+      <tr><td>Percentage change in EPS</td><td><input id="d_h46" type="text" /></td><td><input id="d_h47" type="text" /></td></tr>
+      <tr><td>New EPS</td><td><input id="d_h48" type="text" /></td><td><input id="d_h49" type="text" /></td></tr>
+    </tbody>
+  </table>
+  <table class="tstripe" style="margin-top:8px">
+    <thead>
+      <tr>
+        <th colspan="3">Impact of Increase in Sales (+35%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td></td><td><b>Low leverage plan</b></td><td><b>High leverage plan</b></td></tr>
+      <tr><td>Percentage change in EBIT</td><td><input id="d_h50" type="text" /></td><td><input id="d_h51" type="text" /></td></tr>
+      <tr><td>New EBIT</td><td><input id="d_h52" type="text" /></td><td><input id="d_h53" type="text" /></td></tr>
+      <tr><td>Percentage change in EPS</td><td><input id="d_h54" type="text" /></td><td><input id="d_h55" type="text" /></td></tr>
+      <tr><td>New EPS</td><td><input id="d_h56" type="text" /></td><td><input id="d_h57" type="text" /></td></tr>
+    </tbody>
+  </table>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_8">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th>Table</th>
+        <th>Item</th>
+        <th>Your answer</th>
+        <th>Expected answer</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><b>1</b></td><td colspan="4"><b>Current Income Statement - Before</b></td></tr>
+      <tr><td></td><td>Sales revenue</td><td id="d_s00" class=r></td><td id="d_s01" class=r></td><td id="d_s02" class=r></td></tr>
+      <tr><td></td><td>Variable operating expenses</td><td id="d_s10" class=r></td><td id="d_s11" class=r></td><td id="d_s12" class=r></td></tr>
+      <tr><td></td><td>Contribution margin</td><td id="d_s20" class=r></td><td id="d_s21" class=r></td><td id="d_s22" class=r></td></tr>
+      <tr><td></td><td>Fixed operating expenses</td><td id="d_s30" class=r></td><td id="d_s31" class=r></td><td id="d_s32" class=r></td></tr>
+      <tr><td></td><td>Operating income (EBIT)</td><td id="d_s40" class=r></td><td id="d_s41" class=r></td><td id="d_s42" class=r></td></tr>
+      <tr><td></td><td>Interest expense</td><td id="d_s50" class=r></td><td id="d_s51" class=r></td><td id="d_s52" class=r></td></tr>
+      <tr><td></td><td>Earnings before taxes</td><td id="d_s60" class=r></td><td id="d_s61" class=r></td><td id="d_s62" class=r></td></tr>
+      <tr><td></td><td>Taxes</td><td id="d_s70" class=r></td><td id="d_s71" class=r></td><td id="d_s72" class=r></td></tr>
+      <tr><td></td><td>Net income</td><td id="d_s80" class=r></td><td id="d_s81" class=r></td><td id="d_s82" class=r></td></tr>
+      <tr><td></td><td>Number of common shares</td><td id="d_s90" class=r></td><td id="d_s91" class=r></td><td id="d_s92" class=r></td></tr>
+      <tr><td></td><td>Earnings per share</td><td id="d_s100" class=r></td><td id="d_s101" class=r></td><td id="d_s102" class=r></td></tr>
+      <tr><td></td><td>DOL</td><td id="d_s110" class=r></td><td id="d_s111" class=r></td><td id="d_s112" class=r></td></tr>
+      <tr><td></td><td>DFL</td><td id="d_s120" class=r></td><td id="d_s121" class=r></td><td id="d_s122" class=r></td></tr>
+      <tr><td></td><td>DCL</td><td id="d_s130" class=r></td><td id="d_s131" class=r></td><td id="d_s132" class=r></td></tr>
+      
+      <tr><td><b>2</b></td><td colspan="4"><b>Income Statement - 100% Equity Financing</b></td></tr>
+      <tr><td></td><td>Sales revenue</td><td id="d_s140" class=r></td><td id="d_s141" class=r></td><td id="d_s142" class=r></td></tr>
+      <tr><td></td><td>Variable operating expenses</td><td id="d_s150" class=r></td><td id="d_s151" class=r></td><td id="d_s152" class=r></td></tr>
+      <tr><td></td><td>Contribution margin</td><td id="d_s160" class=r></td><td id="d_s161" class=r></td><td id="d_s162" class=r></td></tr>
+      <tr><td></td><td>Fixed operating expenses</td><td id="d_s170" class=r></td><td id="d_s171" class=r></td><td id="d_s172" class=r></td></tr>
+      <tr><td></td><td>Operating income (EBIT)</td><td id="d_s180" class=r></td><td id="d_s181" class=r></td><td id="d_s182" class=r></td></tr>
+      <tr><td></td><td>Interest expense</td><td id="d_s190" class=r></td><td id="d_s191" class=r></td><td id="d_s192" class=r></td></tr>
+      <tr><td></td><td>Earnings before taxes</td><td id="d_s200" class=r></td><td id="d_s201" class=r></td><td id="d_s202" class=r></td></tr>
+      <tr><td></td><td>Taxes</td><td id="d_s210" class=r></td><td id="d_s211" class=r></td><td id="d_s212" class=r></td></tr>
+      <tr><td></td><td>Net income</td><td id="d_s220" class=r></td><td id="d_s221" class=r></td><td id="d_s222" class=r></td></tr>
+      <tr><td></td><td>Number of common shares</td><td id="d_s230" class=r></td><td id="d_s231" class=r></td><td id="d_s232" class=r></td></tr>
+      <tr><td></td><td>Earnings per share</td><td id="d_s240" class=r></td><td id="d_s241" class=r></td><td id="d_s242" class=r></td></tr>
+      <tr><td></td><td>DOL</td><td id="d_s250" class=r></td><td id="d_s251" class=r></td><td id="d_s252" class=r></td></tr>
+      <tr><td></td><td>DFL</td><td id="d_s260" class=r></td><td id="d_s261" class=r></td><td id="d_s262" class=r></td></tr>
+      <tr><td></td><td>DCL</td><td id="d_s270" class=r></td><td id="d_s271" class=r></td><td id="d_s272" class=r></td></tr>
+      
+      <tr><td><b>3</b></td><td colspan="4"><b>Income Statement - 100% Debt Financing</b></td></tr>
+      <tr><td></td><td>Sales revenue</td><td id="d_s280" class=r></td><td id="d_s281" class=r></td><td id="d_s282" class=r></td></tr>
+      <tr><td></td><td>Variable operating expenses</td><td id="d_s290" class=r></td><td id="d_s291" class=r></td><td id="d_s292" class=r></td></tr>
+      <tr><td></td><td>Contribution margin</td><td id="d_s300" class=r></td><td id="d_s301" class=r></td><td id="d_s302" class=r></td></tr>
+      <tr><td></td><td>Fixed operating expenses</td><td id="d_s310" class=r></td><td id="d_s311" class=r></td><td id="d_s312" class=r></td></tr>
+      <tr><td></td><td>Operating income (EBIT)</td><td id="d_s320" class=r></td><td id="d_s321" class=r></td><td id="d_s322" class=r></td></tr>
+      <tr><td></td><td>Interest expense</td><td id="d_s330" class=r></td><td id="d_s331" class=r></td><td id="d_s332" class=r></td></tr>
+      <tr><td></td><td>Earnings before taxes</td><td id="d_s340" class=r></td><td id="d_s341" class=r></td><td id="d_s342" class=r></td></tr>
+      <tr><td></td><td>Taxes</td><td id="d_s350" class=r></td><td id="d_s351" class=r></td><td id="d_s352" class=r></td></tr>
+      <tr><td></td><td>Net income</td><td id="d_s360" class=r></td><td id="d_s361" class=r></td><td id="d_s362" class=r></td></tr>
+      <tr><td></td><td>Number of common shares</td><td id="d_s370" class=r></td><td id="d_s371" class=r></td><td id="d_s372" class=r></td></tr>
+      <tr><td></td><td>Earnings per share</td><td id="d_s380" class=r></td><td id="d_s381" class=r></td><td id="d_s382" class=r></td></tr>
+      <tr><td></td><td>DOL</td><td id="d_s390" class=r></td><td id="d_s391" class=r></td><td id="d_s392" class=r></td></tr>
+      <tr><td></td><td>DFL</td><td id="d_s400" class=r></td><td id="d_s401" class=r></td><td id="d_s402" class=r></td></tr>
+      <tr><td></td><td>DCL</td><td id="d_s410" class=r></td><td id="d_s411" class=r></td><td id="d_s412" class=r></td></tr>
+      
+      <tr><td><b>4</b></td><td colspan="4"><b>Impact of Decrease in Sales (-35%)</b></td></tr>
+      <tr><td></td><td>Percentage change in EBIT - low leverage plan</td><td id="d_s420" class=r></td><td id="d_s421" class=r></td><td id="d_s422" class=r></td></tr>
+      <tr><td></td><td>Percentage change in EBIT - high leverage plan</td><td id="d_s430" class=r></td><td id="d_s431" class=r></td><td id="d_s432" class=r></td></tr>
+      <tr><td></td><td>New EBIT - low leverage plan</td><td id="d_s440" class=r></td><td id="d_s441" class=r></td><td id="d_s442" class=r></td></tr>
+      <tr><td></td><td>New EBIT - high leverage plan</td><td id="d_s450" class=r></td><td id="d_s451" class=r></td><td id="d_s452" class=r></td></tr>
+      <tr><td></td><td>Percentage change in EPS - low leverage plan</td><td id="d_s460" class=r></td><td id="d_s461" class=r></td><td id="d_s462" class=r></td></tr>
+      <tr><td></td><td>Percentage change in EPS - high leverage plan</td><td id="d_s470" class=r></td><td id="d_s471" class=r></td><td id="d_s472" class=r></td></tr>
+      <tr><td></td><td>New EPS - low leverage plan</td><td id="d_s480" class=r></td><td id="d_s481" class=r></td><td id="d_s482" class=r></td></tr>
+      <tr><td></td><td>New EPS - high leverage plan</td><td id="d_s490" class=r></td><td id="d_s491" class=r></td><td id="d_s492" class=r></td></tr>
+      
+      <tr><td><b>5</b></td><td colspan="4"><b>Impact of Increase in Sales (+35%)</b></td></tr>
+      <tr><td></td><td>Percentage change in EBIT - low leverage plan</td><td id="d_s500" class=r></td><td id="d_s501" class=r></td><td id="d_s502" class=r></td></tr>
+      <tr><td></td><td>Percentage change in EBIT - high leverage plan</td><td id="d_s510" class=r></td><td id="d_s511" class=r></td><td id="d_s512" class=r></td></tr>
+      <tr><td></td><td>New EBIT - low leverage plan</td><td id="d_s520" class=r></td><td id="d_s521" class=r></td><td id="d_s522" class=r></td></tr>
+      <tr><td></td><td>New EBIT - high leverage plan</td><td id="d_s530" class=r></td><td id="d_s531" class=r></td><td id="d_s532" class=r></td></tr>
+      <tr><td></td><td>Percentage change in EPS - low leverage plan</td><td id="d_s540" class=r></td><td id="d_s541" class=r></td><td id="d_s542" class=r></td></tr>
+      <tr><td></td><td>Percentage change in EPS - high leverage plan</td><td id="d_s550" class=r></td><td id="d_s551" class=r></td><td id="d_s552" class=r></td></tr>
+      <tr><td></td><td>New EPS - low leverage plan</td><td id="d_s560" class=r></td><td id="d_s561" class=r></td><td id="d_s562" class=r></td></tr>
+      <tr><td></td><td>New EPS - high leverage plan</td><td id="d_s570" class=r></td><td id="d_s571" class=r></td><td id="d_s572" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div><b>Your score:</b> <span id="d_tscore"></span></div>
+    <div><b>Maximum score:</b> <span id="d_mscore"></span></div>
+  </div>
+  <button type="button" class="c_nav" onClick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onClick="window.location.reload();">Retry with different numbers</button>
+  <button type="button" class="c_nav" onclick="window.location.href='index.html'">Return to menu</button>
+</div>
+
+<script>
+
+goNext();
+
+</script>
+
+<style>
+body {
+  font-family: sans-serif;
+  background-color: #ffdd22;
+}
+
+table {
+  border-collapse: collapse;
+  background-color: white;
+}
+
+table td, table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+td.r {
+  text-align: right;
+}
+
+.tstripe tr:nth-child(even){background-color: #f2f2f2;}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.c_nav {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.d_boxed {
+  margin-top: 8px;
+  border: 1px solid green;
+  width: 40em;
+  padding: 15px;
+  line-height: 1.5;
+  background-color: white;
+}
+
+input[type=text] {
+  width: 100%;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+</style>
