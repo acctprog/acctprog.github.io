@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strconv"
+	"regexp"
 	"strings"
 	"text/template"
 )
@@ -36,6 +36,7 @@ func checkExt(ext string, pathwd string) []string {
 type Mcq struct {
     N int
     S int
+    T bool
     Q string
     A string
     B string
@@ -44,32 +45,85 @@ type Mcq struct {
     X string
 }
 
+func readAndFormatMcqs(sin string) string {
+    re := regexp.MustCompile(`^\d+\.`)
+    abcdLowers := [4]string{ "a. ", "b. ", "c. ", "d. " }
+	abcdUppers := [4]string{ "A. ", "B. ", "C. ", "D. " }
+	
+	var validLines bytes.Buffer
+	rawLines := strings.Split(sin, "\n")
+	
+	OUTERLOOP:
+	for _, rawLine := range rawLines {
+	    line := strings.TrimSpace(rawLine)
+	    if (len(line) < 3) {
+	        continue
+	    }
+	    if (strings.HasPrefix(line, "ANSWER: ")) {
+	        line = strings.TrimPrefix(line, "ANSWER: ")
+	        line = strings.TrimSpace(line)
+	        if (line == "True") {
+	            line = "A"
+	        } else if (line == "False") {
+	            line = "B"
+	        }
+	        line = "X. " + strings.ToUpper(line[:1]) + "\n\n"
+	        validLines.WriteString(line)
+	        continue
+	    }
+	    for j, abcdLower := range abcdLowers {
+	        if (strings.HasPrefix(line, abcdLower)) {
+                line = strings.TrimPrefix(line, abcdLower)
+                line = strings.TrimSpace(line)
+                line = abcdUppers[j] + line + "\n"
+                validLines.WriteString(line)
+                continue OUTERLOOP
+	        }
+	    }
+	    if (re.MatchString(line)) {
+	        dotIdx := strings.IndexByte(line, '.')
+	        line = line[dotIdx + 1:]
+	        line = strings.TrimSpace(line)
+	        line = "Q. " + line + "\n"
+	        validLines.WriteString(line)
+            continue
+	    }
+	}
+	
+	return validLines.String()
+}
+
 func readMcqs(fin string) []Mcq {
     content, _ := ioutil.ReadFile(fin)
 	sin := strings.Replace(string(content), "\r", "", -1)
-	mcqs := strings.Split(sin, "\n\n")
+	sin = strings.Replace(sin, "\t", " ", -1)
+	reNonascii := regexp.MustCompile("[[:^ascii:]]")
+    sin = reNonascii.ReplaceAllLiteralString(sin, "")
+	validLines := readAndFormatMcqs(sin)
+	// ioutil.WriteFile("validlines.txt", []byte(validLines), 0644)
+	
+	mcqs := strings.Split(validLines, "\n\n")
 	var models []Mcq
 	for i, mcq := range mcqs {
 	    lines := strings.Split(mcq, "\n")
 	    numLines := len(lines)
-	    if (numLines != 7) {
-	        if (numLines > 999) {
-	            for _, l := range lines {
-	                println(l)
-	            }
-	            panic("mcq " + strconv.Itoa(i) + ": " + strconv.Itoa(numLines))
-	        }
-	        //continue
+	    if (numLines <= 1) {
+	        continue
 	    }
 	    var model Mcq
 	    model.N = i
 	    model.S = i + 1
+	    model.T = (numLines == 4)
 	    model.Q = html.EscapeString(strings.TrimPrefix(lines[0], "Q. "))
 	    model.A = html.EscapeString(strings.TrimPrefix(lines[1], "A. "))
 	    model.B = html.EscapeString(strings.TrimPrefix(lines[2], "B. "))
-	    model.C = html.EscapeString(strings.TrimPrefix(lines[3], "C. "))
-	    model.D = html.EscapeString(strings.TrimPrefix(lines[4], "D. "))
-	    model.X = strings.TrimPrefix(lines[5], "X. ")
+	    if (model.T) {
+	        model.X = strings.TrimPrefix(lines[3], "X. ")
+	    } else {
+	        model.C = html.EscapeString(strings.TrimPrefix(lines[3], "C. "))
+	        model.D = html.EscapeString(strings.TrimPrefix(lines[4], "D. "))
+	        model.X = strings.TrimPrefix(lines[5], "X. ")
+	    }
 	    models = append(models, model)
 	}
 	return models
@@ -113,7 +167,8 @@ function style_box(str, sco) {
 
 function get_rad_value(str) {
   var radios = document.getElementsByName(str);
-  for (var i = 0; i < 4; i++) {
+  var numRadios = radios.length;
+  for (var i = 0; i < numRadios; i++) {
     if (radios[i].checked) {
       return radios[i].value;
     }
@@ -227,16 +282,20 @@ body {
     <div>{{.S}}. {{.Q}}</div>
     <br><label><input type=radio name=d_{{.N}} value=A />A. {{.A}}</label>
     <br><label><input type=radio name=d_{{.N}} value=B />B. {{.B}}</label>
+    {{if not .T}}
     <br><label><input type=radio name=d_{{.N}} value=C />C. {{.C}}</label>
     <br><label><input type=radio name=d_{{.N}} value=D />D. {{.D}}</label>
+    {{end}}
   </div>
 `
     const tmpl1 = `  <div class="d_boxed" id="d_b{{.N}}">
     <div>{{.S}}. {{.Q}}</div>
     <br><label>A. {{.A}}</label>
     <br><label>B. {{.B}}</label>
+    {{if not .T}}
     <br><label>C. {{.C}}</label>
     <br><label>D. {{.D}}</label>
+    {{end}}
     <br><br>
     <div><b>Your answer:</b> <span id=d_ya{{.N}}></span></div>
     <div><b>Correct answer:</b> <span id=d_ca{{.N}}></span></div>

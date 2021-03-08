@@ -1,0 +1,83 @@
+1. Maple bonds are issued by the government of Canada in Canadian dollars but sold to only foreign investors.
+ 	a. 	True
+ 	b. 	False
+ANSWER:  	False
+RATIONALE:  	Maple bonds are issued by foreigners in Canadian dollars and in Canada. The advantage is no foreign interest-rate risk for investors.
+POINTS:  	1
+DIFFICULTY:  	EASY
+REFERENCES:  	Who Issues Bonds?
+QUESTION TYPE:  	True / False
+TOPICS:  	(6.1) Bond issuer
+CUSTOM ID:  	06-01
+
+3. Sinking funds are devices used to force companies to retire bonds on a scheduled basis prior to their maturity. Many bond indentures allow the company to acquire bonds for a sinking fund by either purchasing bonds in the market or selecting the bonds to be acquired by a lottery administered by the trustee through a call at face value.
+ 	a. 	True
+ 	b. 	False
+ANSWER:  	True
+POINTS:  	1
+DIFFICULTY:  	EASY
+REFERENCES:  	Key Characteristics of Bonds
+QUESTION TYPE:  	True / False
+TOPICS:  	(6.2) Sinking fund
+CUSTOM ID:  	06-03
+
+
+
+36. Which bond has the greatest interest rate price risk?
+ 	a. 	a 10-year $100 annuity
+ 	b. 	a 10-year, $1,000 face value, zero coupon bond
+ 	c. 	a 10-year, $1,000 face value, 10% coupon bond with annual interest payments
+ 	d. 	All 10-year bonds have the same price risk since they have the same maturity.
+ANSWER:  	b
+POINTS:  	1
+DIFFICULTY:  	EASY MEDIUM
+REFERENCES:  	The Maturity Risk Premium (MRP)
+QUESTION TYPE:  	Multiple Choice
+TOPICS:  	(6.13) Interest rate risk
+KEYWORDS:  	Bloom's Understand
+CUSTOM ID:  	06-36
+
+
+
+
+81. Assume that a 10-year Treasury bond has a 12% annual coupon, while a 15-year T-bond has an 8% annual coupon. Assume also that the yield curve is flat, and all Treasury securities have a 10% yield to maturity. Which of the following statements is correct?
+ 	a. 	If interest rates decline, the prices of both bonds will increase, but the 15-year bond would have a larger percentage increase in price.
+ 	b. 	If interest rates decline, the prices of both bonds will increase, but the 10-year bond would have a larger percentage increase in price.
+ 	c. 	The 10-year bond would sell at a discount, while the 15-year bond would sell at a premium.
+ 	d. 	The 10-year bond would sell at a premium, while the 15-year bond would sell at par.
+ANSWER:  	a
+RATIONALE:  	​
+We can tell by inspection that (c) and (d) are incorrect. That leaves (a) and (b) as the only possibly correct statements. Also, recognize that longer-term bonds, and ones where payments come late (like low coupon bonds) are most sensitive to changes in interest rates. Thus, the 15-year, 8% coupon bond should be more sensitive to a decline in rates. Finally, we can do some calculations to confirm that (a) is the correct answer:
+                                      Current situation              Rates decline    
+10-year                        15-year      10-year      15-year
+Par                                   1000          1000          1000          1000
+Maturity                               10              15              10              15
+Coup rate                          12%             8%           12%             8%
+YTM                            10.00%      10.00%        9.00%        9.00%
+Ann coup                           120              80            120              80
+Price                        $1,122.89     $847.88  $1,192.53     $919.39
+% Gain                                                                6.2%          8.4%
+POINTS:  	1
+DIFFICULTY:  	HARD
+REFERENCES:  	Changes in Bond Values Over Time
+QUESTION TYPE:  	Multiple Choice
+TOPICS:  	(6.5) Effect of interest rate on bond prices
+KEYWORDS:  	Bloom's Analyze
+CUSTOM ID:  	06-81
+
+8. If the yield to maturity is 5.5%, what is the price of a 15-year, zero-coupon bond with a par value of $1,000?
+ 	a. 	$413.35
+ 	b. 	$429.48
+ 	c. 	$447.93
+ 	d. 	$469.72
+ANSWER:  	c
+RATIONALE:  	
+POINTS:  	1
+DIFFICULTY:  	EASY
+REFERENCES:  	Bond Valuation
+QUESTION TYPE:  	Multiple Choice
+TOPICS:  	(6.3) Bond valuation
+KEYWORDS:  	Bloom's Understand
+CUSTOM ID:  	06-88
+
+
