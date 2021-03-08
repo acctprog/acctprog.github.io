@@ -1,18 +1,21 @@
 Instructions:
 
-1. Prepare a text file that is called something_mcq.txt
-2. Double-click on mcq.exe
+1. Prepare a text file that is called something_mcq.txt in Notepad.
+    Make sure it is saved in the mcq folder.
+    You can copy-paste from Word or prepare it from scratch.
+    See 2_mcq.txt for an example of the format.
+2. Double-click on mcq.exe in the mcq folder.
      It will create a file called msomething.html
 3. Go to github.com
-4. On the left side, click the acctprog/acctprog.github.io text
+4. On the left side, click the acctprog/acctprog.github.io text.
 5. Click "Add file" (on the left of the green button),
-    and in the dropdown click "Upload files"
-6. Choose the msomething.html file and double-click to select it
-7. Scroll down and press the green "Commit changes" button
-8. Click on "index.html"
+    and in the dropdown click "Upload files".
+6. Choose the msomething.html file and double-click to select it.
+7. Scroll down and press the green "Commit changes" button.
+8. Click on "index.html".
 9. Click on the pencil icon
-    (second-from-right icon in the grey strip under the blue box)
-10. Create a new line above the "</div>" line that looks similar to the lines above it
-11. Scroll down and press the green "Commit changes" button
-12. Wait for one minute
-13. Go to acctprog.github.io as usual to see the new changes
+    (second-from-right icon in the grey strip under the blue box).
+10. Create a new line above the "</div>" line that looks similar to the lines above it.
+11. Scroll down and press the green "Commit changes" button.
+12. Wait for one minute.
+13. Go to acctprog.github.io as usual to see the new changes.
