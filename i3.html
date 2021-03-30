@@ -1,0 +1,577 @@
+<html>
+<head>
+</head>
+<script>
+
+function addCommas0(x) {
+  x += '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x)) {
+    x = x.replace(rgx, '$1' + ',' + '$2');
+  }
+  return x;
+}
+
+function addCommas(nStr) {
+  nStr += '';
+  var x = nStr.split('.');
+  var x1 = x[0];
+  var x2 = x.length > 1 ? '.' + x[1] : '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x1)) {
+    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+  }
+  return x1 + x2;
+}
+
+function sc0(str, v) {
+  document.getElementById(str).innerHTML = addCommas0(v.toFixed(0));
+}
+
+function sc2(str, v) {
+  document.getElementById(str).innerHTML = addCommas(v.toFixed(2));
+}
+
+function sp2(str, v) {
+  document.getElementById(str).innerHTML = (v*100).toFixed(2) + "%";
+}
+
+var freq_strs = ["", "annually", "semi-annually", "", "quarterly"];
+function sv0(str, v) {
+    document.getElementById(str).innerHTML = freq_strs[v];
+}
+
+function set_el(str, txt) {
+  document.getElementById(str).innerHTML = txt;
+}
+
+r_a1 = [10, 20, 10000];
+r_a2 = [5, 10, 1];
+r_a3 = [6, 9, 0.01];
+r_b1 = [10, 20, 1000];
+r_b2 = [8, 12, 1];
+r_b3 = [6, 9, 0.01];
+r_c1 = [5, 10, 1000];
+r_c2 = [5, 8, 1];
+r_d1 = [5, 10, 1000];
+r_d2 = [9, 9, 0.01];
+r_e1 = [25, 30, 1];
+r_e2 = [3, 6, 10000];
+r_e3 = [6, 9, 0.01];
+r_f1 = [20, 30, 1];
+r_f2 = [5, 12, 1000];
+r_f3 = [5, 10, 0.01];
+r_g1 = [20, 30, 10000];
+r_g2 = [5, 12, 1];
+r_g3 = [5, 10, 0.01];
+r_h1 = [20, 30, 10000];
+r_h2 = [5, 12, 1];
+r_h3 = [5, 10, 0.01];
+
+function randbws(arr) {
+    var min = arr[0];
+    var max = arr[0];
+    var scale = arr[2];
+    if (min == max) return min * scale;
+    return (Math.floor(Math.random() * (max - min + 1) + min)) * scale;
+}
+
+a1 = randbws(r_a1);
+a2 = randbws(r_a2);
+a3 = randbws(r_a3);
+b1 = randbws(r_b1);
+b2 = randbws(r_b2);
+b3 = randbws(r_b3);
+c1 = randbws(r_c1);
+c2 = randbws(r_c2);
+c3 = c1 * 2;
+d1 = randbws(r_d1);
+d2 = randbws(r_d2);
+e1 = randbws(r_e1);
+e2 = randbws(r_e2);
+e3 = randbws(r_e3);
+f1 = randbws(r_f1);
+f2 = randbws(r_f2);
+f3 = randbws(r_f3);
+g1 = randbws(r_g1);
+g2 = randbws(r_g2);
+g3 = randbws(r_g3);
+g4 = 1;
+g5 = g3;
+g6 = 2;
+g7 = g3;
+g8 = 4;
+h1 = randbws(r_h1);
+h2 = randbws(r_h2);
+h3 = randbws(r_h3);
+h4 = 1;
+h5 = h3 - 0.003;
+h6 = 2;
+h7 = h3 - 0.001;
+h8 = 4;
+
+function set_all() {
+    sc0("d_g0", a1);
+    sc0("d_g1", a2);
+    sp2("d_g2", a3);
+    sc0("d_g3", b1);
+    sc0("d_g4", b2);
+    sp2("d_g5", b3);
+    sc0("d_g6", c1);
+    sc0("d_g7", c2);
+    sc0("d_g8", c3);
+    sc0("d_g9", d1);
+    sp2("d_g10", d2);
+    sc0("d_g11", e1);
+    sc0("d_g12", e2);
+    sp2("d_g13", e3);
+    sc0("d_g14", f1);
+    sc0("d_g15", f2);
+    sp2("d_g16", f3);
+    sc0("d_g17", g1);
+    sc0("d_g18", g2);
+    sp2("d_g19", g3);
+    sv0("d_g20", g4);
+    sp2("d_g21", g5);
+    sv0("d_g22", g6);
+    sp2("d_g23", g7);
+    sv0("d_g24", g8);
+    sc0("d_g25", h1);
+    sc0("d_g26", h2);
+    sp2("d_g27", h3);
+    sv0("d_g28", h4);
+    sp2("d_g29", h5);
+    sv0("d_g30", h6);
+    sp2("d_g31", h7);
+    sv0("d_g32", h8);
+}
+
+var exp = [];
+exp[0] = a1 * Math.pow(1 + a3, a2);
+exp[1] = b1 / Math.pow(1 + b3, b2);
+exp[2] = Math.pow(c3 / c1, 1 / c2) - 1;
+exp[3] = 0.724 / d2;
+exp[4] = e2 * (1 - 1 / Math.pow(1 + e3, e1)) / e3;
+exp[5] = f2 * (Math.pow(1 + f3, f1) - 1) / f3;
+exp[6] = g1 * Math.pow(1 + g3, g2);
+exp[7] = g1 * Math.pow(1 + g5 / g6, g2 * g6);
+exp[8] = g1 * Math.pow(1 + g7 / g8, g2 * g8);
+exp[9] = Math.pow(1 + h3 / h4, h4) - 1;
+exp[10] = Math.pow(1 + h5 / h6, h6) - 1;
+exp[11] = Math.pow(1 + h7 / h8, h8) - 1;
+
+function get_el_value(str) {
+  return document.getElementById(str).value;
+}
+
+function doshow_el(str, doshow) {
+  if (doshow == 0) {
+    document.getElementById(str).style.display = "none";
+  } else {
+    document.getElementById(str).style.display = "block";
+  }
+}
+
+function sum_arr(arr) {
+  var res = 0;
+  for (var i = 0; i < arr.length; i++) {
+    res += arr[i];
+  }
+  return res;
+}
+
+function is_numeric_val(value) {
+  return /^-{0,1}\d*\.{0,1}\d+$/.test(value);
+}
+
+function get_txtnum(elval) {
+  elval = elval.replaceAll(" ", "");
+  if (elval == "") return null;
+  if (elval[0] == "$") elval = elval.substring(1);
+  if (elval.endsWith("%")) elval = elval.substring(0, elval.length - 1);
+  elval = elval.replaceAll(",", "");
+  if (!is_numeric_val(elval)) return null;
+  var pelval = parseFloat(elval);
+  return pelval;
+}
+
+function cmpnum(num, str, isPct) {
+  inp = get_txtnum(str);
+  if (inp == null) return 0;
+  if (isPct) num *= 100;
+  num *= 100;
+  inp *= 100;
+  if (Math.abs(num - inp) < 1.1) return 1;
+  return 0;
+}
+
+function doformat(v, isPct) {
+  return isPct ? ((v * 100).toFixed(2) + "%") : addCommas(v.toFixed(2));
+}
+
+var sc_you = [];
+var sc_sco = [];
+var sc_exp = [];
+
+function gen_scores() {
+    var tlength = 12;
+    for (var i = 0; i < tlength; i++) {
+        var isPct = (i == 2 || i >= 9);
+        sc_you[i] = get_el_value("d_p" + i);
+        sc_sco[i] = cmpnum(exp[i], sc_you[i], isPct);
+        sc_exp[i] = doformat(exp[i], isPct);
+        set_el("d_s" + i + "0", sc_you[i]);
+        set_el("d_s" + i + "1", sc_exp[i]);
+        set_el("d_s" + i + "2", sc_sco[i]);
+    }
+    var tscore = sum_arr(sc_sco);
+    var mscore = sc_sco.length;
+    set_el("d_tscore", tscore);
+    set_el("d_mscore", mscore);
+}
+
+var slide_index = -1;
+var num_slides = 10;
+
+function goNext() {
+  if (slide_index == -1) {
+    set_all();
+  }
+  slide_index++;
+  if (slide_index == num_slides - 1) {
+    gen_scores();
+    window.scrollTo(0, 0);
+  }
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+function goPrev() {
+  slide_index--;
+  for (var i = 0; i < num_slides; i++) {
+    doshow_el("ds_" + i, (slide_index == i ? 1 : 0));
+  }
+}
+
+</script>
+
+<div id="ds_0">
+  <div id="d_story" class="d_boxed">
+    Cohen Chen and Qazi LLC (CCQ) is a boutique investment bank that focuses primarily on the transportation sector. Since its inception in 1995, CCQ has completed more than 150 capital raising transactions on North American debt and equity markets.<br><br>All employees of the investment bank are expected to go through continuous professional development and take on-line courses and exams.<br><br>You are writing your first on-line exam.<br><br>Give all answers to two decimal places.
+  </div>
+  <button type="button" class="c_nav" onclick="window.location.href='index.html'">Back to menu</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_1">
+  <div class="d_boxed d_qb">
+    Q1. You have some savings and would like to invest them for a few years. A local bank is offering attractive rates on term deposits.
+  </div>
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Deposit (Savings today)</td><td id="d_g0" class=r></td></tr>
+      <tr><td>Term</td><td id="d_g1" class=r></td></tr>
+      <tr><td>Interest rate (annually)</td><td id="d_g2" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <span>How much will your investment (deposit) be worth at the end of the term?</span>
+    <input type="text" id="d_p0" autocomplete="off" />
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_2">
+  <div class="d_boxed d_qb">
+    Q-2. You are interested in buying a security (Zero coupon bond) with the following characteristics:
+    <br><br><i>Note: A zero-coupon bond does not pay any interest and is sold at a discount to its face or maturity value.</i>
+  </div>
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Face value (Maturity value)</td><td id="d_g3" class=r></td></tr>
+      <tr><td>Term (Years to maturity)</td><td id="d_g4" class=r></td></tr>
+      <tr><td>Interest rate on the bond (Yield)</td><td id="d_g5" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <span>How much should you be willing to pay for the bond today?</span>
+    <input type="text" id="d_p1" autocomplete="off" />
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_3">
+  <div class="d_boxed d_qb">
+    Q-3. You are buying a security (Zero coupon bond) with the following characteristics:
+    <br><br><i>Note: A zero-coupon bond does not pay any interest and is sold at a discount to its face or maturity value.</i>
+  </div>
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Purchase price of the bond (today)</td><td id="d_g6" class=r></td></tr>
+      <tr><td>Term (Years to maturity)</td><td id="d_g7" class=r></td></tr>
+      <tr><td>Face value (Maturity value)</td><td id="d_g8" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <span>What is the annual rate of return on this bond?</span>
+    <input type="text" id="d_p2" autocomplete="off" />
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_4">
+  <div class="d_boxed d_qb">
+    Q-4. You are thinking of investing in an equity fund. Use the following information to answer the question.
+  </div>
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Initial investment (today)</td><td id="d_g9" class=r></td></tr>
+      <tr><td>Expected annual rate of return</td><td id="d_g10" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <span>How long will it take to double your initial investment (in years)?</span>
+    <input type="text" id="d_p3" autocomplete="off" />
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_5">
+  <div class="d_boxed d_qb">
+    Q-5. Your uncle is 60 and as part of his retirement planning is thinking of buying an annuity from an insurance company. The annuity will provide him with fixed payments at the end of each year for a number of years.
+  </div>
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Term of the annuity (years)</td><td id="d_g11" class=r></td></tr>
+      <tr><td>Annuity amount (per year)</td><td id="d_g12" class=r></td></tr>
+      <tr><td>Annual rate of return (interest rate)</td><td id="d_g13" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <span>What is the lump sum amount he needs today to purchase the annuity?</span>
+    <input type="text" id="d_p4" autocomplete="off" />
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_6">
+  <div class="d_boxed d_qb">
+    Q-6. You have recently started your first job after graduation. You have decided to join a well known bank’s Systematic Investment Plan (SIP). This plan is going to allow you to invest in a fund on a consistent basis at the end of each year. The details of the SIP are as follows:
+  </div>
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Term of the annuity (investment period) in years</td><td id="d_g14" class=r></td></tr>
+      <tr><td>Investment amount (per year)</td><td id="d_g15" class=r></td></tr>
+      <tr><td>Estimated annual rate of return</td><td id="d_g16" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <span>What is the amount that will accumulate at the end of the investment period?</span>
+    <input type="text" id="d_p5" autocomplete="off" />
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_7">
+  <div class="d_boxed d_qb">
+    Q-7. You have some savings and would like to invest them for a few years. You have surveyed three banks. Use the following data to answer the questions below.
+  </div>
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Deposit (Savings today)</td><td id="d_g17" class=r></td></tr>
+      <tr><td>Term (years)</td><td id="d_g18" class=r></td></tr>
+      <tr><td>Alpha bank interest rate</td><td id="d_g19" class=r></td></tr>
+      <tr><td>Alpha bank compounding frequency</td><td id="d_g20" class=r></td></tr>
+      <tr><td>Beta bank interest rate</td><td id="d_g21" class=r></td></tr>
+      <tr><td>Beta bank compounding frequency</td><td id="d_g22" class=r></td></tr>
+      <tr><td>Gamma bank interest rate</td><td id="d_g23" class=r></td></tr>
+      <tr><td>Gamma bank compounding frequency</td><td id="d_g24" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <span>Calculate the amount that is going to accumulate at the end of the investment period if:</span><br>
+    <span>(a) You deposit your savings in Alpha bank.</span><input type="text" id="d_p6" autocomplete="off" />
+    <span>(b) You deposit your savings in Beta bank.</span><input type="text" id="d_p7" autocomplete="off" />
+    <span>(c) You deposit your savings in Gamma bank.</span><input type="text" id="d_p8" autocomplete="off" />
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_8">
+  <div class="d_boxed d_qb">
+    Q-7. You have some savings and would like to invest them for a few years. You have surveyed three banks. Use the following data to answer the questions below.
+  </div>
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th colspan="2">Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Deposit (Savings today)</td><td id="d_g25" class=r></td></tr>
+      <tr><td>Term (years)</td><td id="d_g26" class=r></td></tr>
+      <tr><td>Alpha bank interest rate</td><td id="d_g27" class=r></td></tr>
+      <tr><td>Alpha bank compounding frequency</td><td id="d_g28" class=r></td></tr>
+      <tr><td>Beta bank interest rate</td><td id="d_g29" class=r></td></tr>
+      <tr><td>Beta bank compounding frequency</td><td id="d_g30" class=r></td></tr>
+      <tr><td>Gamma bank interest rate</td><td id="d_g31" class=r></td></tr>
+      <tr><td>Gamma bank compounding frequency</td><td id="d_g32" class=r></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <span>Calculate the effective interest rate for:</span><br>
+    <span>(a) Alpha bank.</span><input type="text" id="d_p9" autocomplete="off" />
+    <span>(b) Beta bank.</span><input type="text" id="d_p10" autocomplete="off" />
+    <span>(c) Gamma bank.</span><input type="text" id="d_p11" autocomplete="off" />
+  </div>
+  <button type="button" class="c_nav" onclick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onclick="goNext()">Next</button>
+</div>
+
+<div id="ds_9">
+  <table class="tstripe">
+    <thead>
+      <tr>
+        <th>Question</th>
+        <th>Item</th>
+        <th>Your answer</th>
+        <th>Expected answer</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Amount worth at end of term</td><td id="d_s00" class=r></td><td id="d_s01" class=r></td><td id="d_s02"></td></tr>
+      <tr><td>2</td><td>Amount should be willing to pay today</td><td id="d_s10" class=r></td><td id="d_s11" class=r></td><td id="d_s12"></td></tr>
+      <tr><td>3</td><td>Annual rate of return</td><td id="d_s20" class=r></td><td id="d_s21" class=r></td><td id="d_s22"></td></tr>
+      <tr><td>4</td><td>Years to double investment</td><td id="d_s30" class=r></td><td id="d_s31" class=r></td><td id="d_s32"></td></tr>
+      <tr><td>5</td><td>Lump sum amount needed</td><td id="d_s40" class=r></td><td id="d_s41" class=r></td><td id="d_s42"></td></tr>
+      <tr><td>6</td><td>Amount that will accumulate</td><td id="d_s50" class=r></td><td id="d_s51" class=r></td><td id="d_s52"></td></tr>
+      <tr><td>7a</td><td>Amount for Alpha bank</td><td id="d_s60" class=r></td><td id="d_s61" class=r></td><td id="d_s62"></td></tr>
+      <tr><td>7b</td><td>Amount for Beta bank</td><td id="d_s70" class=r></td><td id="d_s71" class=r></td><td id="d_s72"></td></tr>
+      <tr><td>7c</td><td>Amount for Gamma bank</td><td id="d_s80" class=r></td><td id="d_s81" class=r></td><td id="d_s82"></td></tr>
+      <tr><td>8a</td><td>Rate for Alpha bank</td><td id="d_s90" class=r></td><td id="d_s91" class=r></td><td id="d_s92"></td></tr>
+      <tr><td>8b</td><td>Rate for Beta bank</td><td id="d_s100" class=r></td><td id="d_s101" class=r></td><td id="d_s102"></td></tr>
+      <tr><td>8c</td><td>Rate for Gamma bank</td><td id="d_s110" class=r></td><td id="d_s111" class=r></td><td id="d_s112"></td></tr>
+    </tbody>
+  </table>
+  <div class="d_boxed">
+    <div><b>Your score:</b> <span id="d_tscore"></span></div>
+    <div><b>Maximum score:</b> <span id="d_mscore"></span></div>
+  </div>
+  <button type="button" class="c_nav" onClick="goPrev()">Prev</button>
+  <button type="button" class="c_nav" onClick="window.location.reload();">Retry with different numbers</button>
+  <button type="button" class="c_nav" onclick="window.location.href='index.html'">Return to menu</button>
+</div>
+
+<script>
+
+goNext();
+
+</script>
+
+<style>
+body {
+  font-family: sans-serif;
+  background-color: #ffdd22;
+}
+
+table {
+  border-collapse: collapse;
+  background-color: white;
+}
+
+table td, table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+td.r {
+  text-align: right;
+}
+
+.tstripe tr:nth-child(even){background-color: #f2f2f2;}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.c_nav {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.d_boxed {
+  margin-top: 8px;
+  border: 1px solid green;
+  width: 40em;
+  padding: 15px;
+  line-height: 1.5;
+  background-color: white;
+}
+
+.d_qb {
+  margin-bottom: 8px;
+}
+
+input[type=text] {
+  width: 100%;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+</style>
